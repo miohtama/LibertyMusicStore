@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="span12 text-center">
+            <h2>{% trans "Payment details" %}</h2>
+
+            <p>
+                {{ transaction.fiat_amount|floatformat:2 }} {{ transaction.currency }}
+            </p>
+
+            <p>
+                <strong>{{ transaction.btc_amount }}</strong> <i class="fa fa-btc"></i>
+            </p>
+
+            <p>
+                {% trans "To address:" %} <br>
+            </p>
+
+            <div id="btc-address-holder">
+                <strong class="bitcoin-address"
+                    data-bc-amount="{{ transaction.btc_amount }}"
+                    data-bc-label="{{ request.user.customer.name }}"
+                    data-bc-message="Maksutapahtu"
+                    data-bc-address="{{ transaction.btc_address}}">{{ transaction.btc_address}}</strong>
+            </div>
+
+            <div id="payment-progress" class="text-center">
+
+                <p class="text text-muted">
+                    {% trans "Retrieving payment confirmation from Bitcoin network..." %}
+                </p>
+
+                <div class="progress progress-striped active">
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                        <!-- -->
+                    </div>
+                </div>
+            </div>
+
+            <form class="manual-actions" method="POST" action="{% url 'transaction_actions' transaction.uuid %}">
+                {% csrf_token %}
+                <p class="text-center btn-group-vertical">
+
+                    <button class="btn btn-info" name="transaction-cancel">
+                        {% trans "Cancel payment" %}
+                    </button>
+
+                    <button class="btn btn-info" name="transaction-confirm-manually">
+                        {% trans "Mark manually confirmed" %}
+                    </button>
+                </p>
+            </form>
+        </div>
+
+{% endblock content %}
+
+{% block custom_script %}
+<script>
+window.poll = {
+    transactionUUID: "{{ transaction.uuid }}",
+    pollURL: "{% url 'transaction_poll' transaction.uuid %}",
+    nextURL: "{% url 'transaction' transaction.uuid %}?success=true"
+};
+</script>
+{% endblock custom_script %}

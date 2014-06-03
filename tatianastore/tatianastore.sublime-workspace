@@ -1,0 +1,2145 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"H",
+				"HttpResponseRedirect	import"
+			],
+			[
+				"Http",
+				"HttpResponseForbidden	import"
+			],
+			[
+				"msg",
+				"message"
+			],
+			[
+				"manualy",
+				"manually_confirmed_received_at"
+			],
+			[
+				"kynsila",
+				"kynsilaukka"
+			],
+			[
+				"dec",
+				"Decimal	class"
+			],
+			[
+				"distr",
+				"distributor_id	param"
+			],
+			[
+				"HttpRepo",
+				"HttpResponseServerError	import"
+			],
+			[
+				"update",
+				"update_new_btc_address_blockchain	function"
+			],
+			[
+				"PAYE",
+				"PAYMENT_SOURCE_BLOCKCHAIN"
+			],
+			[
+				"payme",
+				"payment_source	statement"
+			],
+			[
+				"up",
+				"update_new_btc_address_bitcoind	function"
+			],
+			[
+				"Decimal",
+				"decimal	import"
+			],
+			[
+				"HTtpRE",
+				"HttpResponse	import"
+			],
+			[
+				"HttpNo",
+				"HttpResponseNotFound	import"
+			],
+			[
+				"HttpResponseNot",
+				"HttpResponseNotModified	import"
+			],
+			[
+				"HttpRes",
+				"HttpResponseRedirect	import"
+			],
+			[
+				"pyflakes",
+				"pyflakes_disabled"
+			],
+			[
+				"from",
+				"from_address"
+			],
+			[
+				"TYPE_",
+				"TYPE_PARTICIPANT  (variable)"
+			],
+			[
+				"get_",
+				"get_qualified_participants"
+			],
+			[
+				"TYP",
+				"TYPE_PARTICIPANT  (variable)"
+			],
+			[
+				"TYPE",
+				"TYPE_EXTRA_FUNDING  (variable)"
+			],
+			[
+				"get_qua",
+				"get_qualified_bets"
+			],
+			[
+				"TY",
+				"TYPE_PARTICIPANT  (variable)"
+			],
+			[
+				"get_qu",
+				"get_qualified_participants  (function)"
+			],
+			[
+				"game",
+				"game_round"
+			],
+			[
+				"rand",
+				"random  (variable)"
+			],
+			[
+				"max",
+				"max_participants"
+			],
+			[
+				"HTtp",
+				"HttpResponseNotAllowed  (class)"
+			],
+			[
+				"no",
+				"nowrap"
+			],
+			[
+				"Wallet",
+				"WalletTransaction  (class)"
+			],
+			[
+				"djan",
+				"django_bitcoin  (module)"
+			],
+			[
+				"con",
+				"confirmed_trades_count  (function)"
+			],
+			[
+				"Dec",
+				"DecimalField"
+			],
+			[
+				"ONLINE",
+				"ONLINE_PROVIDERS_ORDER  (variable)"
+			],
+			[
+				"background-",
+				"background-position"
+			],
+			[
+				"Htt",
+				"HttpResponseRedirect  (class)"
+			],
+			[
+				"date",
+				"datetime  (class)"
+			],
+			[
+				"Dermbio",
+				"DermbioPatient  (module)"
+			],
+			[
+				"TWO",
+				"TWO_FACTOR_LOGIN_FAIL  (variable)"
+			],
+			[
+				"ON",
+				"ONLINE_PROVIDERS_DICT  (variable)"
+			],
+			[
+				"R",
+				"RuntimeError  (class)"
+			],
+			[
+				"sort",
+				"sort_and_filter_results  (function)"
+			],
+			[
+				"time",
+				"timedelta  (class)"
+			],
+			[
+				"de",
+				"default_settings  (module)"
+			],
+			[
+				"Text",
+				"TextLine  (class)"
+			],
+			[
+				"fil",
+				"filter_report_output  (function)"
+			],
+			[
+				"repo",
+				"report_type"
+			],
+			[
+				"report",
+				"report_type_var_map"
+			],
+			[
+				"Mean",
+				"MeanMedianRow"
+			],
+			[
+				"output",
+				"outputdict"
+			],
+			[
+				"demograp",
+				"demography_id"
+			],
+			[
+				"M",
+				"MeanMedianRow  (class)"
+			],
+			[
+				"text-",
+				"text-transform"
+			],
+			[
+				"securiy",
+				"security_checks"
+			],
+			[
+				"co",
+				"countrycode"
+			],
+			[
+				"in",
+				"initial"
+			],
+			[
+				"da",
+				"datetime"
+			],
+			[
+				"list-",
+				"list-style-type"
+			],
+			[
+				"paym",
+				"payment_method"
+			],
+			[
+				"cou",
+				"country_name"
+			],
+			[
+				"hos",
+				"hospital"
+			],
+			[
+				"hosp",
+				"hospital_vocab"
+			],
+			[
+				"edi",
+				"edit_link"
+			],
+			[
+				"country",
+				"countrycode"
+			],
+			[
+				"find_elem",
+				"find_elements_by_css_selector"
+			],
+			[
+				"Ch",
+				"CheckboxInput"
+			],
+			[
+				"http",
+				"HTTPError"
+			],
+			[
+				"get",
+				"get_var_type  (function)"
+			],
+			[
+				"wh",
+				"white-space"
+			],
+			[
+				"SQL",
+				"SQLALCHEMY_CONNECT_STRING"
+			],
+			[
+				"TA",
+				"TEST_NAME"
+			],
+			[
+				"list-s",
+				"list-style-type"
+			],
+			[
+				"caipi",
+				"caipirinha-bot"
+			],
+			[
+				"ch",
+				"channel_greeting_info  (variable)"
+			],
+			[
+				"splt",
+				"split_channel_spec"
+			],
+			[
+				"wait",
+				"wait  (function)"
+			],
+			[
+				"get_n",
+				"get_network_from_server"
+			],
+			[
+				"cha",
+				"channel_greeting_info"
+			],
+			[
+				"ex",
+				"exchange  (module)"
+			],
+			[
+				"mii",
+				"mikko_profile  (variable)"
+			],
+			[
+				"jere",
+				"jeremias_profile  (variable)"
+			],
+			[
+				"find",
+				"find_element_by_id"
+			],
+			[
+				"I",
+				"IDemoWidget  (class)"
+			],
+			[
+				"__db",
+				"__db_user_name__"
+			],
+			[
+				"__db_",
+				"__db_name__"
+			],
+			[
+				"col",
+				"collective  (module)"
+			],
+			[
+				"Time",
+				"JobTimeoutNotifier"
+			],
+			[
+				"create",
+				"create_site_base"
+			],
+			[
+				"get_uni",
+				"get_unix_user"
+			],
+			[
+				"budd",
+				"buddy_thread  (variable)"
+			],
+			[
+				"is",
+				"isDebugOutputFrame  (function)"
+			],
+			[
+				"fill_in",
+				"fill_in_patient_basic_data  (function)"
+			],
+			[
+				"ren",
+				"renderer  (variable)"
+			],
+			[
+				"projec",
+				"projectorDebug"
+			],
+			[
+				"Shader",
+				"ShaderPass"
+			],
+			[
+				"Addi",
+				"AdditiveBlenderPass"
+			],
+			[
+				"cook",
+				"cookPortletHTML  (function)"
+			],
+			[
+				"au",
+				"autoplay  (function)"
+			],
+			[
+				"real",
+				"realtimeSpectrum  (variable)"
+			],
+			[
+				"DataGridFi",
+				"DataGridFieldObject"
+			],
+			[
+				"sym",
+				"symlinks_fuck_yeah"
+			],
+			[
+				"fiel",
+				"field"
+			],
+			[
+				"print",
+				"print_notifier"
+			],
+			[
+				"skype",
+				"skype_notifier"
+			],
+			[
+				"emai",
+				"email_notifier"
+			],
+			[
+				"PRint",
+				"PrintNotifier"
+			],
+			[
+				"fi",
+				"fill_in_timepoint"
+			],
+			[
+				"sele",
+				"selenium"
+			],
+			[
+				"CSS",
+				"CSS_SELECTOR"
+			],
+			[
+				"sits",
+				"sitsdatabase"
+			],
+			[
+				"proto",
+				"protocolId"
+			],
+			[
+				"Sits",
+				"SitsPatient"
+			],
+			[
+				"timepo",
+				"timepoints"
+			],
+			[
+				"pro",
+				"protocol"
+			],
+			[
+				"qu",
+				"queryMultiAdapter  (function)"
+			],
+			[
+				"pr",
+				"prepare_tree_selection"
+			],
+			[
+				"datag",
+				"datagridfield"
+			],
+			[
+				"ma",
+				"mandatory_timepoints"
+			],
+			[
+				"source",
+				"sourceProtocols"
+			],
+			[
+				"multi",
+				"multi-protocol"
+			],
+			[
+				"prot",
+				"protocolIds"
+			],
+			[
+				"getSUb",
+				"getSubjectOrderMap"
+			],
+			[
+				"data",
+				"datadefinitions"
+			],
+			[
+				"all",
+				"all_schema"
+			],
+			[
+				"remove",
+				"removeFields"
+			],
+			[
+				"last",
+				"last_effective_date"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/Users/mikko/code/tatianastore/requirements.txt",
+			"settings":
+			{
+				"buffer_size": 849,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "\"\"\"\n\n    Views for customer users.\n\n\"\"\"\n\n\nfrom decimal import Decimal\n\nfrom django import http\nfrom django.conf.urls import patterns\nfrom django.conf.urls import url\n\nfrom django.views.generic.base import View\nfrom django.shortcuts import render_to_response\nfrom django.core.urlresolvers import reverse\nfrom django.template import RequestContext\nfrom django.db.models import Sum\nfrom django.contrib import messages\n\nfrom . import models\nfrom . import forms\n\n\nclass CustomerView(View):\n\n    def pre_prcess(self, request, customer_id):\n        \"\"\" Check permissions, etc.\n        \"\"\"\n\n        self.customer = models.Customer.objects.get(id=int(customer_id))\n\n        if not request.user.is_staff:\n            if not request.user.can_access_customer(self.customer):\n                raise http.Http404()\n\n        self.distributor = self.customer.distributor\n\n\nclass Summary(CustomerView):\n\n    def get(self, request, customer_id):\n        self.pre_process(request, customer_id)\n        transactions = self.customer.transaction_set.all().order_by(\"-id\")\n        users = self.customer.operators.all().order_by(\"-id\")\n        return render_to_response(\"customer/summary.html\", locals(), context_instance=RequestContext(request))\n\n\nurlpatterns = patterns('',\n    #url(r'^$', Summary.as_view(), name=\"distributor_summary\"),\n    url(r'^(?P<customer_id>\\d+)/$', Summary.as_view(), name=\"customer_summary\"),\n    #url(r'^(?P<year>\\d{4})/customer/$', Summary.as_view(), name=\"distributor_summary\"),\n)",
+			"file": "customer.py",
+			"file_size": -1,
+			"file_write_time": -1,
+			"settings":
+			{
+				"buffer_size": 1486,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "\"\"\"\n\n    Distributor views and urls.\n\n\"\"\"\n\n\nfrom decimal import Decimal\n\nfrom django import http\nfrom django.conf.urls import patterns\nfrom django.conf.urls import url\nfrom django import forms as django_forms\nfrom django.views.generic import FormView\nfrom django.shortcuts import redirect\n\nfrom django.views.generic.base import View\nfrom django.shortcuts import render_to_response\nfrom django.core.urlresolvers import reverse\nfrom django.template import RequestContext\nfrom django.db.models import Sum\nfrom django.contrib import messages\n\nfrom . import models\nfrom . import forms\n\n\n\nclass CreateCustomerForm(django_forms.ModelForm):\n    \"\"\"\n    \"\"\"\n\n    class Meta:\n        model = models.Customer\n        fields = (\"name\", \"bank_transfer_details\", \"currency\")\n\n    def validate_currency(self, value):\n        if not len(value) == 3:\n            raise forms.ValidationError(\"Use three-letter currency code\")\n\n\nclass EditCustomerForm(django_forms.ModelForm):\n    \"\"\"\n    \"\"\"\n\n    class Meta:\n        model = models.Customer\n        fields = (\"name\", \"bank_transfer_details\")\n\n    def __init__(self, *args, **kwargs):\n        super(EditCustomerForm, self).__init__(*args, **kwargs)\n        self.fields['name'].widget.attrs['readonly'] = True\n\n\nclass DistributorView(View):\n\n    def pre_process(self, request, distributor_id):\n        \"\"\" Check permissions, etc.\n        \"\"\"\n\n        self.distributor = models.Distributor.objects.get(id=int(distributor_id))\n\n        if not request.user.is_staff:\n            if request.user not in self.distributor.operators.all():\n                raise http.Http404()\n\n\nclass Summary(DistributorView):\n\n    def get(self, request, distributor_id):\n        self.pre_process(request, distributor_id)\n        return render_to_response(\"distributor/summary.html\", locals(), context_instance=RequestContext(request))\n\n\nclass DistributorCustomer(DistributorView):\n    \"\"\" \"\"\"\n\n    def pre_process(self, request, distributor_id, customer_id):\n        \"\"\" Check permissions, etc.\n        \"\"\"\n        super(DistributorCustomer, self).pre_process(request, distributor_id)\n        self.customer = self.distributor.customer_set.get(id=customer_id)\n\n    def get(self, request, distributor_id, customer_id):\n        self.pre_process(request, distributor_id, customer_id)\n        total_pending = self.customer.get_transactions_pending_fiat_credit().aggregate(Sum(\"fiat_amount\"))[\"fiat_amount__sum\"] or 0\n        total_transactions = self.customer.transaction_set.aggregate(Sum(\"fiat_amount\"))[\"fiat_amount__sum\"] or 0\n        transactions = self.customer.get_transactions().order_by(\"-id\")\n        bank_transfers = self.customer.fiatcredittransaction_set.all().order_by(\"-id\")\n        customer = self.customer\n        return render_to_response(\"distributor/customer.html\", locals(), context_instance=RequestContext(request))\n\n\nclass DistributorCustomerCreditFiat(DistributorCustomer):\n    \"\"\"\n    \"\"\"\n\n    def get(self, request, distributor_id, customer_id):\n        return http.HttpResponseRedirect(reverse(\"distributor_customer\", args=(distributor_id, customer_id)))\n\n    def post(self, request, distributor_id, customer_id):\n        self.pre_process(request, distributor_id, customer_id)\n\n        if \"credit-selected\" in request.POST:\n            transaction_uuids = request.POST.getlist(\"credit\", [])\n\n            if len(transaction_uuids) == 0:\n                messages.error(request, \"Please mark transaction checkboxes.\")\n                return http.HttpResponseRedirect(reverse(\"distributor_customer\", args=(distributor_id, customer_id)))\n\n            transactions = self.customer.transaction_set.filter(uuid__in=transaction_uuids)\n\n            # Make sure the customer owned everyone of the transactions\n            assert len(transaction_uuids) == transactions.count(), \"Selected transactions did not match those of customer\"\n\n            total = transactions.aggregate(Sum(\"fiat_amount\"))[\"fiat_amount__sum\"] or 0\n            total = Decimal(total).quantize(Decimal(\"1.00\"))\n            form = forms.CreditFiatForm(initial=dict(transaction_uuids=\",\".join(transaction_uuids)))\n            return render_to_response(\"distributor/credit_fiat.html\", locals(), context_instance=RequestContext(request))\n        elif \"confirm-credit\" in request.POST:\n            form = forms.CreditFiatForm(request.POST)\n\n            if form.is_valid():\n                transaction_uuids = form.cleaned_data[\"transaction_uuids\"].split(\",\")\n                transactions = self.customer.transaction_set.filter(uuid__in=transaction_uuids)\n                self.customer.credit_fiat(transactions, request.user, form.cleaned_data[\"message\"])\n                messages.success(request, \"Bank transfer created\")\n                return http.HttpResponseRedirect(reverse(\"distributor_customer\", args=(distributor_id, customer_id)))\n            else:\n                transaction_uuids = form.data[\"transaction_uuids\"].split(\",\")\n                transactions = self.customer.transaction_set.filter(uuid__in=transaction_uuids)\n                total = transactions.aggregate(Sum(\"fiat_amount\"))[\"fiat_amount__sum\"] or 0\n                total = Decimal(total).quantize(Decimal(\"1.00\"))\n                return render_to_response(\"distributor/credit_fiat.html\", locals(), context_instance=RequestContext(request))\n        else:\n            return http.HttpResponseServerError(\"Don't know what to do\")\n\n\nclass CreateCustomer(DistributorView):\n\n    def dispatch(self, request, *args, **kwargs):\n        self.pre_process(request, kwargs[\"distributor_id\"])\n        if request.method == \"POST\":\n            form = CreateCustomerForm(request.POST, initial={\"distributor_id\": self.distributor.id})\n            if form.is_valid():\n                customer = form.save(commit=False)\n                customer.distributor = self.distributor\n                customer.save()\n                customer.create_user()\n                return redirect(\"distributor_customer\", self.distributor.id, customer.id)\n        else:\n            form = CreateCustomerForm()\n        return render_to_response(\"distributor/customer_add.html\", locals(), context_instance=RequestContext(request))\n\n\nclass EditCustomer(DistributorCustomer):\n\n    def dispatch(self, request, *args, **kwargs):\n        self.pre_process(request, kwargs[\"distributor_id\"], kwargs[\"customer_id\"])\n        if request.method == \"POST\":\n            form = EditCustomerForm(request.POST, instance=self.customer)\n            if form.is_valid():\n                form.save()\n                return redirect(\"distributor_customer\", self.distributor.id, self.customer.id)\n        else:\n            form = EditCustomerForm(instance=self.customer)\n        return render_to_response(\"distributor/customer_edit.html\", locals(), context_instance=RequestContext(request))\n\n\nurlpatterns = patterns('',\n    #url(r'^$', Summary.as_view(), name=\"distributor_summary\"),\n    url(r'^(?P<distributor_id>\\d+)/$', Summary.as_view(), name=\"distributor_summary\"),\n    url(r'^(?P<distributor_id>\\d+)/customer/add/$', CreateCustomer.as_view(), name=\"distributor_customer_add\"),\n    url(r'^(?P<distributor_id>\\d+)/customer/(?P<customer_id>\\d+)/$', DistributorCustomer.as_view(), name=\"distributor_customer\"),\n    url(r'^(?P<distributor_id>\\d+)/customer/(?P<customer_id>\\d+)/edit/$', EditCustomer.as_view(), name=\"distributor_customer_edit\"),\n    url(r'^(?P<distributor_id>\\d+)/customer/(?P<customer_id>\\d+)/credit_fiat/$', DistributorCustomerCreditFiat.as_view(), name=\"distributor_customer_credit_fiat\"),\n    #url(r'^(?P<year>\\d{4})/customer/$', Summary.as_view(), name=\"distributor_summary\"),\n)",
+			"file": "distributor.py",
+			"file_size": -1,
+			"file_write_time": -1,
+			"settings":
+			{
+				"buffer_size": 7597,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "\"\"\"\n\n    Master wallet.\n\n\"\"\"",
+			"file": "wallet.py",
+			"file_size": -1,
+			"file_write_time": -1,
+			"settings":
+			{
+				"buffer_size": 28,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "\"\"\"\n\n    User management, both by customer and by distributor.\n\n\"\"\"\n\nfrom django import http\nfrom django.conf.urls import patterns\nfrom django.conf.urls import url\n\nfrom django import forms\nfrom django.contrib.auth.decorators import login_required\nfrom django.shortcuts import redirect\nfrom django.shortcuts import render_to_response\nfrom django.template import RequestContext\nfrom django.contrib import messages\n\nfrom . import models\n\n\nclass UserEdit(forms.ModelForm):\n    \"\"\" \"\"\"\n\n    fields = (\"username\", \"email\", \"pin_code\")\n\n    class Meta:\n        model = models.User\n        fields = ['username', 'email', 'pin_code']\n\n    def __init__(self, *args, **kwargs):\n        super(UserEdit, self).__init__(*args, **kwargs)\n        self.fields['username'].widget.attrs['readonly'] = True\n\n\n@login_required\ndef user_add(request, customer_id):\n    \"\"\" \"\"\"\n\n    assert request.method == \"POST\"\n\n    customer = models.Customer.objects.get(id=customer_id)\n\n    if not request.user.can_access_customer(customer):\n        return http.HttpResponseForbidden(\"You do not have permission to manage this customer.\")\n\n    user = customer.create_user()\n\n    return redirect(\"user_edit\", user.username)\n\n\n@login_required\ndef user_edit(request, username):\n    \"\"\" Allow customer / distributor / superuser to edit user. \"\"\"\n\n    user = models.User.objects.get(username=username)\n\n    # Check we are users of the same customer\n    if not user.customer:\n        return http.HttpResponseForbidden(\"This user does not belong to any customer.\")\n\n    if not request.user.can_access_customer(user.customer):\n        return http.HttpResponseForbidden(\"You do not have permission to manage this customer.\")\n\n    if request.method == \"POST\":\n        form = UserEdit(request.POST, instance=user)\n        if form.is_valid():\n            form.save()\n            messages.success(request, \"Saved %s\" % user.username)\n            if request.user.is_distributor():\n                distributor = request.user.distributor\n                return redirect(\"distributor_customer\", distributor.id, user.customer.id)\n            else:\n                return redirect(\"customer_summary\", user.customer.id)\n\n    else:\n        form = UserEdit(instance=user)\n\n    return render_to_response(\"user/edit.html\", locals(), context_instance=RequestContext(request))\n\n\nurlpatterns = patterns('',\n    url(r'^add-user/(?P<customer_id>\\d+)/$', user_add, name=\"user_add\"),\n    url(r'^(?P<username>.*?)/$', user_edit, name=\"user_edit\"),\n)\n",
+			"file": "users.py",
+			"file_size": -1,
+			"file_write_time": -1,
+			"settings":
+			{
+				"buffer_size": 2483,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "urls.py",
+			"settings":
+			{
+				"buffer_size": 1207,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "models.py",
+			"settings":
+			{
+				"buffer_size": 7931,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Run Tests",
+	"command_palette":
+	{
+		"height": 71.0,
+		"selected_items":
+		[
+			[
+				"trans",
+				"Snippet: trans"
+			],
+			[
+				"wrap",
+				"Emmet: Wrap With Abbreviation"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"ena",
+				"Package Control: Enable Package"
+			],
+			[
+				"enable",
+				"Package Control: Enable Package"
+			],
+			[
+				"dis",
+				"Package Control: Disable Package"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"brow",
+				"SFTP: Browse Server…"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"comment",
+				"Snippet: comment"
+			],
+			[
+				"PACK IN",
+				"Package Control: Install Package"
+			],
+			[
+				"pack ",
+				"Package Control: Disable Package"
+			],
+			[
+				"disa",
+				"Package Control: Disable Package"
+			],
+			[
+				"pac in",
+				"Package Control: Install Package"
+			],
+			[
+				"pack en",
+				"Package Control: Enable Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"disable",
+				"Package Control: Disable Package"
+			],
+			[
+				"pack di",
+				"Package Control: Disable Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"blocktrans",
+				"Snippet: blocktrans"
+			],
+			[
+				"blocktr",
+				"Snippet: blocktrans"
+			],
+			[
+				"blocktrn",
+				"Snippet: blocktrans"
+			],
+			[
+				"bloc",
+				"Snippet: blocktrans"
+			],
+			[
+				"matcing",
+				"Emmet: Go to Matching Pair"
+			],
+			[
+				"mat",
+				"Emmet: Go to Matching Pair"
+			],
+			[
+				"matchi",
+				"Emmet: Go to Matching Pair"
+			],
+			[
+				"matching",
+				"Emmet: Go to Matching Pair"
+			],
+			[
+				"wa",
+				"Emmet: Wrap With Abbreviation"
+			],
+			[
+				"remove tag",
+				"Emmet: Remove Tag"
+			],
+			[
+				"go to",
+				"Emmet: Go to Matching Pair"
+			],
+			[
+				"blocktn",
+				"Snippet: blocktrans"
+			],
+			[
+				"snip trans",
+				"Snippet: trans"
+			],
+			[
+				"snip block",
+				"Snippet: blocktrans"
+			],
+			[
+				"snippet: block",
+				"Snippet: blocktrans"
+			],
+			[
+				"Snippet: trans",
+				"Snippet: trans"
+			],
+			[
+				"in",
+				"Package Control: Install Package"
+			],
+			[
+				"gist",
+				"Gist: Create Public Gist"
+			],
+			[
+				"install ",
+				"Package Control: Install Package"
+			],
+			[
+				"go to m",
+				"Emmet: Go to Matching Pair"
+			],
+			[
+				"html",
+				"HTML: Wrap Selection With Tag"
+			],
+			[
+				"create",
+				"Package Control: Create Package File"
+			],
+			[
+				"create pack",
+				"Package Control: Create Package File"
+			],
+			[
+				"expa",
+				"Emmet: Expand Abbreviation"
+			],
+			[
+				"epand",
+				"Emmet: Expand Abbreviation"
+			],
+			[
+				"mark",
+				"Markdown Preview: preview in Browser"
+			],
+			[
+				"markd",
+				"Markdown Preview: preview in Browser"
+			],
+			[
+				"intal pac",
+				"Package Control: Install Package"
+			],
+			[
+				"pac",
+				"Package Control: Install Package"
+			],
+			[
+				"packa",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 453.0
+	},
+	"console":
+	{
+		"height": 213.0,
+		"history":
+		[
+			"clear()",
+			"clear",
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/kombu/transport/virtual/exchange.py",
+		"/Users/mikko/code/tatianastore/tatianastore/static/bitcoinaddress/node_modules/node-inspector/node_modules/socket.io/node_modules/socket.io-client/lib/vendor/web-socket-js/flash-src/com/hurlant/crypto/tls/KeyExchanges.as",
+		"/Users/mikko/code/tatianastore/lib/redis-py/redis/exceptions.py",
+		"/Users/mikko/code/tatianastore/venv/bin/easy_install",
+		"/Users/mikko/code/tatianastore/tatianastore/static/bitcoinaddress/node_modules/node-inspector/front-end/test-runner.html",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/logutils/redis.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django_extensions/management/commands/reset_db.py",
+		"/Users/mikko/code/tatianastore/lib/redis-py/vagrant/redis_init_script",
+		"/Users/mikko/code/tatianastore/lib/redis-py/vagrant/redis-override.conf",
+		"/Users/mikko/code/tatianastore/requirements.txt",
+		"/Users/mikko/code/tatianastore/logs/django.log",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/transaction_past.html",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/transaction_info.html",
+		"/Users/mikko/code/tatianastore/tatianastore/tests.py",
+		"/Users/mikko/code/tatianastore/tatianastore/distributor.py",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/distributor/customer_add.html",
+		"/Users/mikko/code/tatianastore/tatianastore/customer.py",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/customer/summary.html",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/distributor/customer.html",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/profile.html",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/distributor/summary.html",
+		"/Users/mikko/code/tatianastore/tatianastore/tasks.py",
+		"/Users/mikko/code/tatianastore/tatianastore/settings.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/redis_cache/exceptions.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/redis_cache/hash_ring.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/redis_cache/cache.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/huey/backends/redis_backend.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django_redis-3.5.2-py2.7.egg-info/SOURCES.txt",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django_redis-3.5.2-py2.7.egg-info/installed-files.txt",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/south/introspection_plugins/django_objectpermissions.py",
+		"/Users/mikko/code/tatianastore/venv/bin/django-admin.py",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/base.html",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django/contrib/auth/decorators.py",
+		"/Users/mikko/code/tatianastore/tatianastore/users.py",
+		"/Users/mikko/code/tatianastore/tatianastore/static/main.js",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/distributor/customer_edit.html",
+		"/Users/mikko/code/tatianastore/lib/django-bitcoin/django_bitcoin.egg-info/PKG-INFO",
+		"/Users/mikko/code/tatianastore/README.rst",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django/utils/module_loading.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django/contrib/auth/models.py",
+		"/Users/mikko/code/tatianastore/tatianastore/sample.py",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/user/edit.html",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/customer/users_table.html",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/user_edit.html",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django/utils/decorators.py",
+		"/Users/mikko/code/tatianastore/tatianastore/views.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/registration/auth_urls.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/south/introspection_plugins/django_audit_log.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django_extensions/management/commands/print_user_for_session.py",
+		"/Users/mikko/code/tatianastore/lib/django-bitcoin/django_bitcoin/jsonrpc/json.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/docutils/languages/ja.py",
+		"/Users/mikko/code/tatianastore/tatianastore/static/bitcoinaddress/node_modules/browserify/node_modules/JSONStream/test/fixtures/all_npm.json",
+		"/Users/mikko/code/tatianastore/tatianastore/static/bitcoinprices/node_modules/browserify-jquery/node_modules/jsdom/node_modules/cssstyle/lib/properties/webkitAnimationDelay.js",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django/contrib/auth/fixtures/authtestdata.json",
+		"/Users/mikko/code/tatianastore/lib/django-bitcoin/django_bitcoin.egg-info/dependency_links.txt",
+		"/Users/mikko/code/tatianastore/tatianastore/test_settings.py",
+		"/Users/mikko/code/tatianastore/lib/redis-py/tests/test_encoding.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django/contrib/auth/tests/templates/context_processors/auth_attrs_messages.html",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django/contrib/auth/forms.py",
+		"/Users/mikko/code/tatianastore/bin/restart-prod.sh",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django/contrib/auth/admin.py",
+		"/Users/mikko/code/tatianastore/tatianastore/urls.py",
+		"/Users/mikko/code/tatianastore/tatianastore/static/bitcoinaddress/node_modules/tape/test/subtest_and_async.js",
+		"/Users/mikko/code/tatianastore/tatianastore/forms.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/easy_thumbnails/migrations/0015_auto__del_unique_thumbnail_name_storage_hash__add_unique_thumbnail_sou.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django/contrib/auth/tests/templates/context_processors/auth_attrs_access.html",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/email/distributor_notify_transactions.html",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/transaction_wait.html",
+		"/Users/mikko/code/tatianastore/tatianastore/blockchain.py",
+		"/Users/mikko/code/tatianastore/tatianastore/models.py",
+		"/Users/mikko/code/tatianastore/tatianastore/templatetags/queries.py",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/about.html",
+		"/Users/mikko/code/tatianastore/tatianastore/signals.py",
+		"/Users/mikko/code/tatianastore/tatianastore/messaging.py",
+		"/Users/mikko/code/tatianastore/tatianastore/local_settings.py",
+		"/Users/mikko/code/tatianastore/tatianastore/production_settings.py",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/registration/password_reset_complete.html",
+		"/Users/mikko/code/tatianastore/venv/bin/pep8",
+		"/Users/mikko/code/tatianastore/tatianastore/migrations/__init__.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django/contrib/admindocs/urls.py",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/distributor/credit_fiat.html",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/payment.html",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/PIL/BmpImagePlugin.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django-bitcoin.egg-link",
+		"/Users/mikko/code/tatianastore/tatianastore/static/bitcoinprices/node_modules/grunt/node_modules/iconv-lite/LICENSE",
+		"/Users/mikko/code/tatianastore/tatianastore/static/bitcoinprices/node_modules/browserify-jquery/node_modules/jsdom/node_modules/cssstyle/lib/properties/vectorEffect.js",
+		"/Users/mikko/code/tatianastore/tatianastore/admin.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django/contrib/admin/templatetags/admin_urls.py",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/registration/distributor.html",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/distributor/distributor.html",
+		"/Users/mikko/code/tatianastore/uwsgi_test.ini",
+		"/Users/mikko/code/tatianastore/tatianastore.uwsgi.prod.ini",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/registration/login.html",
+		"/Users/mikko/code/tatianastore/tatianastore/static/main.css",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/encodings/mac_iceland.py",
+		"/Users/mikko/code/tatianastore/tatianastore/static/bitcoinaddress/node_modules/mocha/lib/reporters/min.js",
+		"/Users/mikko/code/tatianastore/tatianastore/static/bitcoinaddress/node_modules/node-inspector/front-end/InspectorFrontendAPI.js",
+		"/Users/mikko/code/tatianastore/tatianastore/static/bitcoinaddress/node_modules/node-inspector/front-end/HeapSnapshot.js",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/encodings/hz.py",
+		"/Users/mikko/code/tatianastore/lib/django-bitcoin/django_bitcoin/models.py",
+		"/Users/mikko/code/tatianastore/tatianastore/bitcoind.py",
+		"/Users/mikko/code/tatianastore/bin/update_walletnotify_ip.sh",
+		"/Users/mikko/code/tatianastore/bin/build_wallet_test_tunnel.sh",
+		"/Users/mikko/code/tatianastore/bin/walletnotify.sh",
+		"/Users/mikko/code/tatianastore/tatianastore/status.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/registration/locale/ar/LC_MESSAGES/django.mo",
+		"/Users/mikko/code/tatianastore/django.log",
+		"/Users/mikko/code/tatianastore/tatianastore/static/bitcoinaddress/node_modules/mocha/lib/reporters/json-stream.js",
+		"/Users/mikko/code/tatianastore/tatianastore/static/bitcoinaddress/node_modules/browserify/node_modules/JSONStream/node_modules/jsonparse/jsonparse.js",
+		"/Users/mikko/code/tatianastore/lib/django-bitcoin/django_bitcoin/jsonrpc/__init__.py",
+		"/Users/mikko/code/tatianastore/lib/django-bitcoin/build/lib/django_bitcoin/jsonrpc/json.py",
+		"/Users/mikko/code/tatianastore/lib/django-bitcoin/build/lib/django_bitcoin/jsonrpc/__init__.py",
+		"/Users/mikko/code/tatianastore/lib/django-bitcoin/django_bitcoin/utils.py",
+		"/Users/mikko/code/tatianastore/lib/django-bitcoin/django_bitcoin/urls.py",
+		"/Users/mikko/code/tatianastore/tatianastore/static/bitcoinaddress/node_modules/browser-launcher/node_modules/plist/tests/iTunes-BIG.xml",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/pyflakes/test/test_undefined_names.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/IPython/utils/nested_context.py",
+		"/Users/mikko/code/tatianastore/tatianastore/static/bitcoinaddress/node_modules/browserify/node_modules/url/node_modules/punycode/vendor/requirejs/tests/funcOne.js",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django/contrib/admin/templates/registration/logged_out.html",
+		"/Users/mikko/code/tatianastore/lib/django-bitcoin/LICENSE.txt",
+		"/Users/mikko/code/tatianastore/tatianastore/static/bitcoinaddress/node_modules/beefy/node_modules/colors/ReadMe.md",
+		"/Users/mikko/code/tatianastore/tatianastore/templates/registration/password_reset_done.html",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/celery/loaders/default.py",
+		"/Users/mikko/code/tatianastore/tatianastore/static/bitcoinaddress/node_modules/tape/lib/default_stream.js",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/celery/app/defaults.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django_extensions/management/commands/describe_form.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/IPython/core/tests/daft_extension.py",
+		"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/pagination_bootstrap/middleware.py"
+	],
+	"find":
+	{
+		"height": 37.0
+	},
+	"find_in_files":
+	{
+		"height": 95.0,
+		"where_history":
+		[
+			"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django",
+			"/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django/contrib/auth",
+			"/Users/mikko/code/tatianastore",
+			"/Users/mikko/code/tatianastore/tatianastore",
+			"/Users/mikko/code/tatianastore/tatianastore,*.py",
+			"/Users/mikko/code/tatianastore/tatianastore",
+			"/Users/mikko/code/tatianastore/tatianastore,*.py",
+			"/Users/mikko/code/tatianastore/tatianastore",
+			"/Users/mikko/code/imagepot/imagepot",
+			"/Users/mikko/code/imagepot/imagepot/templates",
+			"/Users/mikko/Library/Application Support/Sublime Text 3/Packages/SublimePythonIDE/lib/pyflakes",
+			"/Users/mikko/Library/Application Support/Sublime Text 3/Packages/SublimePythonIDE/server",
+			"/Users/mikko/Library/Application Support/Sublime Text 3/Packages/SublimePythonIDE,-/Users/mikko/Library/Application Support/Sublime Text 3/Packages/SublimePythonIDE/lib/*",
+			"/Users/mikko/Library/Application Support/Sublime Text 3/Packages/SublimePythonIDE,-/Users/mikko/Library/Application Support/Sublime Text 3/Packages/SublimePythonIDE/lib",
+			"/Users/mikko/Library/Application Support/Sublime Text 3/Packages/SublimePythonIDE",
+			"/Users/mikko/code/imagepot/imagepot",
+			"/Users/mikko/code/rtv-upgrade/src",
+			"/Users/mikko/code/rtv/src",
+			"/Users/mikko/code/rtv/src/plonetheme.rtv",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/sits-dev/src/sits-packages/sitstesting/sitstesting",
+			"/Users/mikko/code/sits-dev/src/sits-eggs/Products.SitsPatient/Products/SitsPatient/content",
+			"/Users/mikko/code/saariselka/src",
+			"/Users/mikko/code/saariselka/src/plonetheme.saariselka/plonetheme/saariselka/browser/viewlets",
+			"/Users/mikko/code/imagepot/imagepot",
+			"/Users/mikko/code/rtv-upgrade/parts/omelette,*.pt",
+			"/Users/mikko/code/rtv-upgrade/parts/omelette",
+			"/Users/mikko/code/imagepot/lib/django-bitcoin/django_bitcoin",
+			"/Users/mikko/code/imagepot/lib/django-bitcoin",
+			"/Users/mikko/code/bitcoinxcash/exchange",
+			"/Users/mikko/code/polbio_plone414",
+			"/Users/mikko/code/polbio_plone414,*.po",
+			"/Users/mikko/code/polbio_plone414",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/templates",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/samiexperience/src",
+			"/Users/mikko/code/samiexperience/src/saariselka.app",
+			"/Users/mikko/code/samiexperience/src",
+			"/Users/mikko/code/samiexperience/src/saariselka.app",
+			"/Users/mikko/code/samiexperience/src/saariselka.app/saariselka/app/browser",
+			"/Users/mikko/code/samiexperience/src/saariselka.app",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/sits-dev/src/sits-eggs/Products.SitsPatient",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/venv/lib/python2.7/site-packages/provider",
+			"/Users/mikko/code/bitcoinxcash/exchange",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/exchange",
+			"/Users/mikko/code/bitcoinxcash/templates",
+			"<project>",
+			"/Users/mikko/code/bitcoinxcash/affiliate",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/templates/listing",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/exchange",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/templates",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash,*.py",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/templates",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/templates",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/templates",
+			"/Users/mikko/code/bitcoinxcash/exchange",
+			"/Users/mikko/code/sits-dev/src/sits-packages/sits.reporttool/src/sits/reporttool",
+			"/Users/mikko/code/sits-dev/src/sits-eggs",
+			"/Users/mikko/code/sits-dev/src/sits-eggs/Products.SitsPatient/Products/SitsPatient/browser",
+			"/Users/mikko/code/sits-dev/src,*.css",
+			"/Users/mikko/code/sits-dev/src,*.css.dtml",
+			"/Users/mikko/code/bitcoinxcash/templates",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/sits-dev/src/sits-packages",
+			"/Users/mikko/code/sits-dev/src/sits-packages/sits.reporttool/src/sits/reporttool",
+			"/Users/mikko/code/saariselka/src",
+			"/Users/mikko/code/saariselka/src/plonetheme.saariselka",
+			"/Users/mikko/code/rtv/src",
+			"/Users/mikko/code/kalajoki/src/kalajoki.app/src/kalajoki",
+			"/Users/mikko/code/kalajoki/src/kalajoki.app",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/templates",
+			"/Users/mikko/code/bitcoinxcash/exchange",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/exchange",
+			"<project>",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/templates",
+			"/Users/mikko/code/bitcoinxcash/venv",
+			"/Users/mikko/code/bitcoinxcash",
+			"<project>",
+			"/Users/mikko/code/saariselka/src",
+			"/Users/mikko/code/saariselka/src,*.pt",
+			"/Users/mikko/code/bitcoinxcash/templates",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/templates",
+			"/Users/mikko/code/bitcoinxcash/templates/listing",
+			"/Users/mikko/code/bitcoinxcash/templates",
+			"/Users/mikko/code/bitcoinxcash/exchange/tests",
+			"/Users/mikko/code/sits-dev/src/sits-packages/sits.reporttool/src/sits/reporttool/tests",
+			"/Users/mikko/code/sits-dev/src/sits-packages/sitstesting/sitstesting",
+			"/Users/mikko/code/sits-dev/src/sits-packages/sits.reporttool/src/sits/reporttool/tests",
+			"/Users/mikko/code/sits-dev/src/sits-packages/sits.reporttool/src",
+			"/Users/mikko/code/sits-dev/src/sits-packages/sits.reporttool/src/sits",
+			"/Users/mikko/code/sits-dev/src/sits-packages/sits.reporttool/src",
+			"/Users/mikko/code/sits-dev/src/sits-packages/sits.reporttool/src/sits/reporttool/tests",
+			"/Users/mikko/code/sits-dev/src/sits-packages/sits.reporttool/src/sits",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/templates",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/templates",
+			"/Users/mikko/code/bitcoinxcash/venv/lib/python2.7/site-packages/crispy_forms",
+			"/Users/mikko/code/bitcoinxcash/venv/lib/python2.7/site-packages/crispy_forms/templates/bootstrap",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/templates",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/venv/lib/python2.7/site-packages/crispy_forms/templates/bootstrap",
+			"/Users/mikko/code/bitcoinxcash/exchange/tests",
+			"/Users/mikko/code/bitcoinxcash/venv/lib/python2.7/site-packages/crispy_forms",
+			"/Users/mikko/code/saariselka/src/saariselka.app/saariselka",
+			"/Users/mikko/code/saariselka/src/saariselka.app/saariselka/app",
+			"/Users/mikko/code/saariselka/src/saariselka.app/saariselka",
+			"/Users/mikko/code/saariselka/src",
+			"/Users/mikko/code/bitcoinxcash",
+			"/Users/mikko/code/bitcoinxcash/templates",
+			"/Users/mikko/code/sits-dev/src/sits-eggs"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"ManyTo",
+			"fiat_amount'",
+			"fiat_amount",
+			"tatianastore",
+			"settings",
+			"DJANGO_",
+			"DJANGO_REDIS_CLOSE_CONNECTION",
+			"is_authenti",
+			"login_require",
+			"managers",
+			"404",
+			"managers",
+			"pdb",
+			"sensitive_post_parameters_m",
+			"_default_manager",
+			"UserForm",
+			"login_required",
+			"login_req",
+			"mock",
+			"MODES",
+			"messages",
+			"owner",
+			"timezone",
+			"0",
+			"/srv/django/tatianastore",
+			"crispy",
+			"Logout",
+			"rates",
+			"ALLOWED_",
+			"ugettex",
+			"bitcoind",
+			"getreceivedbyaddress",
+			"unconfirmed_",
+			"utcfromti",
+			"8877",
+			"tatianastore",
+			"qr-container",
+			"templatetag",
+			"CACHES",
+			"imagepot",
+			"initialize",
+			"bet",
+			"logger.e",
+			"Payout address updated",
+			"force-funding",
+			"                <button type=\"submit\" class=\"btn\" name=\"force-funding\">\n                    Force funding\n                </button>\n",
+			"force-fund",
+			"force-",
+			"floatformat",
+			"get_qualified_bets",
+			"get_bets_co",
+			"Sum",
+			"uploader_share",
+			"tooltip",
+			"stderr",
+			"syderr",
+			"print",
+			"pyflakes_check",
+			"disabled",
+			"pyflakes_dis",
+			"do_linting",
+			"col_offset",
+			"col",
+			"lineno",
+			"col",
+			"col_offset",
+			"lineno",
+			"do_lint",
+			"do_int",
+			"pdb",
+			"check_syntax",
+			"print",
+			"do_lint",
+			"complete",
+			"lint com",
+			"check",
+			"check_syntax",
+			"do_linting",
+			"8",
+			"            \n",
+			"        \n",
+			"</i>",
+			"<i>",
+			"print",
+			"datetime.datetime.now",
+			"get_minimum_bet",
+			"datetime.datetime.now",
+			"ipdb",
+			"for p",
+			"get_winn",
+			"calculate_winnings",
+			"get_winners",
+			"create_initial_bet",
+			"participant",
+			"can_upload",
+			"258px",
+			"189px",
+			"portlets-below",
+			"banner",
+			"client",
+			"real_name_set_at",
+			"gitw",
+			"javascript",
+			"parsing",
+			"Smartcard auth",
+			"ssn",
+			"sitsim",
+			"front-p",
+			"footer-banners",
+			"getBannerHTML",
+			"structure",
+			"FrontPage",
+			"is_null",
+			"1000",
+			"JSONRp",
+			"wallet",
+			"wallet/",
+			"/wallet",
+			".wallet",
+			"wallet",
+			"authenticate",
+			"RequestContext",
+			"month_year_iter",
+			"Sum",
+			"Si,",
+			"Sum",
+			"Wallettrans",
+			"forms"
+		],
+		"highlight": false,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"tatianastore",
+			"/Users/mikko/code/tatianastore",
+			"tatianastore",
+			"</strong>",
+			"<strong>",
+			"timezone.now",
+			"create_participant",
+			"self",
+			"online_sellers",
+			"online_buyers",
+			"user_query",
+			"LocalBitcoins",
+			"ä",
+			"ö",
+			"newsletter1c",
+			"&amp;",
+			"London, United Kingdom",
+			"buy bitcoins",
+			"bitcoins with",
+			"{% load static from staticfiles %}",
+			"4e4e4e",
+			"countrycode",
+			"/places_lookup/",
+			"/places_lookup",
+			"View",
+			"countryCode",
+			"window.ad.amountMin",
+			"span",
+			"example",
+			"#social-bar ",
+			"#social-bar",
+			"",
+			"explicit_country",
+			".frontpage-promo",
+			"',\n.frontpage-promo",
+			"',\n",
+			"widget_demo",
+			"Interface",
+			"xxx",
+			"zzz",
+			"yyy",
+			"xxx",
+			"sendMessage",
+			"xxx",
+			"site2",
+			"site1",
+			"*plonetool*",
+			"check",
+			"BlockDGFFieldFactory",
+			"need_filter_out_tici",
+			"create_sits_dgf_field",
+			"Interpolate",
+			"",
+			"WallDirector",
+			"$SEVABOT_SERVER",
+			"$SKYPE_SHARED_SECRET",
+			"$SKYPE_CHAT_ID",
+			"mesh",
+			"three",
+			"client3",
+			"mulli",
+			" ",
+			"followMTDRules",
+			"initMTDRules",
+			"authenticated=\"True\"",
+			"",
+			".datagridwidget-widget",
+			"Intra",
+			"<div class=\"label-wrapper\"",
+			"",
+			"this",
+			"getSample($1, protocol=self.getProtocol())",
+			"getSample({1}, protocol=self.getProtocol())",
+			"getField(",
+			"timingtester",
+			"xxx",
+			"email_notifier",
+			"=",
+			"waitChangesSaved",
+			"xxx",
+			"protocolId",
+			"\"label\"",
+			"xxx",
+			"14a0c4",
+			"38bee1",
+			"xxx",
+			"applyTileLinksOnPloneListing",
+			"#39C0E2",
+			"#13A0C3",
+			"#16B5DD"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 6,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/Users/mikko/code/tatianastore/requirements.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 849,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								13,
+								13
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Djaneiro/Syntaxes/HTML (Django).tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "customer.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1486,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								500,
+								500
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Djaneiro/Syntaxes/Python Django.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "distributor.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7597,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Djaneiro/Syntaxes/Python Django.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "wallet.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 28,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Djaneiro/Syntaxes/Python Django.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "users.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2483,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Djaneiro/Syntaxes/Python Django.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 297.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "urls.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1207,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								925,
+								925
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Djaneiro/Syntaxes/Python Django.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "models.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7931,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2486,
+								2486
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/Djaneiro/Syntaxes/Python Django.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1226.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 355.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.sftp":
+	{
+		"height": 108.0
+	},
+	"project": "tatianastore.sublime-project",
+	"replace":
+	{
+		"height": 66.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"req",
+				"requirements.txt"
+			],
+			[
+				"base",
+				"tatianastore/templates/base.html"
+			],
+			[
+				"views",
+				"tatianastore/views.py"
+			],
+			[
+				"tran",
+				"tatianastore/templates/transaction_wait.html"
+			],
+			[
+				"redis_cache",
+				"venv/lib/python2.7/site-packages/redis_cache/exceptions.py"
+			],
+			[
+				"models",
+				"tatianastore/models.py"
+			],
+			[
+				"authdec",
+				"venv/lib/python2.7/site-packages/django/contrib/auth/decorators.py"
+			],
+			[
+				"authmode",
+				"venv/lib/python2.7/site-packages/django/contrib/auth/models.py"
+			],
+			[
+				"authdeco",
+				"venv/lib/python2.7/site-packages/django/contrib/auth/decorators.py"
+			],
+			[
+				"djangodeco",
+				"venv/lib/python2.7/site-packages/django/utils/decorators.py"
+			],
+			[
+				"tests",
+				"tatianastore/tests.py"
+			],
+			[
+				"sett",
+				"tatianastore/settings.py"
+			],
+			[
+				"authmodl",
+				"venv/lib/python2.7/site-packages/django/contrib/auth/models.py"
+			],
+			[
+				"sample",
+				"tatianastore/sample.py"
+			],
+			[
+				"requi",
+				"requirements.txt"
+			],
+			[
+				"setting",
+				"tatianastore/settings.py"
+			],
+			[
+				"authadmin",
+				"venv/lib/python2.7/site-packages/django/contrib/auth/admin.py"
+			],
+			[
+				"main.",
+				"tatianastore/static/main.js"
+			],
+			[
+				"profile",
+				"tatianastore/templates/profile.html"
+			],
+			[
+				"setti",
+				"tatianastore/settings.py"
+			],
+			[
+				"rea",
+				"README.rst"
+			],
+			[
+				"readm",
+				"README.rst"
+			],
+			[
+				"adminurls",
+				"venv/lib/python2.7/site-packages/django/contrib/admindocs/urls.py"
+			],
+			[
+				"djangoadminurls",
+				"venv/lib/python2.7/site-packages/django/contrib/admindocs/urls.py"
+			],
+			[
+				"main.css",
+				"tatianastore/static/main.css"
+			],
+			[
+				"readme",
+				"README.rst"
+			],
+			[
+				"read",
+				"README.rst"
+			],
+			[
+				"urls",
+				"tatianastore/urls.py"
+			],
+			[
+				"djangomodel",
+				"lib/django-bitcoin/django_bitcoin/models.py"
+			],
+			[
+				"json",
+				"lib/django-bitcoin/django_bitcoin/jsonrpc/json.py"
+			],
+			[
+				"transaction",
+				"tatianastore/templates/transaction_info.html"
+			],
+			[
+				"model",
+				"tatianastore/models.py"
+			],
+			[
+				"",
+				"tatianastore/views.py"
+			],
+			[
+				"loca",
+				"tatianastore/local_settings.py"
+			],
+			[
+				"djangobitcoinmodels",
+				"lib/django-bitcoin/django_bitcoin/models.py"
+			],
+			[
+				"trans",
+				"tatianastore/templates/transaction_info.html"
+			],
+			[
+				"base.",
+				"tatianastore/templates/base.html"
+			],
+			[
+				"messa",
+				"tatianastore/messaging.py"
+			],
+			[
+				"sign",
+				"tatianastore/signals.py"
+			],
+			[
+				"messaing",
+				"tatianastore/messaging.py"
+			],
+			[
+				"redisconne",
+				"venv/lib/python2.7/site-packages/redis/connection.py"
+			],
+			[
+				"main",
+				"tatianastore/static/main.js"
+			],
+			[
+				"main.js",
+				"tatianastore/static/main.js"
+			],
+			[
+				"redisclient",
+				"venv/lib/python2.7/site-packages/redis/client.py"
+			],
+			[
+				"require",
+				"requirements.txt"
+			],
+			[
+				"auth_urls",
+				"venv/lib/python2.7/site-packages/registration/auth_urls.py"
+			],
+			[
+				"backenddefaulturs",
+				"venv/lib/python2.7/site-packages/registration/backends/default/urls.py"
+			],
+			[
+				"registrationbackendurls",
+				"venv/lib/python2.7/site-packages/registration/backends/default/urls.py"
+			],
+			[
+				"local_set",
+				"venv/lib/python2.7/site-packages/django/conf/global_settings.py"
+			],
+			[
+				"settings",
+				"tatianastore/settings.py"
+			],
+			[
+				"main.j",
+				"tatianastore/static/main.js"
+			],
+			[
+				"sty",
+				"tatianastore/static/bitcoinaddress/node_modules/mocha/node_modules/diff/style.css"
+			],
+			[
+				"admin",
+				"tatianastore/admin.py"
+			],
+			[
+				"bitcoinmodels",
+				"lib/django-bitcoin/django_bitcoin/models.py"
+			],
+			[
+				"wallet.py",
+				"lib/django-bitcoin/django_bitcoin/pywallet.py"
+			],
+			[
+				"djangosession",
+				"venv/lib/python2.7/site-packages/django/contrib/sessions/__init__.py"
+			],
+			[
+				"mainc.",
+				"imagepot/static/main.css"
+			],
+			[
+				"makefi",
+				"imagepot/static/bitcoinaddress/Makefile"
+			],
+			[
+				"index",
+				"imagepot/static/bitcoinaddress/index.html"
+			],
+			[
+				"lukasz",
+				"sits-eggs/sits-SSN-encryption-lukasz.txt"
+			],
+			[
+				"saariselkaappexte",
+				"saariselka.app/saariselka/app/externalindex.py"
+			],
+			[
+				"ads.",
+				"templates/dashboard/ads.html"
+			],
+			[
+				"api",
+				"exchange/api.py"
+			],
+			[
+				"defaul",
+				"bitcoinxcash/default_settings.py"
+			],
+			[
+				"real",
+				"exchange/accounts/realname.py"
+			],
+			[
+				"profileedit",
+				"templates/accounts/profile_edit.html"
+			],
+			[
+				"localapache",
+				"sits-packages/sitstesting/certs/local-apache-client1.conf"
+			],
+			[
+				"sitstestingapache",
+				"sits-packages/sitstesting/certs/local-apache-client1.conf"
+			],
+			[
+				"smartcard",
+				"sits-eggs/Products.SitsHospital/Products/SitsHospital/browser/smartcard.py"
+			],
+			[
+				"apacheconf",
+				"sits-packages/sitstesting/certs/local-apache-client1.conf"
+			],
+			[
+				"sitshospitalpassword",
+				"sits-eggs/Products.SitsHospital/Products/SitsHospital/browser/setpassword.py"
+			],
+			[
+				"encrpy",
+				"archetypes.encryptedfield/src/archetypes/encryptedfield/encryption.py"
+			],
+			[
+				"sitspatient",
+				"sits-eggs/Products.SitsPatient/Products/SitsPatient/content/SitsPatient.py"
+			],
+			[
+				"archetypesencr",
+				"archetypes.encryptedfield/src/archetypes/encryptedfield/encryption.py"
+			],
+			[
+				"buidbas",
+				"sits-eggs/buildout-base-4.1.cfg"
+			],
+			[
+				"sits-de",
+				"sits-packages/sitstesting/certs/sits-demo-server.conf"
+			],
+			[
+				"plonethemecommon.py",
+				"plonetheme.saariselka/plonetheme/saariselka/browser/viewlets/common.py"
+			],
+			[
+				"main_tem",
+				"gomobiletheme.basic/gomobiletheme/basic/skins/gomobiletheme_basic/main_template.pt"
+			],
+			[
+				"common.py",
+				"saariselka.frontpage/saariselka/frontpage/browser/viewlets/common.py"
+			],
+			[
+				"saariselkafrontpaegview",
+				"saariselka.frontpage/saariselka/frontpage/browser/saariselkafrontpageview.pt"
+			],
+			[
+				"frontpage.py",
+				"saariselka.frontpage/saariselka/frontpage/content/frontpage.py"
+			],
+			[
+				"viewletcommon",
+				"plonetheme.saariselka/plonetheme/saariselka/browser/viewlets/common.py"
+			],
+			[
+				"frontpage",
+				"saariselka.frontpage/saariselka/frontpage/browser/frontpage.pt"
+			],
+			[
+				"frontpage.pt",
+				"saariselka.frontpage/saariselka/frontpage/browser/frontpage.pt"
+			],
+			[
+				"style.css",
+				"static/style.css"
+			],
+			[
+				"ads.py",
+				"exchange/ads.py"
+			],
+			[
+				"accounturl",
+				"exchange/accounts/urls.py"
+			],
+			[
+				"accounturls",
+				"exchange/accounts/urls.py"
+			],
+			[
+				"bitcoincashurls",
+				"bitcoinxcash/urls.py"
+			],
+			[
+				"login",
+				"exchange/login.py"
+			],
+			[
+				"forms",
+				"exchange/forms.py"
+			],
+			[
+				"exchanview",
+				"exchange/views.py"
+			],
+			[
+				"voews",
+				"venv/lib/python2.7/site-packages/provider/oauth2/views.py"
+			],
+			[
+				"forums",
+				"templates/forums.html"
+			],
+			[
+				"tiny_mce_",
+				"Products/TinyMCE/browser/tiny_mce_gzip.js"
+			],
+			[
+				"message",
+				"templates/message_form.html"
+			],
+			[
+				"form",
+				"exchange/forms.py"
+			],
+			[
+				"messagefo",
+				"templates/message_form.html"
+			],
+			[
+				"risk_l",
+				"templates/guides/risk_levels.html"
+			],
+			[
+				"sellgui",
+				"templates/guides/online_sell_advertiser_guide.html"
+			],
+			[
+				"readme.rst",
+				"README.rst"
+			],
+			[
+				"location.py",
+				"exchange/location.py"
+			],
+			[
+				"exc",
+				"exchange/templatetags/exchange_builtin.py"
+			],
+			[
+				"bitcoinxcashurl",
+				"bitcoinxcash/urls.py"
+			],
+			[
+				"ad.html",
+				"templates/ad.html"
+			],
+			[
+				"d-edi",
+				"static/ad-edit.js"
+			],
+			[
+				"local_",
+				"bitcoinxcash/local_settings.py"
+			],
+			[
+				"tasks",
+				"exchange/tasks.py"
+			],
+			[
+				"templatetagsbu",
+				"exchange/templatetags/exchange_builtin.py"
+			],
+			[
+				"exchangemodels",
+				"exchange/models.py"
+			],
+			[
+				"defau",
+				"bitcoinxcash/default_settings.py"
+			],
+			[
+				"utils",
+				"imagepot/utils.py"
+			],
+			[
+				"check",
+				"lib/django-bitcoin/django_bitcoin/management/commands/CheckTransactions.py"
+			],
+			[
+				"settings.py",
+				"imagepot/settings.py"
+			],
+			[
+				"models.",
+				"imagepot/models.py"
+			],
+			[
+				"djangobitcoinmodel",
+				"lib/django-bitcoin/django_bitcoin/models.py"
+			],
+			[
+				"django_bitcoinbca",
+				"lib/django-bitcoin/django_bitcoin/BCAddressField.py"
+			],
+			[
+				"urls.",
+				"imagepot/urls.py"
+			],
+			[
+				"gam",
+				"imagepot/game.py"
+			],
+			[
+				"requirem",
+				"requirements.txt"
+			],
+			[
+				"view_",
+				"imagepot/templates/view_image.html"
+			],
+			[
+				"styl",
+				"static/style.css"
+			],
+			[
+				"base.html",
+				"templates/base.html"
+			],
+			[
+				"quickfo",
+				"exchange/quickform.py"
+			],
+			[
+				"locals",
+				"bitcoinxcash/local_settings.py"
+			],
+			[
+				"defaultset",
+				"bitcoinxcash/default_settings.py"
+			],
+			[
+				"avatarforms",
+				"lib/django-avatar/avatar/forms.py"
+			],
+			[
+				"exchangeutils",
+				"exchange/utils.py"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 436.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

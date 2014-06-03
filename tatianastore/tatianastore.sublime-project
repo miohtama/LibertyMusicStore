@@ -1,0 +1,18 @@
+{
+	"SublimeLinter":
+	{
+		"@python": 2.7
+	},
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": "/Users/mikko/code/tatianastore"
+		}
+	],
+	"settings":
+	{
+		"anaconda_linting": false,
+		"python_interpreter": "/Users/mikko/code/tatianastore/venv/bin/python"
+	}
+}

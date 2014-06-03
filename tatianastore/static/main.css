@@ -1,0 +1,122 @@
+/* Reset the container */
+h1, h2, h3 {
+    font-family: 'Libre Baskerville', serif;
+}
+
+.container {
+}
+
+#navbar-site {
+    min-height: 64px;
+}
+
+.navbar-brand {
+    position: relative;
+    top: -8px;
+}
+
+main.container {
+    min-height: 480px;
+}
+
+.blink {
+
+    -webkit-animation-direction: normal;
+    -webkit-animation-duration: 5s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-name: blink;
+    -webkit-animation-timing-function: ease;
+
+    animation-direction: normal;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+    animation-name: blink;
+    animation-timing-function: ease;
+}
+
+@-webkit-keyframes 'blink' {
+    0% { background: rgba(255,0,0,0.5); }
+    50% { background: rgba(255,0,0,0); }
+    100% { background: rgba(255,0,0,0.5); }
+}
+
+.store-header {
+    margin-top: 60px;
+}
+
+.song {
+    border-bottom: 1px solid #eee;
+}
+
+.clickable-price {
+    cursor: pointer;
+    border-bottom: 1px #888 dashed;
+}
+
+.label[data-btc-price] {
+    border-bottom: none;
+}
+
+#fiat-input {
+    font-size: 200%;
+}
+
+#footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    text-align: center;
+    border-top: 1px solid gray;
+}
+
+/* Demo page splash styling */
+#bitcoin-icon {
+    color: #F7931A;
+}
+
+#bitcoin-icon .fa-circle {
+    text-shadow: 0 1px 3px rgba(32, 32, 32, 0.3);
+}
+
+#bitcoin-icon .fa-btc {
+    -moz-transform: rotate(20deg);
+    -webkit-transform: rotate(20deg);
+    transform: rotate(20deg);
+}
+
+.bitcoin-address-qr-container {
+    margin: 20px 0;
+}
+
+/* Bitcoin addresses */
+.bitcoin-address-pre-blurb {
+    text-align: center;
+}
+
+/* Action hints are slidedowns, hidden by default */
+.bitcoin-action-hint {
+    display: none;
+}
+
+.bitcoin-address-container {
+    text-align: center;
+    border-bottom: 1px solid gray;
+    padding-bottom: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+/* Show dashed underlining so people get a hint it's clickable */
+.bitcoin-address-container .bitcoin-address {
+    border-bottom: 1px dashed gray;
+    cursor: pointer;
+}
+
+/* Center QR code image */
+.bitcoin-address-qr-container > img,
+.bitcoin-address-qr-container > canvas {
+    margin: 0 auto;
+}
+
+#payment-progress {
+    max-width: 400px;
+    margin: 0 auto;
+}

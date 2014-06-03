@@ -1,0 +1,39 @@
+{% load crispy_forms_tags %}
+{% load debug %}
+
+<form id="bet-form-captcha" class="ajax-form" method="POST" action="{{ action }}">
+
+    {% csrf_token %}
+
+    <p>
+        Please enter the text below to proceed to betting
+    </p>
+
+    {% if errors %}
+        <p class="text text-danger">
+            {{ errors }}
+        </p>
+    {% endif %}
+
+    <div class="recaptcha-ajax-captcha">
+
+        {% comment %}
+            $.AJAX does not post button
+        {% endcomment %}
+        <input type="hidden" name="captcha-submit" value="true" />
+
+        <div id="captcha-placeholder">
+            <i class="fa fa-spin icon-spinner icon-4x"></i>
+        </div>
+    </div>
+
+    <span class="recaptcha-ajax-submit">
+        <button type="submit" class="btn btn-lg">
+            <i class="fa fa-play"></i>
+            Enter
+        </button>
+    </span>
+
+    <div style="clear: both"><!-- --></div>
+
+</form>

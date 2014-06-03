@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load url from future %}
+
+{% load static from staticfiles %}
+{% load i18n %}
+
+<head>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+{% comment %}
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+{% endcomment %}
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "main.css" %}"/>
+    <link href='http://fonts.googleapis.com/css?family=Libre+Baskerville&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+    <title>{% block title %}Libery Music Store{% endblock %}</title>
+
+    {% block description %}<meta name="description" content="Simple Bitcoin point-of-sale" />{% endblock %}
+
+    <meta name="viewport" content="width=device-width" />
+    {% block extra_head %}
+        {% comment %}
+            Subpages can register their CSS/JS here
+        {% endcomment %}
+    {% endblock %}
+
+</head>
+
+<body>
+
+<noscript>
+    <div class="alert alert-danger">
+        {% trans "Please enable JavaScript in your web browser." %}
+    </div>
+</noscript>
+
+<main class="container">
+
+    {% if messages %}
+    <div class="row">
+      <div class="span12">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} {% if message.tags == "error" %}alert-danger{% endif %}">
+                {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
+            </div>
+          {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if downtime %}
+        <div class="row">
+          <div class="col-md-12">
+              <div class="alert alert-error">
+                    <h4 class="alert-heading">
+                  {% blocktrans %}Scheduled downtime starting {{downtime}} (UTC), after {{downtime_hours}} hours.  Estimated duration
+                  {{downtime_estimated_minutes}} minutes.{% endblocktrans %}</h4>
+              </div>
+          </div>
+        </div>
+    {% endif %}
+
+
+    {% block content %}{% endblock %}
+
+    {% block footer %}
+        <div id="footer">
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="text text-muted">
+                        © Libery Music Store 2014
+                    </p>
+                </div>
+            </div>
+        </div>
+    {% endblock footer %}
+</main>
+
+{% include "bitcoin_address.html" %}
+
+<script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+{% comment %}
+    <script src="{% static 'bootstrap/dist/js/bootstrap.js' %}"></script>
+{% endcomment %}
+
+{% block body_end %}
+{% endblock body_end %}
+
+{% comment %}
+<script src="{% static "moment.min.js" %}"></script>
+<script src="{% static "countdown.min.js" %}"></script>
+<script src="{% static "moment-countdown.min.js" %}"></script>
+{% endcomment %}
+
+<script src="{% static 'bitcoinprices/bitcoinprices.js' %}"></script>
+<script src="{% static 'bitcoinaddress/dist/bitcoinaddress-bundle.debug.js' %}"></script>
+<script src="{% static "main.js" %}"></script>
+
+{% block custom_script %}
+{% endblock custom_script %}
+
+</body>
+
+</html>

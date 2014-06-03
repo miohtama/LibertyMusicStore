@@ -1,0 +1,63 @@
+
+<header class="navbar navbar-default" id="navbar-site">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle"
+                 data-toggle="collapse"
+                 data-target="#tatianastore-navbar-collapse-1">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url 'index' %}">
+                    <span class="fa-stack" id="bitcoin-icon">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-btc fa-stack fa-inverse fa-stack-1x"></i>
+                    </span>
+
+                    Libery Music Store
+
+                  </a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="tatianastore-navbar-collapse-1">
+
+                <ul class="nav navbar-nav">
+                    {% if request.user.customer %}
+                        <li><a href="{% url 'index' %}">{% trans "New payment" %}</a></li>
+                        <li><a href="{% url 'transaction_past' %}">{% trans "Past payments" %}</a></li>
+                        <li><a href="{% url 'customer_summary' request.user.customer.id %}">{% trans "Store info" %}</a></li>
+                    {% endif %}
+
+                    {% if request.user.distributor %}
+                        <li><a href="{% url 'distributor_summary' request.user.distributor.id %}">{% trans "Manage customers" %}</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'about' %}">{% trans "About" %}</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    {% if request.user.is_anonymous %}
+                        <li>
+                            <a href="{% url 'auth_login' %}">{% trans "Log in" %}</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'registration_register' %}">{% trans "Sign up" %}</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{% url 'auth_logout' %}">
+                                {% blocktrans with username=request.user.username %}
+                                    Logout <strong>{{username}}</strong>
+                                {% endblocktrans %}
+                            </a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </div>
+
+         </div>
+     </div>
+</header>
