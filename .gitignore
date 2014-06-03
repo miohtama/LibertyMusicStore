@@ -22,3 +22,5 @@ tatianastore/static/bitcoinaddress/
 logs/*
 local_settings.*
 *.sqlite3
+media/covers/*
+media/songs/*
