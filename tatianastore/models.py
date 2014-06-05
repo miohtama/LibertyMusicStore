@@ -84,12 +84,15 @@ class Album(models.Model):
 
     name = models.CharField(max_length=80, blank=True, null=True)
 
-    #: Artist's description of this album
+    #: Artist's description of this albums
     description = models.TextField(blank=True, null=True)
 
     owner = models.ForeignKey(Artist)
 
     cover = ThumbnailerImageField(upload_to=filename_gen("covers/"), blank=True, null=True)
+
+    #: Full album as a zipped file
+    download_zip = models.FileField(upload_to=filename_gen("songs/"), blank=False, null=False)
 
     #: Price in USD
     fiat_price = models.DecimalField(max_digits=16, decimal_places=8, default=Decimal(0))
@@ -116,7 +119,11 @@ class Song(models.Model):
 
     download_mp3 = models.FileField(upload_to=filename_gen("songs/"), blank=False, null=False)
 
-    preview_mp3 = models.FileField(upload_to=filename_gen("songs/"), blank=True, null=True)
+    prelisten_mp3 = models.FileField(upload_to=filename_gen("prelisten/"), blank=True, null=True)
+    prelisten_vorbis = models.FileField(upload_to=filename_gen("prelisten/"), blank=True, null=True)
+
+    #: Song duration in seconds
+    duration = models.FloatField(blank=True, null=True)
 
     #: Price in USD
     fiat_price = models.DecimalField(max_digits=16, decimal_places=8, default=Decimal(0))

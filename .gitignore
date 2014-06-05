@@ -24,3 +24,5 @@ local_settings.*
 *.sqlite3
 media/covers/*
 media/songs/*
+media/prelisten/*
+sample-cd
