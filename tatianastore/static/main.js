@@ -4,64 +4,6 @@
 
     var paymentProgress = 0;
 
-    var countdownStart = new Date();
-
-    function formatTwoDigits(n) {
-        return ("0" + n).slice(-2);
-    }
-
-    function formatTimeLeftShort(start, end) {
-        var elapsed = end - start;
-        var difference = new Date(elapsed);
-
-        // TODO: Finish
-        // Calculate total hours > 24
-        var hours = 24*(difference.getDate()-1) + difference.getHours();
-        return formatTwoDigits(hours) + ":" + formatTwoDigits(difference.getMinutes()) + "." + formatTwoDigits(difference.getSeconds());
-    }
-
-    /**
-     * Initialize all countdown timers on the page.
-     */
-    function updateCountdowns() {
-
-        // Get the current time from the server
-        // Milliseconds, what a brilliant idea Brendan Eich
-        var serverCountdownStart = new Date(parseInt($("meta[name='x-countdown-start']").attr("content"), 10) * 1000);
-
-        $("[data-countdown-until]").each(function() {
-            var elem = $(this);
-            var until = new Date(parseInt(elem.attr("data-countdown-until"), 10) * 1000);
-
-            // Calculate the current countdown moment
-            // JavaScript Date has no + operator WTF
-            var now = new Date() - countdownStart - (-serverCountdownStart);
-            var format = elem.attr("data-countdown-format");
-
-
-            if(now > until) {
-                elem.html("<span class='countdown-passed'>passed</span>");
-            } else {
-                var text;
-
-                if(format == "short") {
-                    text = formatTimeLeftShort(now, until);
-                } else {
-                    text = moment(until).countdown(now, countdown.HOURS|countdown.MINUTES|countdown.SECONDS).toString();
-                }
-
-                elem.text(text);
-            }
-
-        });
-    }
-
-    function updatePaymentProgress() {
-        paymentProgress += 0.5;
-        paymentProgress = Math.min(paymentProgress, 100);
-        $("#payment-progress .progress-bar").css("width", paymentProgress+"%");
-    }
-
     /**
      * Load the library.
      */
@@ -87,10 +29,6 @@
                 colorLight : "#ffffff"
             }
         });
-    }
-
-    function initTooltips() {
-        $(".rule-tip").tooltip();
     }
 
     function pollTransaction() {
@@ -140,24 +78,6 @@
         });
     }
 
-    /**
-     * On transaction wait page, have some confirmations dialogs for buttons.
-     */
-    function handleConfirmManualActions() {
-
-        $(".manual-actions button").click(function(e) {
-
-            var $this = $(this);
-            var text = $this.text().trim();
-            if(window.confirm('Are you sure you want to do "' + text + '"?')) {
-                return true;
-            } else {
-                e.preventDefault();
-                return false;
-            }
-        });
-    }
-
     function initPrices() {
         bitcoinprices.init({
 
@@ -202,14 +122,69 @@
         });
     }
 
+    /**
+     * Artist page JS entry point.
+     */
+    function handlePlayAndOrder() {
+        var currentlyPlaying = null;
+
+        $(".btn-prelisten").click(function(e) {
+
+            e.preventDefault();
+
+            function stopPlaying() {
+
+                if(currentlyPlaying) {
+                    audiotools.fadeOut(currentlyPlaying);
+                    //currentlyPlaying.pause();
+                    currentlyPlaying = null;
+                }
+                // Revert icons to normal
+                $(".btn-prelisten i").attr("class", "fa fa-volume-up");
+                $(".btn-prelisten").removeClass("playing");
+            }
+
+
+            var btn = $(this);
+
+            var isStopAction = btn.hasClass("playing");
+
+            // Revert all icons back
+            stopPlaying();
+
+            if(isStopAction) {
+                // don't start again
+                return;
+            }
+
+            // Show spinner until loaded
+            btn.addClass("playing");
+            btn.find("i").attr("class", "fa fa-spin fa-spinner");
+
+            var audio = btn.parents(".song").find("audio").get(0);
+
+            $(audio).on("playing", function() {
+                btn.find("i").attr("class", "fa fa-stop");
+            });
+
+            $(audio).on("canplay", function() {
+                //btn.find("i").attr("class", "fa fa-stop");
+                audiotools.fadeIn(currentlyPlaying);
+            });
+
+            currentlyPlaying = audio;
+            audio.load();
+
+            return false;
+        });
+    }
 
     $(document).ready(function() {
         initPrices();
         initBitcoinAddresses();
-        initTooltips();
-        window.setInterval(updatePaymentProgress, 500);
+        //window.setInterval(updatePaymentProgress, 500);
         pollTransaction();
-        handleConfirmManualActions();
+        handlePlayAndOrder();
     });
 
 })(jQuery);

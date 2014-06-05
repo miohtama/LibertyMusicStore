@@ -21,21 +21,6 @@
                     <span class="currency-wrapper">
                          Currency: <strong class="current-currency-symbol text-primary"><i class="fa fa-btc"></i></strong>
                     </span>
-
-                    <span class="separator text-muted">
-                        |
-                    </span>
-                    <span class="empty-selection">
-                        Please select songs
-                    </span>
-
-                    <span class="selected-songs hidden">
-                        Total: <span></span>
-
-                        <button class="btn" type="submit">
-                            Download
-                        </button>
-                    </span>
                 </div>
             </div>
         </div>
@@ -67,33 +52,42 @@
                 <div class="songs col-md-6">
                     {% for song in album.song_set.all %}
                         <div class="song">
-                            <h3 class="pull-left">
-                                <span class="name">
-                                    {{ song.name }}
-                                </span>
+                            <h3 class="song-name pull-left">
+                                {{ song.name }}
                             </h3>
 
-                            <div class="btn-group btn-group-lg pull-right">
+                            <div class="song-controls">
+                                <div class="btn-group">
 
-                                <a class="btn btn-default" href="#" class="prelisten" title="Listen a sample">
-                                    <i class="fa fa-volume-up"></i>
-                                </a>
+                                    <a class="btn btn-default btn-prelisten" href="#" class="prelisten" title="Listen a sample">
+                                        <i class="fa fa-volume-up"></i>
+                                    </a>
 
-                                <a href="#" class="select btn btn-default" title="Add to selection">
-                                    <i class="fa fa-shopping-cart"></i>
-                                    <span class="price" data-btc-price="{{ song.get_btc_price }}">
-                                        {{ album.get_btc_price }} BTC
-                                    </span>
-                                </a>
+                                    <a href="#" class="select btn btn-default" title="Add to selection">
+                                        <i class="fa fa-shopping-cart"></i>
+                                        <span class="price" data-btc-price="{{ song.get_btc_price }}">
+                                            {{ album.get_btc_price }} BTC
+                                        </span>
+                                    </a>
 
-                                <a href="#" class="unselect hidden btn-default" title="Remove from selection">
-                                    <i class="fa fa-times-circle"></i>
-                                </a>
+                                    <a href="#" class="unselect hidden btn-default" title="Remove from selection">
+                                        <i class="fa fa-times-circle"></i>
+                                    </a>
+                                </div>
                             </div>
 
                             <input type="hidden" name="song-{{ album.slug }}-{{ song.slug }}">
 
-                            <div style="clear: both"></div>
+                            <audio preload="none" class="prelisten hidden">
+                                {% if song.prelisten_mp3 %}
+                                    <source src="{{ song.prelisten_mp3.url }}" type="audio/mpeg">
+                                {% endif %}
+
+                                {% if song.prelisten_vorbis %}
+                                    <source src="{{ song.prelisten_vorbis.url }}" type="audio/ogg">
+                                {% endif %}
+
+                            </audio>
 
                         </div>
                     {% endfor %}

@@ -40,12 +40,59 @@ main.container {
     100% { background: rgba(255,0,0,0.5); }
 }
 
+@-webkit-keyframes 'playing' {
+    0% { background: rgba(255,255,255,1); }
+    50% { background: rgba(128,255,128,1); }
+    100% { background: rgba(255,255,255,0.5); }
+}
+
+.playing {
+
+    -webkit-animation-direction: normal;
+    -webkit-animation-duration: 5s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-name: playing;
+    -webkit-animation-timing-function: ease;
+
+    animation-direction: normal;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+    animation-name: playing;
+    animation-timing-function: ease;
+}
+
 .store-header {
     margin-top: 60px;
 }
 
+.row-album {
+    margin-bottom: 60px;
+}
+
 .song {
-    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
+}
+
+.song {
+    display: flex;
+    -moz-box-align: start;
+    align-items: flex-start;
+}
+
+.song-name {
+    -moz-box-flex: 1;
+    -webkit-box-flex: 1;
+    flex: 1 0 0px;
+    margin: 10px 20px 10px 0;
+    font-size: 18px;
+}
+
+.currency-wrapper {
+    min-width: 60px;
+}
+
+.song-controls {
+
 }
 
 .clickable-price {
