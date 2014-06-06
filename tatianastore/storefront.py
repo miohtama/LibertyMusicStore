@@ -77,7 +77,9 @@ def order(request, item_type, item_id):
 
     transaction = models.DownloadTransaction.objects.create()
 
-    transaction.prepare(albums=albums, songs=songs, description=name, ip=request.META["REMOTE_ADDR"])
+    user_currency = request.COOKIES.get("user_currency")
+
+    transaction.prepare(albums=albums, songs=songs, description=name, ip=request.META["REMOTE_ADDR"], user_currency=user_currency)
 
     return redirect("pay", str(transaction.uuid))
 
@@ -86,6 +88,18 @@ def pay(request, uuid):
     """ Show order <iframe>.
     """
     transaction = get_object_or_404(models.DownloadTransaction, uuid=uuid)
+
+    converter = models.get_rate_converter()
+
+    if transaction.user_currency and transaction.user_currency != "BTC":
+        # The user had chosen specific currency when
+        # this transaction was initiated
+        user_currency = transaction.user_currency
+        user_fiat_amount = converter.convert("BTC", user_currency, transaction.btc_amount)
+    else:
+        # Default to the store currency
+        user_currency = transaction.currency
+        user_fiat_amount = transaction.fiat_amount
 
     if request.method == "POST":
         if "cancel" in request.POST:

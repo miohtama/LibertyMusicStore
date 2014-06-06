@@ -4,6 +4,24 @@
 
     var paymentProgress = 0;
 
+    // http://stackoverflow.com/a/13164238/315168
+    function writeCookie(key, value, days) {
+        var date = new Date();
+        // Get unix milliseconds at current time plus number of days
+        date.setTime(+date + (days * 86400000)); //24 * 60 * 60 * 1000
+        window.document.cookie = key + "=" + '"' + value + '"' + "; expires=" + date.toGMTString() + "; path=/";
+        return value;
+    }
+
+    /**
+     * Totally psychological progress bar.
+     */
+    function updatePaymentProgress() {
+        paymentProgress += 0.1;
+        paymentProgress = Math.min(paymentProgress, 100);
+        $("#payment-progress .progress-bar").css("width", paymentProgress+"%");
+    }
+
     /**
      * Load the library.
      */
@@ -129,8 +147,11 @@
      */
     function handleCurrencySwitch() {
         $("#change-currency").click(function() {
-            bitcoinprices.toggleNextActiveCurrency();
+            var currency  = bitcoinprices.toggleNextActiveCurrency();
             $(document).trigger("activecurrencychange");
+
+            // Pass information to the server what currency the user is suing
+            writeCookie("user_currency", currency, 30);
         });
     }
 
@@ -199,7 +220,7 @@
     $(document).ready(function() {
         initPrices();
         initBitcoinAddresses();
-        //window.setInterval(updatePaymentProgress, 500);
+        window.setInterval(updatePaymentProgress, 500);
         pollTransaction();
         handlePlayAndOrder();
         handleCurrencySwitch();

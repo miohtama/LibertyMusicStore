@@ -85,9 +85,14 @@ class Converter(object):
         source = source.upper()
         target = target.upper()
 
+        if source == target:
+            # No conversion needed
+            return amount
+
         assert "BTC" in (source, target), "We can only convert to BTC forth and back"
 
         # Swap around if we are doing backwards conversion
+        original_target = target
         if source == "BTC":
             inverse = True
             source, target = target, source
@@ -109,11 +114,11 @@ class Converter(object):
         else:
             result = amount / Decimal(rate)
 
-        if target == "BTC":
+        if original_target == "BTC":
             # Present BTC with 8 decimals
-            result = result.quantize(Decimal("0.00000001"))
+            result = result.quantize(Decimal("1.00000000"))
         else:
-            result = result.quantize(Decimal("0.01"))
+            result = result.quantize(Decimal("1.00"))
 
         return result
 

@@ -4,7 +4,7 @@ from collections import OrderedDict
 import logging
 from uuid import uuid4
 import random
-
+import datetime
 
 from django.db import models
 from django.utils.encoding import smart_str
@@ -222,7 +222,7 @@ class DownloadTransaction(models.Model):
         self.btc_address = blockchain.create_new_receiving_address(label=label)
         return self.btc_address
 
-    def prepare(self, albums, songs, description, ip):
+    def prepare(self, albums, songs, description, ip, user_currency):
         """ Prepares this transaction for the payment phase.
 
         Count order total, initialize BTC addresses, etc.
@@ -231,6 +231,8 @@ class DownloadTransaction(models.Model):
         self.song = songs
         self.ip = ip
         self.payment_source = DownloadTransaction.PAYMENT_SOURCE_BLOCKCHAIN
+        self.user_currency = user_currency
+        self.expires_at = self.created_at + datetime.timedelta(days=1)
 
         fiat_amount = Decimal(0)
 
