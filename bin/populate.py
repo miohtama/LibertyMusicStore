@@ -33,6 +33,7 @@ admin.save()
 
 test_artist = models.Artist.objects.create(name="Test Artist")
 test_artist.currency = "USD"
+test_artist.store_url = "http://localhost:8000/store/test-artist/"
 test_artist.save()
 
 test_album = models.Album.objects.create(name="Test Album", owner=test_artist)
@@ -83,7 +84,7 @@ if os.path.exists(sample_cd_path):
 
         # http://stackoverflow.com/a/10906037/315168
         shutil.copyfile(f2, os.path.join(os.getcwd(), "media/songs", f))
-        song.price = Decimal("0.90")
+        song.fiat_price = Decimal("0.90")
         song.download_mp3.name = 'songs/' + f
         with audioread.audio_open(f2) as ar:
             song.duration = ar.duration / 1000.0

@@ -169,7 +169,10 @@ class DownloadTransaction(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     #: The currency where the original prices where
-    source_currency = models.CharField(max_length=5, blank=True, null=True)
+    currency = models.CharField(max_length=5, blank=True, null=True)
+
+    #: The currency used to display the prices to the user for this transaction
+    user_currency = models.CharField(max_length=5, blank=True, null=True)
 
     #: The address where the owner must make the payment.
     btc_address = models.CharField(max_length=50, blank=True, null=True)
@@ -215,7 +218,7 @@ class DownloadTransaction(models.Model):
         """ Get blockchain.info payment address for this order.
         """
         from . import blockchain
-        label = self.description + u" Total: %s Order: %s" % (self.fiat_amount, self.uuid)
+        label = self.description + u" Total: %s %s Order: %s" % (self.fiat_amount, self.currency, self.uuid)
         self.btc_address = blockchain.create_new_receiving_address(label=label)
         return self.btc_address
 
@@ -261,7 +264,7 @@ class DownloadTransaction(models.Model):
         assert source_currency, "Did not get any line items"
 
         self.artist = artist
-        self.source_currency = source_currency
+        self.currency = source_currency
         self.fiat_amount = fiat_amount
 
         converter = get_rate_converter()
@@ -306,6 +309,11 @@ class DownloadTransaction(models.Model):
         """ The user of a customer marks this BTC transaction manually confirmed. """
         self.manually_confirmed_received_at = timezone.now()
         self.btc_received_at = timezone.now()
+        self.save()
+
+    def mark_cancelled(self):
+        """ The user of a customer marks this BTC transaction manually confirmed. """
+        self.cancelled_at = timezone.now()
         self.save()
 
     def check_balance(self, value, transaction_hash):

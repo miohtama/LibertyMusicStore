@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load thumbnail %}
+
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12 text-center" id="payment-details">
+            <h2>{% trans "Make Bitcoin payment" %}</h2>
+
+            <h3>
+                <i class="fa fa-music"></i> {{ transaction.description }}
+            </h3>
+
+            <p>
+                {{ transaction.fiat_amount|floatformat:2 }} {{ transaction.currency }} /
+                {{ transaction.btc_amount }} <i class="fa fa-btc"></i>
+            </p>
+
+            <div id="btc-address-holder">
+                <strong class="bitcoin-address"
+                    data-bc-amount="{{ transaction.btc_amount }}"
+                    data-bc-label="{{ request.user.customer.name }}"
+                    data-bc-message="Maksutapahtu"
+                    data-bc-address="{{ transaction.btc_address}}">{{ transaction.btc_address}}</strong>
+            </div>
+
+            <div id="payment-progress" class="text-center">
+
+                <p class="text text-muted">
+                    {% trans "Waiting for the payment confirmation from the Bitcoin network" %}
+                </p>
+
+                <div class="progress progress-striped active">
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                        <!-- -->
+                    </div>
+                </div>
+            </div>
+
+            <form class="manual-actions" method="POST">
+                {% csrf_token %}
+                <p class="text-center btn-group-vertical">
+
+                    <button type="submit" class="btn btn-default" name="cancel">
+                        <i class="fa fa-times"></i>
+                        {% trans "Cancel and return" %}
+                    </button>
+                </p>
+            </form>
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block footer %}
+{% endblock footer %}

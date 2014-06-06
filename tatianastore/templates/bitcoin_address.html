@@ -1,7 +1,29 @@
+{% load i18n %}
+
 <div id="bitcoin-address-template" class="bitcoin-address-container" style="display: none">
 
-    <div>
-        <span class="bitcoin-address"></span>
+    <div class="payment-address-wrapper">
+        {% trans "To address:" %}<span id="payment-address" class="bitcoin-address"></span>
+    </div>
+
+    <div class="payment-controls btn-group">
+        <a href="#" class="btn btn-default bitcoin-address-action bitcoin-address-action-send">
+            <i class="fa fa-btc"></i>
+            {% trans "Pay from wallet" %}
+        </a>
+
+        <a href="#" class="btn btn-default bitcoin-address-action bitcoin-address-action-copy">
+            <i class="fa fa-copy"></i>
+            {% trans "Copy" %}
+        </a>
+    </div>
+
+    <div class="bitcoin-action-hint bitcoin-action-hint-send text-muted">
+        {% trans "Sending payment to the address from locally installed Bitcoin wallet app. You need to have a wallet installed on your current computer." %}
+    </div>
+
+    <div class="bitcoin-action-hint bitcoin-action-hint-copy text-muted">
+        {% trans "Press CTRL + C or &#x2318; + C to copy the Bitcoin address." %}
     </div>
 
     <div class="bitcoin-address-qr-container">

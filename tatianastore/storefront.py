@@ -51,10 +51,11 @@ def about(request):
 
 
 def artist(request, slug):
-    """ Show artiest embed <iframe>.
+    """ Show artist show inside embed <iframe>.
     """
     artist = get_object_or_404(models.Artist, slug=slug)
     albums = artist.album_set.all()
+    songs_without_album = models.Song.objects.filter(artist=artist, album__isnull=True)
     return render_to_response("storefront/artist.html", locals(), context_instance=RequestContext(request))
 
 
@@ -68,7 +69,7 @@ def order(request, item_type, item_id):
 
     albums = songs = []
     if item_type == "album":
-        albums = models.Album.objects.filte3r(id=item_id)
+        albums = models.Album.objects.filter(id=item_id)
         name = albums[0].name
     else:
         songs = models.Song.objects.filter(id=item_id)
@@ -84,7 +85,14 @@ def order(request, item_type, item_id):
 def pay(request, uuid):
     """ Show order <iframe>.
     """
-    return http.HttpResponse("ok")
+    transaction = get_object_or_404(models.DownloadTransaction, uuid=uuid)
+
+    if request.method == "POST":
+        if "cancel" in request.POST:
+            transaction.mark_cancelled()
+            return http.HttpResponseRedirect(transaction.artist.store_url)
+
+    return render_to_response("storefront/pay.html", locals(), context_instance=RequestContext(request))
 
 
 def download_song(request, transaction_uuid, song_slug):

@@ -134,6 +134,14 @@ main.container {
     transform: rotate(20deg);
 }
 
+.payment-address-wrapper {
+    font-size: 133%;
+}
+
+.payment-controls {
+    margin-top: 20px;
+}
+
 .bitcoin-address-qr-container {
     margin: 20px 0;
 }
