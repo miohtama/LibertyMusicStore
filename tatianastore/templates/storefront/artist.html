@@ -18,9 +18,9 @@
             <div class="col-md-6">
                 <div class="controls pull-right">
 
-                    <span class="currency-wrapper">
-                         Currency: <strong class="current-currency-symbol text-primary"><i class="fa fa-btc"></i></strong>
-                    </span>
+                    <button id="change-currency" type="button" class="btn btn-default currency-wrapper">
+                         Currency: <strong class="current-currency-symbol"><i class="fa fa-btc"></i></strong>
+                    </button>
                 </div>
             </div>
         </div>
@@ -40,7 +40,7 @@
                         {{ album.description }}
                     </p>
 
-                    <a class="btn btn-lg btn-default buy-whole-album" href="#">
+                    <a class="btn btn-lg btn-default buy-whole-album" href="{% url 'order' 'album' album.id %}">
                         <i class="fa fa-shopping-cart"></i>
                         <span class="btc-price" data-btc-price="{{ album.get_btc_price }}">
                             {{ album.get_btc_price }} BTC
@@ -50,47 +50,7 @@
                 </div>
 
                 <div class="songs col-md-6">
-                    {% for song in album.song_set.all %}
-                        <div class="song">
-                            <h3 class="song-name pull-left">
-                                {{ song.name }}
-                            </h3>
-
-                            <div class="song-controls">
-                                <div class="btn-group">
-
-                                    <a class="btn btn-default btn-prelisten" href="#" class="prelisten" title="Listen a sample">
-                                        <i class="fa fa-volume-up"></i>
-                                    </a>
-
-                                    <a href="#" class="select btn btn-default" title="Add to selection">
-                                        <i class="fa fa-shopping-cart"></i>
-                                        <span class="price" data-btc-price="{{ song.get_btc_price }}">
-                                            {{ album.get_btc_price }} BTC
-                                        </span>
-                                    </a>
-
-                                    <a href="#" class="unselect hidden btn-default" title="Remove from selection">
-                                        <i class="fa fa-times-circle"></i>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <input type="hidden" name="song-{{ album.slug }}-{{ song.slug }}">
-
-                            <audio preload="none" class="prelisten hidden">
-                                {% if song.prelisten_mp3 %}
-                                    <source src="{{ song.prelisten_mp3.url }}" type="audio/mpeg">
-                                {% endif %}
-
-                                {% if song.prelisten_vorbis %}
-                                    <source src="{{ song.prelisten_vorbis.url }}" type="audio/ogg">
-                                {% endif %}
-
-                            </audio>
-
-                        </div>
-                    {% endfor %}
+                    {% include "storefront/song_purchase_list.html" with songs=album.song_set.all %}
                 </div>
             </div>
         {% endfor %}

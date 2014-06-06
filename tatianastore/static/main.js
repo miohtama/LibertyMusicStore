@@ -112,13 +112,25 @@
                 clickPrices : true,
 
                 // Build Bootstrap dropdown menu for currency switching
-                menu : true
+                menu : true,
+
+                clickableCurrencySymbol: false
             },
 
             // Allows passing the explicit jQuery version to bitcoinprices.
             // This is useful if you are using modular javascript (AMD/UMD/require()),
             // but for most normal usage you don't need this
             jQuery: jQuery
+        });
+    }
+
+    /**
+     * Cycle through available currencies
+     */
+    function handleCurrencySwitch() {
+        $("#change-currency").click(function() {
+            bitcoinprices.toggleNextActiveCurrency();
+            $(document).trigger("activecurrencychange");
         });
     }
 
@@ -172,6 +184,11 @@
                 audiotools.fadeIn(currentlyPlaying);
             });
 
+            $(audio).on("ended", function() {
+                stopPlaying();
+            });
+
+
             currentlyPlaying = audio;
             audio.load();
 
@@ -185,6 +202,7 @@
         //window.setInterval(updatePaymentProgress, 500);
         pollTransaction();
         handlePlayAndOrder();
+        handleCurrencySwitch();
     });
 
 })(jQuery);

@@ -1,0 +1,36 @@
+{% for song in songs %}
+    <div class="song">
+        <h3 class="song-name pull-left">
+            {{ song.name }}
+        </h3>
+
+        <div class="song-controls">
+            <div class="btn-group">
+
+                <a class="btn btn-default btn-prelisten" href="#" class="prelisten" title="Listen a sample">
+                    <i class="fa fa-volume-up"></i>
+                </a>
+
+                <a href="{% url 'order' 'song' song.id %}" class="select btn btn-default" title="Purchase this song">
+                    <i class="fa fa-shopping-cart"></i>
+                    <span class="price" data-btc-price="{{ song.get_btc_price }}">
+                        {{ album.get_btc_price }} BTC
+                    </span>
+                </a>
+            </div>
+        </div>
+
+        <input type="hidden" name="song-{{ album.slug }}-{{ song.slug }}">
+
+        <audio preload="none" class="prelisten hidden">
+            {% if song.prelisten_mp3 %}
+                <source src="{{ song.prelisten_mp3.url }}" type="audio/mpeg">
+            {% endif %}
+
+            {% if song.prelisten_vorbis %}
+                <source src="{{ song.prelisten_vorbis.url }}" type="audio/ogg">
+            {% endif %}
+        </audio>
+
+    </div>
+{% endfor %}

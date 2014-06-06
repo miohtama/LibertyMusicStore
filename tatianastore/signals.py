@@ -11,14 +11,11 @@ from django.utils.timezone import now
 from . import models
 
 
-@receiver(post_save, sender=models.Transaction)
+@receiver(post_save, sender=models.DownloadTransaction)
 def transaction_post_save(sender, instance, signal, *args, **kwargs):
     """ Poke listeners about the new state in Redis when transactions change. """
     redis = cache.raw_client
     transaction = instance
-    customer = transaction.customer
     # transaction.uuid can be UUID() or string
     message = dict(transaction_uuid=unicode(transaction.uuid), status=transaction.get_status())
-    redis.publish("customer_%d" % customer.id, json.dumps(message))
-
-
+    redis.publish("transaction_%s" % transaction.uuid, json.dumps(message))

@@ -61,6 +61,10 @@ main.container {
     animation-timing-function: ease;
 }
 
+#change-currency {
+    min-width: 140px;
+}
+
 .store-header {
     margin-top: 60px;
 }

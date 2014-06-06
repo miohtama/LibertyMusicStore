@@ -69,6 +69,9 @@ class Artist(models.Model):
     #: In which fiat currency the sales of these songs are
     currency = models.CharField(max_length=5, blank=False, null=False, default="USD")
 
+    #: Where this store is hosted (needed for the backlinks)
+    store_url = models.URLField()
+
     def __unicode__(self):
         return u"%s - %s" % (self.slug, self.name)
 
@@ -110,8 +113,13 @@ class Song(models.Model):
     """
     """
 
-    album = models.ForeignKey(Album)
+    #: Owner of the song
+    artist = models.ForeignKey(Artist)
 
+    #: Song can belong to album, or exist without an album
+    album = models.ForeignKey(Album, null=True)
+
+    #: Song title
     name = models.CharField(max_length=80, blank=True, null=True)
 
     #: Visible in URls
@@ -137,7 +145,7 @@ class Song(models.Model):
         return u"%s: %s - %s" % (self.album.owner.name, self.album.name, self.name)
 
 
-class Transaction(models.Model):
+class DownloadTransaction(models.Model):
     """ Order to buy some songs, with attached bitcoin transaction info.
     """
 
@@ -152,20 +160,24 @@ class Transaction(models.Model):
 
     uuid = models.CharField(max_length=64, editable=False, blank=True, default=uuid4)
 
-    owner = models.ForeignKey(User)
+    artist = models.ForeignKey(Artist, null=True)
 
-    albums = models.ManyToManyField(Album, related_name="albums_bought")
+    albums = models.ManyToManyField(Album, related_name="album_download_transactions")
 
-    songs = models.ManyToManyField(Album, related_name="songs_bought")
+    songs = models.ManyToManyField(Album, related_name="song_download_transactions")
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+    #: The currency where the original prices where
+    source_currency = models.CharField(max_length=5, blank=True, null=True)
 
     #: The address where the owner must make the payment.
     btc_address = models.CharField(max_length=50, blank=True, null=True)
 
-    # How many BTC was this bet
+    # How many BTC was this order
     btc_amount = models.DecimalField(max_digits=16, decimal_places=8, default=Decimal(0))
 
+    #: What's the source price of this transaction
     fiat_amount = models.DecimalField(max_digits=16, decimal_places=8, default=Decimal(0))
 
     #: Either "blockchain.info" or "bitcoind"
@@ -179,6 +191,9 @@ class Transaction(models.Model):
     #: Bitcoin transcation hash which triggered this payment complete
     received_transaction_hash = models.CharField(max_length=256, blank=True, null=True)
 
+    #: The user pressed cancel on the payment page
+    cancelled_at = models.DateTimeField(blank=True, null=True)
+
     #: If we don't receive payment by this time the payment
     #: can be considered as discarded
     expires_at = models.DateTimeField(blank=True, null=True)
@@ -191,17 +206,76 @@ class Transaction(models.Model):
     ip = models.IPAddressField(blank=True, null=True)
 
     def update_new_btc_address(self):
-        if self.payment_source == Transaction.PAYMENT_SOURCE_BLOCKCHAIN:
+        if self.payment_source == DownloadTransaction.PAYMENT_SOURCE_BLOCKCHAIN:
             self.update_new_btc_address_blockchain()
         else:
             raise RuntimeError("Unknown payment soucre")
 
     def update_new_btc_address_blockchain(self):
-        """
+        """ Get blockchain.info payment address for this order.
         """
         from . import blockchain
-        self.btc_address = blockchain.create_new_receiving_address(label=u"Transaction %d for customer %s" % (self.id, self.customer.id))
+        label = self.description + u" Total: %s Order: %s" % (self.fiat_amount, self.uuid)
+        self.btc_address = blockchain.create_new_receiving_address(label=label)
         return self.btc_address
+
+    def prepare(self, albums, songs, description, ip):
+        """ Prepares this transaction for the payment phase.
+
+        Count order total, initialize BTC addresses, etc.
+        """
+        self.albums = albums
+        self.song = songs
+        self.ip = ip
+        self.payment_source = DownloadTransaction.PAYMENT_SOURCE_BLOCKCHAIN
+
+        fiat_amount = Decimal(0)
+
+        artist = None
+        source_currency = None
+
+        for a in albums:
+
+            # Make sure everything is from the same artist,
+            # as currently artist determinates the currency
+            if not artist:
+                artist = a.artist
+            else:
+                assert a.artist == artist, "Cannot order cross artists (album)"
+
+            fiat_amount += a.fiat_price
+            source_currency = a.artist.currency
+
+        for s in songs:
+
+            # Make sure everything is from the same artist,
+            # as currently artist determinates the currency
+            if not artist:
+                artist = s.artist
+            else:
+                assert s.artist == artist, "Cannot order cross artists (song)"
+
+            fiat_amount += s.fiat_price
+            source_currency = s.artist.currency
+
+        assert source_currency, "Did not get any line items"
+
+        self.artist = artist
+        self.source_currency = source_currency
+        self.fiat_amount = fiat_amount
+
+        converter = get_rate_converter()
+
+        self.btc_amount = converter.convert(source_currency, "BTC", fiat_amount)
+
+        self.description = description
+        self.update_new_btc_address_blockchain()
+
+        # Make sure we don't accidentally create negative orders
+        assert self.btc_amount > 0, "Cannot make empty or negative orders (btc) "
+        assert self.fiat_amount > 0, "Cannot make empty or negative orders (fiat)"
+
+        self.save()
 
     def is_pending(self):
         return self.btc_received_at is None and self.cancelled_at is None
@@ -233,11 +307,6 @@ class Transaction(models.Model):
         self.manually_confirmed_received_at = timezone.now()
         self.btc_received_at = timezone.now()
         self.save()
-
-    def save(self, *args, **kwargs):
-        assert self.btc_amount > 0
-        assert self.fiat_amount > 0
-        super(Transaction, self).save(*args, **kwargs)
 
     def check_balance(self, value, transaction_hash):
         """ Check if this transaction can be confirmed as received.

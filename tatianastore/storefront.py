@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django import http
 from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.template import RequestContext
@@ -57,9 +58,33 @@ def artist(request, slug):
     return render_to_response("storefront/artist.html", locals(), context_instance=RequestContext(request))
 
 
-def order(request, uuid):
+def order(request, item_type, item_id):
+    """ Create an order for the item.
+
+    :param item_type: "album" or "song"
+
+    :param item_id: item id
+    """
+
+    albums = songs = []
+    if item_type == "album":
+        albums = models.Album.objects.filte3r(id=item_id)
+        name = albums[0].name
+    else:
+        songs = models.Song.objects.filter(id=item_id)
+        name = songs[0].name
+
+    transaction = models.DownloadTransaction.objects.create()
+
+    transaction.prepare(albums=albums, songs=songs, description=name, ip=request.META["REMOTE_ADDR"])
+
+    return redirect("pay", str(transaction.uuid))
+
+
+def pay(request, uuid):
     """ Show order <iframe>.
     """
+    return http.HttpResponse("ok")
 
 
 def download_song(request, transaction_uuid, song_slug):
@@ -217,7 +242,9 @@ def profile(request):
     return render_to_response("profile.html", locals(), context_instance=RequestContext(request))
 
 
-
 urlpatterns = patterns('',
     url(r'^(?P<slug>[-_\w]+)/$', artist, name="artist"),
+    url(r'^order/(?P<item_type>[\w]+)/(?P<item_id>[\d]+)/$', order, name="order"),
+    url(r'^pay/(?P<uuid>[^/]+)/$', pay, name="pay"),
+    url(r'^thanks/(?P<uuid>[^/]+)/$', pay, name="thanks"),
 )

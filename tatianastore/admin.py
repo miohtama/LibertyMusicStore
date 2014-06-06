@@ -45,7 +45,7 @@ class User(UserAdmin):
     add_form = UserCreationForm
 
 
-class Transaction(admin.ModelAdmin):
+class DownloadTransaction(admin.ModelAdmin):
     pass
 
 
@@ -67,7 +67,7 @@ admin.site.unregister(_Group)
 #admin.site.unregister(_User)
 
 admin.site.register(models.User, User)
-admin.site.register(models.Transaction, Transaction)
+admin.site.register(models.DownloadTransaction, DownloadTransaction)
 admin.site.register(models.Album, Album)
 admin.site.register(models.Song, Song)
 admin.site.register(models.Artist, Artist)

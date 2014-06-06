@@ -40,12 +40,19 @@ test_album.fiat_price = Decimal("8.90")
 test_album.description = u"My very first album åäö"
 test_album.save()
 
-test_song1 = models.Song.objects.create(name="Song A", album=test_album)
+test_song1 = models.Song.objects.create(name="Song A", album=test_album, artist=test_artist)
 test_song1.fiat_price = Decimal("0.95")
 test_song1.save()
-test_song2 = models.Song.objects.create(name="Song B", album=test_album)
+
+test_song2 = models.Song.objects.create(name="Song B", album=test_album, artist=test_artist)
 test_song2.fiat_price = Decimal("0.50")
 test_song2.save()
+
+# Song without an album
+test_song3 = models.Song.objects.create(name="Song C", artist=test_artist)
+test_song3.fiat_price = Decimal("0.50")
+test_song3.save()
+
 
 # Generate sample content from downloaded MP3s
 # assume you can find
@@ -72,7 +79,7 @@ if os.path.exists(sample_cd_path):
         f2 = os.path.join(sample_cd_path, f)
         audiofile = eyed3.load(f2)
 
-        song = models.Song.objects.create(name=audiofile.tag.title, album=test_album)
+        song = models.Song.objects.create(name=audiofile.tag.title, album=test_album, artist=test_artist)
 
         # http://stackoverflow.com/a/10906037/315168
         shutil.copyfile(f2, os.path.join(os.getcwd(), "media/songs", f))
