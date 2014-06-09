@@ -50,13 +50,13 @@ def about(request):
     return render_to_response("about.html", locals(), context_instance=RequestContext(request))
 
 
-def artist(request, slug):
+def store(request, slug):
     """ Show artist show inside embed <iframe>.
     """
-    artist = get_object_or_404(models.Artist, slug=slug)
-    albums = artist.album_set.all()
-    songs_without_album = models.Song.objects.filter(artist=artist, album__isnull=True)
-    return render_to_response("storefront/artist.html", locals(), context_instance=RequestContext(request))
+    store = get_object_or_404(models.Store, slug=slug)
+    albums = store.album_set.all()
+    songs_without_album = models.Song.objects.filter(store=store, album__isnull=True)
+    return render_to_response("storefront/store.html", locals(), context_instance=RequestContext(request))
 
 
 def order(request, item_type, item_id):
@@ -71,9 +71,11 @@ def order(request, item_type, item_id):
     if item_type == "album":
         albums = models.Album.objects.filter(id=item_id)
         name = albums[0].name
-    else:
+    elif item_type == "song":
         songs = models.Song.objects.filter(id=item_id)
         name = songs[0].name
+    else:
+        raise RuntimeError("Bad item type")
 
     transaction = models.DownloadTransaction.objects.create()
 
@@ -88,6 +90,9 @@ def pay(request, uuid):
     """ Show order <iframe>.
     """
     transaction = get_object_or_404(models.DownloadTransaction, uuid=uuid)
+
+    if transaction.btc_received_at:
+        return redirect("thanks", transaction.uuid)
 
     converter = models.get_rate_converter()
 
@@ -104,56 +109,55 @@ def pay(request, uuid):
     if request.method == "POST":
         if "cancel" in request.POST:
             transaction.mark_cancelled()
-            return http.HttpResponseRedirect(transaction.artist.store_url)
+            return http.HttpResponseRedirect(transaction.store.store_url)
 
     return render_to_response("storefront/pay.html", locals(), context_instance=RequestContext(request))
 
 
-def download_song(request, transaction_uuid, song_slug):
-    """ Download ordered songs. """
-    transaction = models.Transaction.objects.get(uuid=transaction_uuid)
+def thanks(request, uuid):
+    """ Show the download page after the payment.
+    """
+    transaction = get_object_or_404(models.DownloadTransaction, uuid=uuid)
 
-    if request.user.customer and transaction.customer == request.user.customer:
-        if transaction.is_pending():
-            return http.HttpResponseRedirect(reverse("transaction_wait", args=(uuid,)))
+    if not transaction.btc_received_at:
+        return redirect("pay", transaction.uuid)
 
-    return http.HttpResponseRedirect(reverse("transaction_info", args=(uuid,)))
+    # tuples of (name, link)
+    download_links = []
 
+    for a in transaction.albums.all():
+        download_links.append(dict(name=a.name, link=reverse("download", args=(transaction.uuid,)) + "?album_id=%d" % a.id))
+        store = a.store
 
-def transaction_wait(request, uuid):
-    """ """
-    transaction = models.Transaction.objects.get(uuid=uuid)
+    for s in transaction.songs.all():
+        download_links.append(dict(name=s.name, link=reverse("download", args=(transaction.uuid,)) + "?song_id=%d" % s.id))
+        store = s.store
 
-    if transaction.get_status() != "pending":
-        # Wait page can be only opened when the transaction is pending
-        return http.HttpResponseRedirect(reverse("transaction", args=(transaction.uuid,)))
-
-    admin = request.user.is_authenticated() and request.user.is_staff
-    return render_to_response("transaction_wait.html", locals(), context_instance=RequestContext(request))
-
-
-def transaction_actions(request, uuid):
-    """ Show a past transaction info."""
-    transaction = models.Transaction.objects.get(uuid=uuid)
-
-    if request.method != "POST":
-        return http.HttpResponseRedirect(reverse("transaction", args=(transaction.uuid,)))
-
-    if "transaction-cancel" in request.POST:
-        transaction.cancelled_at = now()
-        transaction.save()
-        return http.HttpResponseRedirect(reverse("transaction", args=(transaction.uuid,)))
-
-    if "transaction-confirm-manually" in request.POST:
-        transaction.mark_manually_confirmed()
-        return http.HttpResponseRedirect(reverse("transaction", args=(transaction.uuid,)))
+    return render_to_response("storefront/thanks.html", locals(), context_instance=RequestContext(request))
 
 
-def transaction_info(request, uuid):
-    """ Show a past transaction info."""
-    transaction = models.Transaction.objects.get(uuid=uuid)
-    admin = request.user.is_authenticated() and request.user.is_staff
-    return render_to_response("transaction_info.html", locals(), context_instance=RequestContext(request))
+def download(request, uuid):
+    """ Download ordered albums/songs. """
+    transaction = get_object_or_404(models.DownloadTransaction, uuid=uuid)
+    song_id = request.GET.get("song_id")
+    album_id = request.GET.get("album_id")
+
+    if album_id:
+        album = transaction.albums.get(id=album_id)
+        _file = album.download_zip
+        download_name = album.name + ".zip"
+        content_type = "application/zip"
+    elif song_id:
+        song = transaction.songs.get(id=song_id)
+        _file = song.download_mp3
+        content_type = "audio/mp3"
+        download_name = song.name + ".mp3"
+    else:
+        raise RuntimeError("No album or song given for the download")
+
+    response = http.HttpResponse(_file, content_type=content_type)
+    response['Content-Disposition'] = 'attachment; filename=%s' % download_name
+    return response
 
 
 def transaction_poll(request, uuid):
@@ -163,25 +167,23 @@ def transaction_poll(request, uuid):
     confirmation from the network.
     """
 
-    print "Entering transaction_poll()"
+    # print "Entering transaction_poll()"
 
-    transaction = models.Transaction.objects.get(uuid=uuid)
-
-    customer = transaction.customer
+    transaction = models.DownloadTransaction.objects.get(uuid=uuid)
 
     redis = cache.raw_client
     pubsub = redis.pubsub()
-    pubsub.subscribe("customer_%d" % customer.id)
+    pubsub.subscribe("transaction_%s" % transaction.uuid)
 
     timeout = time.time() + 10
 
     while time.time() < timeout:
-        print "Transaction polling started %s", now()
+        # print "Transaction polling started %s", now()
 
         try:
             message = pubsub.get_message()
             if message:
-                print "Got message", message
+                # print "Got message", message
                 if message["type"] != "subscribe":
                     data = json.loads(message["data"])
                     if data["transaction_uuid"] == uuid:
@@ -191,10 +193,10 @@ def transaction_poll(request, uuid):
             logger.error("Polling exception")
             logger.exception(e)
 
-        print "Transaction polling stopped %s", now()
+        # print "Transaction polling stopped %s", now()
         time.sleep(0.5)
 
-    print "Returning"
+    # print "Returning"
     pubsub.close()
     return http.HttpResponseNotModified()
 
@@ -265,8 +267,10 @@ def profile(request):
 
 
 urlpatterns = patterns('',
-    url(r'^(?P<slug>[-_\w]+)/$', artist, name="artist"),
+    url(r'^(?P<slug>[-_\w]+)/$', store, name="store"),
     url(r'^order/(?P<item_type>[\w]+)/(?P<item_id>[\d]+)/$', order, name="order"),
     url(r'^pay/(?P<uuid>[^/]+)/$', pay, name="pay"),
-    url(r'^thanks/(?P<uuid>[^/]+)/$', pay, name="thanks"),
+    url(r'^transaction_poll/(?P<uuid>[^/]+)/$', transaction_poll, name="transaction_poll"),
+    url(r'^thanks/(?P<uuid>[^/]+)/$', thanks, name="thanks"),
+    url(r'^download/(?P<uuid>[^/]+)/$', download, name="download"),
 )

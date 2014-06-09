@@ -31,26 +31,26 @@ admin.is_staff = True
 admin.set_password("admin")
 admin.save()
 
-test_artist = models.Artist.objects.create(name="Test Artist")
+test_artist = models.Store.objects.create(name="Test Store")
 test_artist.currency = "USD"
-test_artist.store_url = "http://localhost:8000/store/test-artist/"
+test_artist.store_url = "http://localhost:8000/store/test-store/"
 test_artist.save()
 
-test_album = models.Album.objects.create(name="Test Album", owner=test_artist)
+test_album = models.Album.objects.create(name="Test Album", store=test_artist)
 test_album.fiat_price = Decimal("8.90")
 test_album.description = u"My very first album åäö"
 test_album.save()
 
-test_song1 = models.Song.objects.create(name="Song A", album=test_album, artist=test_artist)
+test_song1 = models.Song.objects.create(name="Song A", album=test_album, store=test_artist)
 test_song1.fiat_price = Decimal("0.95")
 test_song1.save()
 
-test_song2 = models.Song.objects.create(name="Song B", album=test_album, artist=test_artist)
+test_song2 = models.Song.objects.create(name="Song B", album=test_album, store=test_artist)
 test_song2.fiat_price = Decimal("0.50")
 test_song2.save()
 
 # Song without an album
-test_song3 = models.Song.objects.create(name="Song C", artist=test_artist)
+test_song3 = models.Song.objects.create(name="Song C", store=test_artist)
 test_song3.fiat_price = Decimal("0.50")
 test_song3.save()
 
@@ -66,12 +66,15 @@ test_song3.save()
 sample_cd_path = os.path.join(os.getcwd(), "sample-cd")
 if os.path.exists(sample_cd_path):
     print "Uploading sample CD content"
-    test_album = models.Album.objects.create(name="Test Album 2", owner=test_artist)
+    test_album = models.Album.objects.create(name="Test Album 2", store=test_artist)
 
     shutil.copyfile(sample_cd_path + "/cover.jpg", os.path.join(os.getcwd(), "media/covers/cover.jpg"))
+    shutil.copyfile(sample_cd_path + "/album.zip", os.path.join(os.getcwd(), "media/songs/album.zip"))
     test_album.cover.name = "covers/cover.jpg"
+    test_album.download_zip.name = "songs/album.zip"
+    test_album.fiat_price = Decimal("9.90")
     test_album.save()
-    test_album.price = Decimal("9.90")
+
 
     for f in os.listdir(sample_cd_path):
         if not f.endswith(".mp3"):
@@ -80,7 +83,7 @@ if os.path.exists(sample_cd_path):
         f2 = os.path.join(sample_cd_path, f)
         audiofile = eyed3.load(f2)
 
-        song = models.Song.objects.create(name=audiofile.tag.title, album=test_album, artist=test_artist)
+        song = models.Song.objects.create(name=audiofile.tag.title, album=test_album, store=test_artist)
 
         # http://stackoverflow.com/a/10906037/315168
         shutil.copyfile(f2, os.path.join(os.getcwd(), "media/songs", f))

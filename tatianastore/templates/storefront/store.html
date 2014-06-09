@@ -16,7 +16,7 @@
             </div>
 
             <div class="col-md-6">
-                <div class="controls pull-right">
+                <div class="currency-controls pull-right">
 
                     <button id="change-currency" type="button" class="btn btn-default currency-wrapper">
                          Currency: <strong class="current-currency-symbol"><i class="fa fa-btc"></i></strong>
@@ -37,7 +37,6 @@
                     <img src="{% thumbnail album.cover 128x128 %}" alt="">
 
                     <p class="album-description text-muted">
-                        {{ album.description }}
                     </p>
 
                     <a class="btn btn-lg btn-default buy-whole-album" href="{% url 'order' 'album' album.id %}">

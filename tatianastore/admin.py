@@ -49,7 +49,7 @@ class DownloadTransaction(admin.ModelAdmin):
     pass
 
 
-class Artist(admin.ModelAdmin):
+class Store(admin.ModelAdmin):
     pass
 
 
@@ -70,4 +70,4 @@ admin.site.register(models.User, User)
 admin.site.register(models.DownloadTransaction, DownloadTransaction)
 admin.site.register(models.Album, Album)
 admin.site.register(models.Song, Song)
-admin.site.register(models.Artist, Artist)
+admin.site.register(models.Store, Store)

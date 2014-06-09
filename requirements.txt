@@ -21,7 +21,7 @@ wsgiref==0.1.2
 django-pagination-bootstrap==1.0.5
 -e git+git@github.com:laysakura/rainbow_logging_handler.git@2425d00f7dc562e23881b7bab2abe9d0128bf46d#egg=rainbow_logging_handler
 requests==2.3.0
-redis==2.9.1
+redis==2.10.1
 recaptcha-client==1.0.6
 django-nose==1.2
 django-redis

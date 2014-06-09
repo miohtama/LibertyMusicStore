@@ -53,7 +53,7 @@ class User(AbstractUser):
     objects = UserManager()
 
 
-class Artist(models.Model):
+class Store(models.Model):
     """ One user presents artist / store. """
 
     #: Which users can edit data for this artist
@@ -87,10 +87,10 @@ class Album(models.Model):
 
     name = models.CharField(max_length=80, blank=True, null=True)
 
-    #: Artist's description of this albums
+    #: Store's description of this albums
     description = models.TextField(blank=True, null=True)
 
-    owner = models.ForeignKey(Artist)
+    store = models.ForeignKey(Store)
 
     cover = ThumbnailerImageField(upload_to=filename_gen("covers/"), blank=True, null=True)
 
@@ -106,7 +106,7 @@ class Album(models.Model):
     def get_btc_price(self):
         """ """
         converter = get_rate_converter()
-        return converter.convert(self.owner.currency, "BTC", self.fiat_price)
+        return converter.convert(self.store.currency, "BTC", self.fiat_price)
 
 
 class Song(models.Model):
@@ -114,7 +114,7 @@ class Song(models.Model):
     """
 
     #: Owner of the song
-    artist = models.ForeignKey(Artist)
+    store = models.ForeignKey(Store)
 
     #: Song can belong to album, or exist without an album
     album = models.ForeignKey(Album, null=True)
@@ -139,10 +139,10 @@ class Song(models.Model):
     def get_btc_price(self):
         """ """
         converter = get_rate_converter()
-        return converter.convert(self.album.owner.currency, "BTC", self.fiat_price)
+        return converter.convert(self.store.currency, "BTC", self.fiat_price)
 
     def __unicode__(self):
-        return u"%s: %s - %s" % (self.album.owner.name, self.album.name, self.name)
+        return u"%s: %s" % (self.store.name, self.name)
 
 
 class DownloadTransaction(models.Model):
@@ -160,11 +160,11 @@ class DownloadTransaction(models.Model):
 
     uuid = models.CharField(max_length=64, editable=False, blank=True, default=uuid4)
 
-    artist = models.ForeignKey(Artist, null=True)
+    store = models.ForeignKey(Store, null=True)
 
     albums = models.ManyToManyField(Album, related_name="album_download_transactions")
 
-    songs = models.ManyToManyField(Album, related_name="song_download_transactions")
+    songs = models.ManyToManyField(Song, related_name="song_download_transactions")
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -228,7 +228,7 @@ class DownloadTransaction(models.Model):
         Count order total, initialize BTC addresses, etc.
         """
         self.albums = albums
-        self.song = songs
+        self.songs = songs
         self.ip = ip
         self.payment_source = DownloadTransaction.PAYMENT_SOURCE_BLOCKCHAIN
         self.user_currency = user_currency
@@ -236,36 +236,36 @@ class DownloadTransaction(models.Model):
 
         fiat_amount = Decimal(0)
 
-        artist = None
+        store = None
         source_currency = None
 
         for a in albums:
 
             # Make sure everything is from the same artist,
             # as currently artist determinates the currency
-            if not artist:
-                artist = a.artist
+            if not store:
+                store = a.store
             else:
-                assert a.artist == artist, "Cannot order cross artists (album)"
+                assert a.store == store, "Cannot order cross artists (album)"
 
             fiat_amount += a.fiat_price
-            source_currency = a.artist.currency
+            source_currency = a.store.currency
 
         for s in songs:
 
             # Make sure everything is from the same artist,
             # as currently artist determinates the currency
-            if not artist:
-                artist = s.artist
+            if not store:
+                store = s.store
             else:
-                assert s.artist == artist, "Cannot order cross artists (song)"
+                assert s.store == store, "Cannot order cross artists (song)"
 
             fiat_amount += s.fiat_price
-            source_currency = s.artist.currency
+            source_currency = s.store.currency
 
         assert source_currency, "Did not get any line items"
 
-        self.artist = artist
+        self.store = store
         self.currency = source_currency
         self.fiat_amount = fiat_amount
 
@@ -279,7 +279,7 @@ class DownloadTransaction(models.Model):
         # Make sure we don't accidentally create negative orders
         assert self.btc_amount > 0, "Cannot make empty or negative orders (btc) "
         assert self.fiat_amount > 0, "Cannot make empty or negative orders (fiat)"
-
+        assert self.albums.all().count() > 0 or self.songs.all().count() > 0, "At least one album or one song must be in the transaction"
         self.save()
 
     def is_pending(self):
@@ -289,7 +289,8 @@ class DownloadTransaction(models.Model):
         return self.btc_received_at is not None
 
     def is_credited(self):
-        return self.fiat_transaction is not None
+        """ Has store owner been credited for this transation. """
+        return False
 
     def is_cancelled(self):
         return self.cancelled_at is not None
@@ -302,8 +303,6 @@ class DownloadTransaction(models.Model):
             return "cancelled"
         elif self.manually_confirmed_received_at:
             return "completed (manually marked)"
-        elif self.fiat_transaction:
-            return "credited"
         else:
             return "completed"
 

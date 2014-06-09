@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12 text-center" id="payment-details">
+            <h2>{% trans "Thank you for the support!" %}</h2>
+
+            <p>
+                {% trans "Download and save from the link below." %}
+            </p>
+
+            <div class="downloads">
+                {% for download in download_links %}
+                    <p>
+                        <a download href="{{ download.link }}">
+                            <i class="fa fa-download"></i>
+                            {{ download.name }}
+                        </a>
+                    </p>
+                {% endfor %}
+            </div>
+
+
+            <p>
+                <a class="btn btn-default" href="{{ store.store_url }}">
+                    <i class="fa fa-rotate-left"></i>
+                    {% blocktrans with name=store.name %}
+                        Back to {{name}}
+                    {% endblocktrans %}
+                </a>
+            </p>
+
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block footer %}
+{% endblock footer %}

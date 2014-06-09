@@ -57,3 +57,13 @@
 
 {% block footer %}
 {% endblock footer %}
+
+{% block custom_script %}
+<script>
+window.poll = {
+    transactionUUID: "{{ transaction.uuid }}",
+    pollURL: "{% url 'transaction_poll' transaction.uuid %}",
+    nextURL: "{% url 'thanks' transaction.uuid %}"
+};
+</script>
+{% endblock custom_script %}

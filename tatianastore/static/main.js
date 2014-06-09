@@ -18,7 +18,9 @@
      */
     function updatePaymentProgress() {
         paymentProgress += 0.1;
-        paymentProgress = Math.min(paymentProgress, 100);
+        if(paymentProgress >= 100) {
+            paymentProgress = 0; // Wrap around
+        }
         $("#payment-progress .progress-bar").css("width", paymentProgress+"%");
     }
 
@@ -107,13 +109,14 @@
             marketRateVariable: "24h_avg",
 
             // Which currencies are in shown to the user
-            currencies: ["BTC", "USD", "EUR", "CNY"],
+            currencies: ["BTC", "USD", "EUR", "GBP"],
 
             // Special currency symbol artwork
             symbols: {
                 "BTC": "<i class='fa fa-btc'></i>",
                 "USD": "$",
-                "EUR": "€"
+                "EUR": "€",
+                "GBP": "£"
             },
 
             // Which currency we show user by the default if

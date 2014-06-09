@@ -91,6 +91,10 @@ main.container {
     font-size: 18px;
 }
 
+.currency-controls {
+    margin-bottom: 20px;
+}
+
 .currency-wrapper {
     min-width: 60px;
 }
@@ -149,6 +153,10 @@ main.container {
 /* Bitcoin addresses */
 .bitcoin-address-pre-blurb {
     text-align: center;
+}
+
+.bitcoin-action-hint-container {
+    min-height: 20px;
 }
 
 /* Action hints are slidedowns, hidden by default */

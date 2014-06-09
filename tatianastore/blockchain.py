@@ -60,16 +60,17 @@ def blockchain_received(request):
     address = request.GET['address']
     confirmations = int(request.GET.get('confirmations', -1))
 
-    logger.error("Transaction received: %s BTC:%s address:%s confirmations:%d", transaction_hash, value, address, confirmations)
+    logger.info("Transaction received: %s BTC:%s address:%s confirmations:%d", transaction_hash, value, address, confirmations)
 
     try:
-        t = models.Transaction.objects.get(btc_address=address)
-    except models.Transaction.DoesNotExist:
+        t = models.DownloadTransaction.objects.get(btc_address=address)
+    except models.DownloadTransaction.DoesNotExist:
         logger.error("Got blockchain_received() for unknown address %s", address)
         return http.HttpResponse("*fail")
 
     success = t.check_balance(value, transaction_hash)
 
+    # Blockchain return values, don't know if meaningful
     return http.HttpResponse("*ok*") if success else http.HttpResponse("*error*")
 
 
