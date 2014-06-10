@@ -1,0 +1,21 @@
+{% load thumbnail %}
+
+<h2>{{ album.name }}</h2>
+<img src="{% thumbnail album.cover 128x128 %}" alt="">
+
+<p class="album-description text-muted">
+</p>
+
+{% if tx %}
+    <a class="btn btn-lg btn-default btn-buy-album" href="{% url 'download' tx.uuid album.uuid %}">
+        <i class="fa fa-download"></i>
+    </a>
+{% else %}
+    <a class="btn btn-lg btn-default btn-buy-album" href="{% url 'order' 'album' album.id %}">
+        <i class="fa fa-shopping-cart"></i>
+        <span class="btc-price" data-btc-price="{{ album.get_btc_price }}">
+            {{ album.get_btc_price }} BTC
+        </span>
+    </a>
+{% endif %}
+

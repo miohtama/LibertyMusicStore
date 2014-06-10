@@ -25,9 +25,9 @@
 
 
             <p>
-                <a class="btn btn-default" href="{{ store.store_url }}">
+                <a class="btn btn-default" href="{{ transaction.store.store_url }}">
                     <i class="fa fa-rotate-left"></i>
-                    {% blocktrans with name=store.name %}
+                    {% blocktrans with name=transaction.store.name %}
                         Back to {{name}}
                     {% endblocktrans %}
                 </a>

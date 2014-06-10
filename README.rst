@@ -76,7 +76,7 @@ Running tests
 
 Ex::
 
-    python manage.py test --settings=tatianastore.test_settings tatianastore
+    python manage.py test tatianastore --settings=tatianastore.test_settings
 
 UWSGI
 -------

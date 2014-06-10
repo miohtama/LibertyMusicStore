@@ -10,6 +10,7 @@ from django.conf import settings
 
 from .models import get_rate_converter
 
+
 def ensure_safe_user_image(image):
     """ Perform various checks to sanitize user uploaded image data.
 
@@ -67,3 +68,5 @@ def convert_to_btc(amount, currency):
     return converter.convert(currency, "BTC", Decimal(amount))
 
 
+def get_session_id(request):
+    return request.session._session_key

@@ -5,16 +5,21 @@ import logging
 from uuid import uuid4
 import random
 import datetime
+import json
 
 from django.db import models
 from django.utils.encoding import smart_str
 from django.contrib.auth import hashers
 from django.core.urlresolvers import reverse
+from django.core.cache import get_cache
 from django.db.models import Sum
 from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager as DjangoUserManager
+from django.contrib.contenttypes.generic import GenericForeignKey
+from django.contrib.contenttypes.generic import GenericRelation
+from django.contrib.contenttypes.models import ContentType
 
 from easy_thumbnails.fields import ThumbnailerImageField
 from autoslug import AutoSlugField
@@ -28,7 +33,6 @@ def get_rate_converter():
     from tatianastore import btcaverage
     global _rate_converter
     if not _rate_converter:
-        from django.core.cache import get_cache
         redis = get_cache("default").raw_client
         _rate_converter = btcaverage.RedisConverter(redis)
     return _rate_converter
@@ -76,32 +80,23 @@ class Store(models.Model):
         return u"%s - %s" % (self.slug, self.name)
 
 
-class Album(models.Model):
-    """ Album containing X songs.
+class StoreItem(models.Model):
+    """ Base class for buyable content. """
 
-    Has cover art. You can buy the whole album with the reduced price.
-    """
+    store = models.ForeignKey(Store)
+
+    uuid = models.CharField(max_length=64, editable=False, blank=True, default=uuid4)
 
     #: Visible in URls
     slug = AutoSlugField(populate_from='name')
 
     name = models.CharField(max_length=80, blank=True, null=True)
 
-    #: Store's description of this albums
-    description = models.TextField(blank=True, null=True)
-
-    store = models.ForeignKey(Store)
-
-    cover = ThumbnailerImageField(upload_to=filename_gen("covers/"), blank=True, null=True)
-
-    #: Full album as a zipped file
-    download_zip = models.FileField(upload_to=filename_gen("songs/"), blank=False, null=False)
-
-    #: Price in USD
+    #: Price in store currency
     fiat_price = models.DecimalField(max_digits=16, decimal_places=8, default=Decimal(0))
 
-    def __unicode__(self):
-        return u"%s: %s" % (self.owner.name, self.name)
+    class Meta:
+        abstract = True
 
     def get_btc_price(self):
         """ """
@@ -109,37 +104,38 @@ class Album(models.Model):
         return converter.convert(self.store.currency, "BTC", self.fiat_price)
 
 
-class Song(models.Model):
-    """
+class Album(StoreItem):
+    """ Album containing X songs.
+
+    Has cover art. You can buy the whole album with the reduced price.
     """
 
-    #: Owner of the song
-    store = models.ForeignKey(Store)
+    #: Store's description of this albums
+    description = models.TextField(blank=True, null=True)
+
+    cover = ThumbnailerImageField(upload_to=filename_gen("covers/"), blank=True, null=True)
+
+    #: Full album as a zipped file
+    download_zip = models.FileField(upload_to=filename_gen("songs/"), blank=True, null=True)
+
+    def __unicode__(self):
+        return u"%s: %s" % (self.store.name, self.name)
+
+
+class Song(StoreItem):
+    """
+    """
 
     #: Song can belong to album, or exist without an album
     album = models.ForeignKey(Album, null=True)
 
-    #: Song title
-    name = models.CharField(max_length=80, blank=True, null=True)
-
-    #: Visible in URls
-    slug = AutoSlugField(populate_from='name')
-
-    download_mp3 = models.FileField(upload_to=filename_gen("songs/"), blank=False, null=False)
+    download_mp3 = models.FileField(upload_to=filename_gen("songs/"), blank=True, null=True)
 
     prelisten_mp3 = models.FileField(upload_to=filename_gen("prelisten/"), blank=True, null=True)
     prelisten_vorbis = models.FileField(upload_to=filename_gen("prelisten/"), blank=True, null=True)
 
     #: Song duration in seconds
     duration = models.FloatField(blank=True, null=True)
-
-    #: Price in USD
-    fiat_price = models.DecimalField(max_digits=16, decimal_places=8, default=Decimal(0))
-
-    def get_btc_price(self):
-        """ """
-        converter = get_rate_converter()
-        return converter.convert(self.store.currency, "BTC", self.fiat_price)
 
     def __unicode__(self):
         return u"%s: %s" % (self.store.name, self.name)
@@ -155,16 +151,15 @@ class DownloadTransaction(models.Model):
     #: Who we notify when the transaction is complete
     customer_email = models.CharField(max_length=64, blank=True, null=True)
 
+    #: Django session used to create this purchase request
+    session_id = models.CharField(max_length=64, blank=True, null=True)
+
     #: Human-readable description of this transaction
     description = models.CharField(max_length=256, editable=False, blank=True, default="")
 
     uuid = models.CharField(max_length=64, editable=False, blank=True, default=uuid4)
 
     store = models.ForeignKey(Store, null=True)
-
-    albums = models.ManyToManyField(Album, related_name="album_download_transactions")
-
-    songs = models.ManyToManyField(Song, related_name="song_download_transactions")
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -222,36 +217,25 @@ class DownloadTransaction(models.Model):
         self.btc_address = blockchain.create_new_receiving_address(label=label)
         return self.btc_address
 
-    def prepare(self, albums, songs, description, ip, user_currency):
+    def prepare(self, items, description, session_id, ip, user_currency):
         """ Prepares this transaction for the payment phase.
 
         Count order total, initialize BTC addresses, etc.
         """
-        self.albums = albums
-        self.songs = songs
         self.ip = ip
         self.payment_source = DownloadTransaction.PAYMENT_SOURCE_BLOCKCHAIN
         self.user_currency = user_currency
         self.expires_at = self.created_at + datetime.timedelta(days=1)
+        self.session_id = session_id
+
+        assert session_id, "Cannot create download transaction without a valid sessio"
 
         fiat_amount = Decimal(0)
 
         store = None
         source_currency = None
 
-        for a in albums:
-
-            # Make sure everything is from the same artist,
-            # as currently artist determinates the currency
-            if not store:
-                store = a.store
-            else:
-                assert a.store == store, "Cannot order cross artists (album)"
-
-            fiat_amount += a.fiat_price
-            source_currency = a.store.currency
-
-        for s in songs:
+        for s in items:
 
             # Make sure everything is from the same artist,
             # as currently artist determinates the currency
@@ -262,6 +246,8 @@ class DownloadTransaction(models.Model):
 
             fiat_amount += s.fiat_price
             source_currency = s.store.currency
+
+            DownloadTransactionItem.objects.create(content_object=s, transaction=self)
 
         assert source_currency, "Did not get any line items"
 
@@ -279,7 +265,7 @@ class DownloadTransaction(models.Model):
         # Make sure we don't accidentally create negative orders
         assert self.btc_amount > 0, "Cannot make empty or negative orders (btc) "
         assert self.fiat_amount > 0, "Cannot make empty or negative orders (fiat)"
-        assert self.albums.all().count() > 0 or self.songs.all().count() > 0, "At least one album or one song must be in the transaction"
+        assert len(items) > 0, "At least one album or one song must be in the transaction"
         self.save()
 
     def is_pending(self):
@@ -317,6 +303,16 @@ class DownloadTransaction(models.Model):
         self.cancelled_at = timezone.now()
         self.save()
 
+    def mark_payment_received(self):
+        """ Enough Bitcoins have been received to process this transaction. """
+        self.btc_received_at = timezone.now()
+        content_manager = UserPaidContentManager(self.session_id)
+
+        for download_item in DownloadTransactionItem.objects.filter(transaction=self):
+            item = download_item.content_object
+            content_manager.mark_paid_by_user(item, self)
+        self.save()
+
     def check_balance(self, value, transaction_hash):
         """ Check if this transaction can be confirmed as received.
 
@@ -334,8 +330,7 @@ class DownloadTransaction(models.Model):
         if value >= t.btc_amount - settings.TRANSACTION_BALANCE_CONFIRMATION_THRESHOLD_BTC:
             logger.info("blockhain.info confirmation success, address: %s tx: %s needed: %s got: %s", t.btc_address, transaction_hash, t.btc_amount, value)
             t.received_transaction_hash = transaction_hash
-            t.btc_received_at = timezone.now()
-            t.save()  # Will trigger signal/Redis pubsub
+            self.mark_payment_received()
             return True
         elif value < t.btc_amount - settings.TRANSACTION_BALANCE_CONFIRMATION_THRESHOLD_BTC:
             logger.error("SHORT OF VALUE: Transaction receiving address: %s unconfirmed balance: %s needs: %s", t.btc_address, value, t.btc_amount)
@@ -345,3 +340,62 @@ class DownloadTransaction(models.Model):
             return False
         else:
             raise RuntimeError("Unhandled transaction balance case %s %s %s" % transaction_hash, value, t.btc_address)
+
+
+class DownloadTransactionItem(models.Model):
+    """ All items which were bought with the particular transaction.
+
+    Links DownloadTransaction to song/album using GenericRelationship.
+    """
+    transaction = models.ForeignKey(DownloadTransaction)
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey()
+
+
+class UserPaidContentManager(object):
+    """ Remember which songs and albums are available for the user.
+
+    We store the list in redis for the performance reason,
+    as this list is retrieved for every store page view.
+
+    This data expires in 365 days, because that's how long
+    we store the session data maximum. After that the retrieval
+    of items must be done through the support.
+    """
+
+    #: session id -> hash of content already owned
+    #: hash maps "song_x" or "album_x" to DownloadTransaction id which has paid for the content
+    REDIS_HASH_KEY = "session_paid_content"
+
+    def __init__(self, session_id):
+        assert session_id, "User content manager needs valid session for the user"
+        self.redis = get_cache("default").raw_client
+        self.session_id = session_id
+        content = self.redis.hget(UserPaidContentManager.REDIS_HASH_KEY, session_id)
+        if content:
+            content = json.loads(content)
+        else:
+            content = {}
+        self.content = content
+
+    def get_download_transaction(self, uuid):
+        """
+        :param type: "album" or "song"
+        """
+
+        uuid = str(uuid)
+        transaction_uuid = self.content.get(uuid)
+        if not transaction_uuid:
+            return None
+        else:
+            return DownloadTransaction.objects.get(uuid=transaction_uuid)
+
+    def has_item(self, item):
+        return self.get_download_transaction(item.uuid) is not None
+
+    def mark_paid_by_user(self, item, transaction):
+        assert isinstance(item, StoreItem)
+        self.content[str(item.uuid)] = str(transaction.uuid)
+        # Save back to redis
+        self.redis.hset(UserPaidContentManager.REDIS_HASH_KEY, self.session_id, json.dumps(self.content))

@@ -99,8 +99,16 @@ main.container {
     min-width: 60px;
 }
 
+.btn-buy-album {
+    min-width: 128px;
+}
+
 .song-controls {
 
+}
+
+.song-controls .btn-select {
+    min-width: 80px;
 }
 
 .clickable-price {

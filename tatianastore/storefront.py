@@ -27,6 +27,7 @@ from django.conf.urls import url
 
 from . import models
 from . import forms
+from utils import get_session_id
 
 logger = logging.getLogger(__name__)
 
@@ -56,6 +57,8 @@ def store(request, slug):
     store = get_object_or_404(models.Store, slug=slug)
     albums = store.album_set.all()
     songs_without_album = models.Song.objects.filter(store=store, album__isnull=True)
+    session_id = get_session_id(request)
+    content_manager = models.UserPaidContentManager(session_id)
     return render_to_response("storefront/store.html", locals(), context_instance=RequestContext(request))
 
 
@@ -71,9 +74,11 @@ def order(request, item_type, item_id):
     if item_type == "album":
         albums = models.Album.objects.filter(id=item_id)
         name = albums[0].name
+        items = albums
     elif item_type == "song":
         songs = models.Song.objects.filter(id=item_id)
         name = songs[0].name
+        items = songs
     else:
         raise RuntimeError("Bad item type")
 
@@ -81,7 +86,9 @@ def order(request, item_type, item_id):
 
     user_currency = request.COOKIES.get("user_currency")
 
-    transaction.prepare(albums=albums, songs=songs, description=name, ip=request.META["REMOTE_ADDR"], user_currency=user_currency)
+    session_id = get_session_id(request)
+
+    transaction.prepare(items, description=name, session_id=session_id, ip=request.META["REMOTE_ADDR"], user_currency=user_currency)
 
     return redirect("pay", str(transaction.uuid))
 
@@ -125,30 +132,33 @@ def thanks(request, uuid):
     # tuples of (name, link)
     download_links = []
 
-    for a in transaction.albums.all():
-        download_links.append(dict(name=a.name, link=reverse("download", args=(transaction.uuid,)) + "?album_id=%d" % a.id))
-        store = a.store
-
-    for s in transaction.songs.all():
-        download_links.append(dict(name=s.name, link=reverse("download", args=(transaction.uuid,)) + "?song_id=%d" % s.id))
-        store = s.store
+    for a in models.DownloadTransactionItem.objects.filter(transaction=transaction):
+        download_links.append(dict(name=a.content_object.name, link=reverse("download", args=(uuid, a.content_object.uuid))))
 
     return render_to_response("storefront/thanks.html", locals(), context_instance=RequestContext(request))
 
 
-def download(request, uuid):
+def download(request, transaction_uuid, item_uuid):
     """ Download ordered albums/songs. """
-    transaction = get_object_or_404(models.DownloadTransaction, uuid=uuid)
-    song_id = request.GET.get("song_id")
-    album_id = request.GET.get("album_id")
+    transaction = get_object_or_404(models.DownloadTransaction, uuid=transaction_uuid)
 
-    if album_id:
-        album = transaction.albums.get(id=album_id)
+    items = models.DownloadTransactionItem.objects.filter(transaction=transaction)
+
+    for item in items:
+        if item.content_object.uuid == item_uuid:
+            break
+    else:
+        return http.HttpResponseNotFound("This download did not contain the mentioned item")
+
+    item = item.content_object
+
+    if isinstance(item, models.Album):
+        album = item
         _file = album.download_zip
         download_name = album.name + ".zip"
         content_type = "application/zip"
-    elif song_id:
-        song = transaction.songs.get(id=song_id)
+    elif isinstance(item, models.Song):
+        song = item
         _file = song.download_mp3
         content_type = "audio/mp3"
         download_name = song.name + ".mp3"
@@ -272,5 +282,5 @@ urlpatterns = patterns('',
     url(r'^pay/(?P<uuid>[^/]+)/$', pay, name="pay"),
     url(r'^transaction_poll/(?P<uuid>[^/]+)/$', transaction_poll, name="transaction_poll"),
     url(r'^thanks/(?P<uuid>[^/]+)/$', thanks, name="thanks"),
-    url(r'^download/(?P<uuid>[^/]+)/$', download, name="download"),
+    url(r'^download/(?P<transaction_uuid>[^/]+)/(?P<item_uuid>[^/]+)/$', download, name="download"),
 )

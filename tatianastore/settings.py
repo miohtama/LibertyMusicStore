@@ -261,8 +261,8 @@ SOUTH_MIGRATION_MODULES = {
     'easy_thumbnails': 'easy_thumbnails.south_migrations',
 }
 
+# Disable some warning pollution
 import warnings
-
 warnings.filterwarnings('ignore', r"DateTimeField received a naive datetime", RuntimeWarning, r'django\.db\.models\.fields')
 
 # Add this to your settings.py
