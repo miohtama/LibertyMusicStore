@@ -26,3 +26,9 @@ media/covers/*
 media/songs/*
 media/prelisten/*
 sample-cd
+*.key
+*.secure
+*.csr
+*.crt
+manage.py
+
