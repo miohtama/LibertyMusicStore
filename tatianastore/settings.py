@@ -9,6 +9,9 @@ TEMPLATE_DEBUG = DEBUG
 SITE_URL = "http://localhost:8000"
 SITE_NAME = "Libery Music Store"
 
+
+PUBLIC_URL = "https://libertymusicstore.net"
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )

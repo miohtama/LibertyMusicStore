@@ -59,6 +59,7 @@ def store(request, slug):
     songs_without_album = models.Song.objects.filter(store=store, album__isnull=True)
     session_id = get_session_id(request)
     content_manager = models.UserPaidContentManager(session_id)
+    public_url = settings.PUBLIC_URL
     return render_to_response("storefront/store.html", locals(), context_instance=RequestContext(request))
 
 
@@ -170,6 +171,21 @@ def download(request, transaction_uuid, item_uuid):
     return response
 
 
+def embed(request, slug):
+    """ Return JavaScript source needed to embed this store. """
+    store = get_object_or_404(models.Store, slug=slug)
+    store_url = reverse("store", args=(store.slug,))
+    return render_to_response("storefront/embed.js", locals(), context_instance=RequestContext(request), content_type="text/javascript")
+
+
+def embed_code(request, slug):
+    """ View embed example code. """
+    store = get_object_or_404(models.Store, slug=slug)
+    public_url = settings.PUBLIC_URL
+    embed_src = request.build_absolute_uri(reverse("embed", args=(store.slug,)))
+    return render_to_response("storefront/embed_code.html", locals(), context_instance=RequestContext(request))
+
+
 def transaction_poll(request, uuid):
     """ Open a long-standing HTTP connection to get transaction info.
 
@@ -277,6 +293,8 @@ def profile(request):
 
 
 urlpatterns = patterns('',
+    url(r'^(?P<slug>[-_\w]+)/embed/$', embed, name="embed"),
+    url(r'^(?P<slug>[-_\w]+)/embed-code/$', embed_code, name="embed_code"),
     url(r'^(?P<slug>[-_\w]+)/$', store, name="store"),
     url(r'^order/(?P<item_type>[\w]+)/(?P<item_id>[\d]+)/$', order, name="order"),
     url(r'^pay/(?P<uuid>[^/]+)/$', pay, name="pay"),

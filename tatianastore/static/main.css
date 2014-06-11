@@ -1,4 +1,8 @@
 /* Reset the container */
+body {
+    background: none transparent;
+}
+
 h1, h2, h3 {
     font-family: 'Libre Baskerville', serif;
 }

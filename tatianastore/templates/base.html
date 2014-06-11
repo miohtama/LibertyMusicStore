@@ -98,11 +98,13 @@
 <script src="{% static "countdown.min.js" %}"></script>
 <script src="{% static "moment-countdown.min.js" %}"></script>
 {% endcomment %}
-
+{% block script %}
 <script src="{% static 'bitcoinprices/bitcoinprices.js' %}"></script>
 <script src="{% static 'bitcoinaddress/dist/bitcoinaddress-bundle.debug.js' %}"></script>
 <script src="{% static "audiotools.js" %}"></script>
+<script src="{% static "pym.js" %}"></script>
 <script src="{% static "main.js" %}"></script>
+{% endblock script %}
 
 {% block custom_script %}
 {% endblock custom_script %}

@@ -3,6 +3,7 @@
     "use strict";
 
     var paymentProgress = 0;
+    var pymChild = null;
 
     // http://stackoverflow.com/a/13164238/315168
     function writeCookie(key, value, days) {
@@ -22,6 +23,18 @@
             paymentProgress = 0; // Wrap around
         }
         $("#payment-progress .progress-bar").css("width", paymentProgress+"%");
+    }
+
+    /**
+     * Handle <iframe> embed and signalling with the parent frame.
+     */
+    function initEmbed() {
+        pymChild = new pym.Child({id: "store-embed-iframe-wrapper"});
+
+        $(window).load(function() {
+            console.log("foo");
+            pymChild.sendHeightToParent();
+        });
     }
 
     /**
@@ -221,6 +234,7 @@
     }
 
     $(document).ready(function() {
+        initEmbed();
         initPrices();
         initBitcoinAddresses();
         window.setInterval(updatePaymentProgress, 500);

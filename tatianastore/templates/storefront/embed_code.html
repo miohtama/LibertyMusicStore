@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block extra_head %}
+<style>
+body {
+    background-color: #fff;
+    background-image:
+    linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
+    linear-gradient(#eee .1em, transparent .1em);
+    background-size: 100% 1.2em;
+}
+</style>
+{% endblock extra_head %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12 text-center" id="payment-details">
+
+            <h1>{{name}}</h1>
+            <p class="lead">{% blocktrans with name=store.name %}
+                Store embedding HTML code example
+            {% endblocktrans %}</p>
+
+            <p>
+                {% trans "Put the following code on your web page" %}
+            </p>
+
+<pre>
+&lt;a id="store-embed" href="{{ public_url }}">Liberty Music Store for Bitcoin&lt;/a>
+&lt;script src="{% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.scheme }}{{ request.get_host }}{% url 'embed' store.slug %}">&lt;/script>
+&lt;noscript style="color: red">Store only works when your browser has JavaScript enabled&lt;/noscript>
+</pre>
+
+            <p>
+                {% trans "Store example below" %}
+            </p>
+
+<a id="store-embed" href="{{ public_url }}">Liberty Music Store for Bitcoin</a>
+<script>
+(function() {
+    window.libertyMusicStore =  {
+        storeURL: "{{ store.store_url }}"
+    };
+    var t = document.createElement('script'); t.type = 'text/javascript'; t.async = true;
+    t.src = "{{ embed_src }}";
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(t, s);
+})();
+</script>
+<noscript style="color: red">Store only works when your browser has JavaScript enabled</noscript>
+
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block footer %}
+{% endblock footer %}
+
+{% block script %}
+{% endblock script %}
