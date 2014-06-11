@@ -114,6 +114,28 @@ Populate cache::
     converter.update()
     print converter.convert("btc", "usd", Decimal("1.0"))
 
+Production setup
+-----------------
+
+Dependencies::
+
+    apt-get install supervisor postgresql postgresql-server-dev-all
+    source /srv/django/tatianastore/venv/bin/activate
+    pip install psycopg2
+
+ffmpeg::
+
+    cd /tmp
+    wget http://johnvansickle.com/ffmpeg/releases/ffmpeg-2.2.1-64bit-static.tar.bz2
+    tar -xf ffmpeg-2.2.1-64bit-static.tar.bz2
+    mv ffmpeg-2.2.1-64bit-static/ffmpeg /usr/local/bin
+
+More
+
+* https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-django-with-postgres-nginx-and-gunicorn
+
+* http://od-eon.com/blogs/calvin/postgresql-cheat-sheet-beginners/
+
 Other
 -----
 
