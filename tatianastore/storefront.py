@@ -4,6 +4,7 @@
 
 """
 
+import os
 import time
 import logging
 import json
@@ -169,6 +170,7 @@ def download(request, transaction_uuid, item_uuid):
 
     response = http.HttpResponse(_file, content_type=content_type)
     response['Content-Disposition'] = 'attachment; filename=%s' % download_name
+    response['Content-Length'] = _file.size
     return response
 
 
