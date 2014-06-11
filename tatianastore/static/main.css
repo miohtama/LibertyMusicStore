@@ -120,6 +120,11 @@ main.container {
     border-bottom: 1px #888 dashed;
 }
 
+.btc-clickable-amount {
+    cursor: pointer;
+    border-bottom: 1px #888 dashed;
+}
+
 .label[data-btc-price] {
     border-bottom: none;
 }

@@ -313,6 +313,10 @@ class DownloadTransaction(models.Model):
             content_manager.mark_paid_by_user(item, self)
         self.save()
 
+    def get_notification_message(self):
+        """ Return the notification payload used to async communication about this transcation. """
+        return dict(transaction_uuid=unicode(self.uuid), status=self.get_status())
+
     def check_balance(self, value, transaction_hash):
         """ Check if this transaction can be confirmed as received.
 

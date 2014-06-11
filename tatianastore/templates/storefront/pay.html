@@ -15,15 +15,16 @@
             </h3>
 
             <p>
-                {{ user_fiat_amount }} {{ user_currency }} /
-                {{ transaction.btc_amount }} <i class="fa fa-btc"></i>
+                <span class="btc-clickable-amount">{{ transaction.btc_amount }}</span> <i class="fa fa-btc"></i>
+                / {{ user_fiat_amount }} {{ user_currency }}
+
             </p>
 
             <div id="btc-address-holder">
                 <strong class="bitcoin-address"
                     data-bc-amount="{{ transaction.btc_amount }}"
                     data-bc-label="{{ request.user.customer.name }}"
-                    data-bc-message="Maksutapahtu"
+                    data-bc-message="{{ transaction.description }}"
                     data-bc-address="{{ transaction.btc_address}}">{{ transaction.btc_address}}</strong>
             </div>
 

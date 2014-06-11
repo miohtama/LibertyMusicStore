@@ -98,3 +98,39 @@ def get_all_address_data():
     else:
         for address in data["addresses"]:
             yield address
+
+
+def force_check_old_address(tx):
+    """ Check if the transaction has come through.
+
+    :return True if the transaction has succeeded
+    """
+
+    if tx.btc_received_at:
+        # Already paid
+        return True
+
+    # Find address status on blockchain.info
+    # TODO: optimize
+    addresses = get_all_address_data()
+    for address in addresses:
+        if address["address"] == tx.btc_address:
+            break
+    else:
+        return False
+
+    try:
+
+        if tx.get_status() != "pending":
+            # Cancelled, confirmed, etc.
+            return False
+
+        value = address["total_received"] / Decimal(100000000)
+
+        if tx.check_balance(value, transaction_hash=""):
+            return True
+
+    except BlockChainAPIError as e:
+        logger.error("BlockChain wallet service error: %s" % e.message)
+
+    return False

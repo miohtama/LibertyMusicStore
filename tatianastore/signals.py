@@ -17,5 +17,5 @@ def transaction_post_save(sender, instance, signal, *args, **kwargs):
     redis = cache.raw_client
     transaction = instance
     # transaction.uuid can be UUID() or string
-    message = dict(transaction_uuid=unicode(transaction.uuid), status=transaction.get_status())
+    message = transaction.get_notification_message()
     redis.publish("transaction_%s" % transaction.uuid, json.dumps(message))

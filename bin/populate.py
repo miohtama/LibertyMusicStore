@@ -75,7 +75,6 @@ if os.path.exists(sample_cd_path):
     test_album.fiat_price = Decimal("9.90")
     test_album.save()
 
-
     for f in os.listdir(sample_cd_path):
         if not f.endswith(".mp3"):
             continue

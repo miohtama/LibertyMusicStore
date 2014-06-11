@@ -78,6 +78,19 @@ Ex::
 
     python manage.py test tatianastore --settings=tatianastore.test_settings
 
+Running manual tests against the blockchain wallet
+----------------------------------------------------
+
+Build a tunnel to a publicly accessible server::
+
+    bin/tunnel-blockchain-callback.sh
+
+Make sure you have your tunneled IP and port in blockchain account notifications::
+
+    http://1.2.3.4:4000/blockchain_received/
+
+Do a test payment.
+
 UWSGI
 -------
 

@@ -233,9 +233,19 @@
         });
     }
 
+    /**
+     * Make BTC amount clickable
+     */
+    function initClickableAmount() {
+        $(".btc-clickable-amount").click(function() {
+            window.getSelection().selectAllChildren(this);
+        });
+    }
+
     $(document).ready(function() {
         initEmbed();
         initPrices();
+        initClickableAmount();
         initBitcoinAddresses();
         window.setInterval(updatePaymentProgress, 500);
         pollTransaction();

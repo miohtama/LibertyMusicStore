@@ -27,6 +27,7 @@ from django.conf.urls import url
 
 from . import models
 from . import forms
+from . import blockchain
 from utils import get_session_id
 
 logger = logging.getLogger(__name__)
@@ -203,6 +204,12 @@ def transaction_poll(request, uuid):
 
     timeout = time.time() + 10
 
+    # At the beginning of the poll do force one manual refresh of the address.
+    # This way we mitigate problems with unreliable BlochChain notifications
+    # and unreliable Redis pubsub
+    if blockchain.force_check_old_address(transaction):
+        return http.HttpResponse(json.dumps(transaction.get_notification_message()))
+
     while time.time() < timeout:
         # print "Transaction polling started %s", now()
 
@@ -250,7 +257,7 @@ def transaction_check_old(request):
     customer = request.user.customer
     transactions = customer.transaction_set.all()
     try:
-        addresses = blockchain.get_all_address_data()
+
 
         checked = succeeded = 0
 
