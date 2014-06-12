@@ -25,6 +25,7 @@ local_settings.*
 media/covers/*
 media/songs/*
 media/prelisten/*
+media/thumbs
 sample-cd
 *.key
 *.secure
