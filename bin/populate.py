@@ -25,11 +25,12 @@ print "Generating sample content"
 print "--------------------------"
 print ""
 
-admin = models.User.objects.create(username="admin")
-admin.is_superuser = True
-admin.is_staff = True
-admin.set_password("admin")
-admin.save()
+if models.User.objects.filter(username="admin").count() == 0:
+   admin = models.User.objects.create(username="admin")
+   admin.is_superuser = True
+   admin.is_staff = True
+   admin.set_password("admin")
+   admin.save()
 
 test_artist = models.Store.objects.create(name="Test Store")
 test_artist.currency = "USD"
