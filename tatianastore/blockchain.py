@@ -68,6 +68,10 @@ def blockchain_received(request):
         logger.error("Got blockchain_received() for unknown address %s", address)
         return http.HttpResponse("*fail")
 
+    if t.btc_received_at:
+        # Already complete
+        return http.HttpResponse("*ok*")
+
     success = t.check_balance(value, transaction_hash)
 
     # Blockchain return values, don't know if meaningful
