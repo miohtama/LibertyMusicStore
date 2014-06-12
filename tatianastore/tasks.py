@@ -13,7 +13,7 @@ from . import models
 logger = logging.getLogger(__name__)
 
 
-@db_periodic_task(crontab(hour='*/1'))
+@db_periodic_task(crontab(minute='59'))
 def update_exchange_rates():
     """ Fetch new exchange rates from btcaverage. """
     from tatianastore.models import get_rate_converter
