@@ -149,6 +149,10 @@ THUMBNAIL_ALIASES = {
     },
 }
 
+THUMBNAIL_BASEDIR = 'thumbs'
+
+THUMBNAIL_DEBUG = True
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
