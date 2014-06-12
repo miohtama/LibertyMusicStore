@@ -10,6 +10,7 @@ import logging
 import json
 from decimal import Decimal
 from django.contrib.auth.decorators import login_required
+import datetime
 
 from django import http
 from django.shortcuts import render_to_response
@@ -56,6 +57,11 @@ def about(request):
 def store(request, slug):
     """ Show artist show inside embed <iframe>.
     """
+ 
+    # Force creation of session key
+    request.session._get_or_create_session_key()
+    request.session["initialized"] = datetime.datetime.now()    
+
     store = get_object_or_404(models.Store, slug=slug)
     albums = store.album_set.all()
     songs_without_album = models.Song.objects.filter(store=store, album__isnull=True)
