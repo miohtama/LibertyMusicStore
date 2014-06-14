@@ -28,10 +28,16 @@ body {
                 {% trans "Put the following code on your web page" %}
             </p>
 
-<pre>
-&lt;a id="store-embed" href="{{ public_url }}">Liberty Music Store for Bitcoin&lt;/a>
-&lt;script src="{% if request.is_secure %}https://{% else %}http://{% endif %}{{ request.scheme }}{{ request.get_host }}{% url 'embed' store.slug %}">&lt;/script>
-&lt;noscript style="color: red">Store only works when your browser has JavaScript enabled&lt;/noscript>
+<pre style="text-align: left; font-size: 77%">
+&lt;a id="store-embed" href="{{ public_url }}"&gt;Liberty Music Store for Bitcoin&lt;/a&gt;
+&lt;script&gt;
+(function() {
+    window.libertyMusicStore =  { storeURL: "{{ store.store_url }}" };
+    var t = document.createElement('script'); t.type = 'text/javascript'; t.async = true; t.src = "{{ embed_src }}";
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(t, s);
+})();
+&lt;/script&gt;
+&lt;noscript style="color: red"&gt;Store only works when your browser has JavaScript enabled&lt;/noscript&gt;
 </pre>
 
             <p>

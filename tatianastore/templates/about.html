@@ -8,23 +8,8 @@
         <div class="span12 text-center">
             <h2>{% trans "Libery Music Store" %}</h2>
             <p class="lead">
-                Versio 0.0
+                The Bitcoin music store for artists will be opened here.
             </p>
         </div>
-
-    <div class="span12">
-            <p class="text-center">
-                {% blocktrans with username=request.user.username customer=request.user.customer.name %}
-                    You are logged in as user <strong>{{username}}</strong>.
-                {% endblocktrans %}
-            </p>
-        </div>
-
-        <div class="span12">
-            <p class="text-center text-warning">
-                {% trans "This is a beta version and intended for test usage only." %}
-            </p>
-        </div>
-    </div>
 
 {% endblock content %}
