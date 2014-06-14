@@ -16,7 +16,7 @@
 
             <p>
                 <span class="btc-clickable-amount">{{ transaction.btc_amount }}</span> <i class="fa fa-btc"></i>
-                / {{ user_fiat_amount }} {{ user_currency }}
+                / {{ user_fiat_amount|floatformat:2 }} {{ user_currency }}
 
             </p>
 

@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     #url(r'^home/$', 'tatianastore.views.enter_payment', name='enter_payment'),
     #url(r'^pay/$', 'tatianastore.views.pay', name='pay'),
 
+    # TODO: Make this URL unguessable
     url(r'^blockchain_received/$', 'tatianastore.blockchain.blockchain_received', name='blockchain_received'),
 
     # Uncomment the next line to enable the admin:

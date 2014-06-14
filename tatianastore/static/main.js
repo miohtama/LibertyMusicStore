@@ -105,8 +105,11 @@
                 }
             },
             error: function(xhr) {
+                // This is fired on page unload in Firefox,
+                // so we need some smarter logic here
+                // before we can have any user active error message
                 console.log(xhr);
-                alert("Error communicating with the server.");
+                //alert("Error communicating with the server.");
             }
         });
     }
