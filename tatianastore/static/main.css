@@ -125,6 +125,10 @@ main.container {
     border-bottom: 1px #888 dashed;
 }
 
+.thanks-download-song {
+    font-size: 200%;
+}
+
 .label[data-btc-price] {
     border-bottom: none;
 }
