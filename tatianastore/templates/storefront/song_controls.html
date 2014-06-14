@@ -35,7 +35,7 @@
 
             <input type="hidden" name="song-{{ album.slug }}-{{ song.slug }}">
 
-            <audio preload="none" class="prelisten hidden">
+            <audio preload="none" class="prelisten">
                 {% if song.prelisten_mp3 %}
                     <source src="{{ song.prelisten_mp3.url }}" type="audio/mpeg">
                 {% endif %}

@@ -216,18 +216,20 @@
                 btn.find("i").attr("class", "fa fa-stop");
             });
 
-            $(audio).on("canplay", function() {
-                //btn.find("i").attr("class", "fa fa-stop");
+            /*
+            $(audio).on("canplay canplaythrough", function() {
+                btn.find("i").attr("class", "fa fa-stop");
+                console.log("canplay");
                 audiotools.fadeIn(currentlyPlaying);
-            });
+            });*/
 
             $(audio).on("ended", function() {
                 stopPlaying();
             });
 
-
             currentlyPlaying = audio;
             audio.load();
+            audiotools.fadeIn(currentlyPlaying);
 
             return false;
         });

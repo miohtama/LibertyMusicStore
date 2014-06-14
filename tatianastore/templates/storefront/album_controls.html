@@ -1,7 +1,9 @@
 {% load thumbnail %}
 
 <h2>{{ album.name }}</h2>
+{% if album.cover %}
 <img src="{% thumbnail album.cover 128x128 %}" alt="">
+{% endif %}
 
 <p class="album-description text-muted">
 </p>

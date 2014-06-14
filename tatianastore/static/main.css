@@ -50,13 +50,17 @@ main.container {
     100% { background: rgba(255,255,255,0.5); }
 }
 
-.playing {
+.playing,
+.playing:focus {
+
+    background: rgba(128,255,128,1);
 
     -webkit-animation-direction: normal;
     -webkit-animation-duration: 5s;
     -webkit-animation-iteration-count: infinite;
     -webkit-animation-name: playing;
     -webkit-animation-timing-function: ease;
+
 
     animation-direction: normal;
     animation-duration: 5s;
