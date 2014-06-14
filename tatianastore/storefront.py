@@ -125,7 +125,7 @@ def pay(request, uuid):
     if request.method == "POST":
         if "cancel" in request.POST:
             transaction.mark_cancelled()
-            return http.HttpResponseRedirect(transaction.store.store_url)
+            return redirect("store", transaction.store.slug)
 
     return render_to_response("storefront/pay.html", locals(), context_instance=RequestContext(request))
 
