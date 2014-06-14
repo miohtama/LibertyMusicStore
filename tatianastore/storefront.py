@@ -142,13 +142,18 @@ def thanks(request, uuid):
     download_links = []
 
     for a in models.DownloadTransactionItem.objects.filter(transaction=transaction):
-        download_links.append(dict(name=a.content_object.name, link=reverse("download", args=(uuid, a.content_object.uuid))))
+        content_type, download_name, _file = a.get_download_info()
+        url = reverse("download", args=(uuid, a.content_object.uuid, download_name))
+        download_links.append(dict(name=a.content_object.name, link=url))
 
     return render_to_response("storefront/thanks.html", locals(), context_instance=RequestContext(request))
 
 
-def download(request, transaction_uuid, item_uuid):
-    """ Download ordered albums/songs. """
+def download(request, transaction_uuid, item_uuid, filename):
+    """ Download ordered albums/songs.
+
+    :param: Filename leftover for the browser to pick from URL, see http://stackoverflow.com/a/1365186/315168
+    """
     transaction = get_object_or_404(models.DownloadTransaction, uuid=transaction_uuid)
 
     items = models.DownloadTransactionItem.objects.filter(transaction=transaction)
@@ -159,23 +164,10 @@ def download(request, transaction_uuid, item_uuid):
     else:
         return http.HttpResponseNotFound("This download did not contain the mentioned item")
 
-    item = item.content_object
-
-    if isinstance(item, models.Album):
-        album = item
-        _file = album.download_zip
-        download_name = album.name + ".zip"
-        content_type = "application/zip"
-    elif isinstance(item, models.Song):
-        song = item
-        _file = song.download_mp3
-        content_type = "audio/mp3"
-        download_name = song.name + ".mp3"
-    else:
-        raise RuntimeError("No album or song given for the download")
+    content_type, download_name, _file = item.get_download_info()
 
     response = http.HttpResponse(_file, content_type=content_type)
-    response['Content-Disposition'] = 'attachment; filename=%s' % download_name
+    response['Content-Disposition'] = 'attachment'
     response['Content-Length'] = _file.size
     return response
 
@@ -315,5 +307,5 @@ urlpatterns = patterns('',
     url(r'^pay/(?P<uuid>[^/]+)/$', pay, name="pay"),
     url(r'^transaction_poll/(?P<uuid>[^/]+)/$', transaction_poll, name="transaction_poll"),
     url(r'^thanks/(?P<uuid>[^/]+)/$', thanks, name="thanks"),
-    url(r'^download/(?P<transaction_uuid>[^/]+)/(?P<item_uuid>[^/]+)/$', download, name="download"),
+    url(r'^download/(?P<transaction_uuid>[^/]+)/(?P<item_uuid>[^/]+)/(?P<filename>[^/]+)$', download, name="download"),
 )

@@ -17,7 +17,7 @@
                         Already bought
                     {% endcomment %}
 
-                    <a href="{% url 'download' tx.uuid song.uuid %}" class="btn-select btn btn-default" title="Download purchased song">
+                    <a href="{% url 'download' tx.uuid song.uuid song.get_download_info.1 %}" class="btn-select btn btn-default" title="Download purchased song">
                         <i class="fa fa-download"></i>
                     </a>
                 {% else %}

@@ -118,6 +118,12 @@ class Album(StoreItem):
     #: Full album as a zipped file
     download_zip = models.FileField(upload_to=filename_gen("songs/"), blank=True, null=True)
 
+    def get_download_info(self):
+        _file = self.download_zip
+        download_name = self.name + ".zip"
+        content_type = "application/zip"
+        return content_type, download_name, _file
+
     def __unicode__(self):
         return u"%s: %s" % (self.store.name, self.name)
 
@@ -136,6 +142,12 @@ class Song(StoreItem):
 
     #: Song duration in seconds
     duration = models.FloatField(blank=True, null=True)
+
+    def get_download_info(self):
+        _file = self.download_mp3
+        content_type = "audio/mp3"
+        download_name = self.name + ".mp3"
+        return content_type, download_name, _file
 
     def __unicode__(self):
         return u"%s: %s" % (self.store.name, self.name)
@@ -355,6 +367,11 @@ class DownloadTransactionItem(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey()
+
+    def get_download_info(self):
+        """ Get content type and filename for the download. """
+        item = self.content_object
+        return item.get_download_info()
 
 
 class UserPaidContentManager(object):

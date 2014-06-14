@@ -9,7 +9,7 @@
 </p>
 
 {% if tx %}
-    <a class="btn btn-lg btn-default btn-buy-album" href="{% url 'download' tx.uuid album.uuid %}">
+    <a class="btn btn-lg btn-default btn-buy-album" href="{% url 'download' tx.uuid album.uuid album.get_download_info.1 %}">
         <i class="fa fa-download"></i>
     </a>
 {% else %}
