@@ -29,6 +29,8 @@ Example ``local_settings.py``::
 
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+    PUBLIC_URL = "http://localhost:8000"
+
 Setup empty database::
 
     python manage.py syncdb --noinput && python manage.py migrate

@@ -54,15 +54,33 @@ class Store(admin.ModelAdmin):
 
 
 class Song(admin.ModelAdmin):
-    list_display = ('id', 'order', 'name')
+    list_display = ('id', 'order', 'name', "fiat_price")
 
 
-class SongInline(admin.StackedInline):
-    model = Song
+class SongInline(admin.TabularInline):
+    model = models.Song
+    fields = ("visible", "order", "name", "fiat_price")
+    extra = 0
 
 
 class Album(admin.ModelAdmin):
     inlines = [SongInline]
+
+    fields = ("visible", "name", "fiat_price",)
+
+    # https://djangosnippets.org/snippets/1053/
+    class Media:
+        js = (
+            'https://code.jquery.com/jquery-2.0.3.min.js',
+            '/static/admin/jquery-ui-1.10.4.custom.js',
+            '/static/admin/menusort.js',
+        )
+
+        css = {
+            'all': ('/static/admin/hide-tabularinline-name.css',),
+        }
+
+
 
 
 

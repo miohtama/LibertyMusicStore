@@ -1,0 +1,9 @@
+/* http://stackoverflow.com/a/5556813/315168 */
+.original p {
+  display: none !important;
+  color: red !important;
+}
+
+.inline-group .tabular tr.has_original td {
+    padding-top: 0em;
+}

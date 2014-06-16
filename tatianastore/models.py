@@ -95,6 +95,10 @@ class StoreItem(models.Model):
     #: Price in store currency
     fiat_price = models.DecimalField(max_digits=16, decimal_places=8, default=Decimal(0))
 
+    #: Hidden items are "soft-deleted" - they do not appear in the store,
+    #: but still exist in db for accounting purposes and such
+    visible = models.BooleanField(default=True)
+
     class Meta:
         abstract = True
 
