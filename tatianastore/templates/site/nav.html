@@ -1,3 +1,4 @@
+{% load i18n %}
 
 <header class="navbar navbar-default" id="navbar-site">
     <div class="navbar-inner">
@@ -25,18 +26,11 @@
             <div class="collapse navbar-collapse" id="tatianastore-navbar-collapse-1">
 
                 <ul class="nav navbar-nav">
-                    {% if request.user.customer %}
-                        <li><a href="{% url 'index' %}">{% trans "New payment" %}</a></li>
-                        <li><a href="{% url 'transaction_past' %}">{% trans "Past payments" %}</a></li>
-                        <li><a href="{% url 'customer_summary' request.user.customer.id %}">{% trans "Store info" %}</a></li>
-                    {% endif %}
-
-                    {% if request.user.distributor %}
-                        <li><a href="{% url 'distributor_summary' request.user.distributor.id %}">{% trans "Manage customers" %}</a></li>
-                    {% endif %}
-                    <li><a href="{% url 'about' %}">{% trans "About" %}</a></li>
+                    <li><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+                    <li><a href="{% url 'index' %}">{% trans "About" %}</a></li>
                 </ul>
 
+                {% comment %}
                 <ul class="nav navbar-nav navbar-right">
                     {% if request.user.is_anonymous %}
                         <li>
@@ -54,8 +48,8 @@
                             </a>
                         </li>
                     {% endif %}
-
                 </ul>
+                {% endcomment %}
             </div>
 
          </div>

@@ -9,7 +9,7 @@ from . import storefront
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', 'tatianastore.storefront.index', name='index'),
+    url(r'^$', 'tatianastore.site.index', name='index'),
     #url(r'^about/$', 'tatianastore.views.about', name='about'),
     #url(r'^home/$', 'tatianastore.views.enter_payment', name='enter_payment'),
     #url(r'^pay/$', 'tatianastore.views.pay', name='pay'),
