@@ -143,6 +143,11 @@ class Song(StoreItem):
     #: Song duration in seconds
     duration = models.FloatField(blank=True, null=True)
 
+    order = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        ordering = ('order', "-id")
+
     def get_download_info(self):
         _file = self.download_mp3
         content_type = "audio/mp3"

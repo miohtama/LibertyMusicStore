@@ -54,11 +54,16 @@ class Store(admin.ModelAdmin):
 
 
 class Song(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'order', 'name')
+
+
+class SongInline(admin.StackedInline):
+    model = Song
 
 
 class Album(admin.ModelAdmin):
-    pass
+    inlines = [SongInline]
+
 
 
 from django.contrib.auth.models import Group as _Group
