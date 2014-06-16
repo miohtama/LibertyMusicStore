@@ -30,7 +30,7 @@
 
         // Handle dynamic iframe sizing with pym
         var iframe = document.createElement("iframe");
-        loadScript("{% static 'pym.js' %}");
+        loadScript("{{ public_url }}{% static 'pym.js' %}");
     }
 
     if (document.readyState == "complete" || document.readyState == "loaded" || document.readyState == "interactive") {

@@ -35,25 +35,6 @@ from utils import get_session_id
 logger = logging.getLogger(__name__)
 
 
-def index(request):
-    """ """
-    return render_to_response("about.html", locals(), context_instance=RequestContext(request))
-
-
-def enter_payment(request):
-    """ Ask start entering the payment."""
-
-    admin = request.user.is_authenticated() and request.user.is_staff
-    return render_to_response("payment.html", locals(), context_instance=RequestContext(request))
-
-
-def about(request):
-    """ """
-
-    admin = request.user.is_authenticated() and request.user.is_staff
-    return render_to_response("about.html", locals(), context_instance=RequestContext(request))
-
-
 def store(request, slug):
     """ Show artist show inside embed <iframe>.
     """
@@ -176,6 +157,7 @@ def embed(request, slug):
     """ Return JavaScript source needed to embed this store. """
     store = get_object_or_404(models.Store, slug=slug)
     store_url = reverse("store", args=(store.slug,))
+    public_url = settings.PUBLIC_URL
     return render_to_response("storefront/embed.js", locals(), context_instance=RequestContext(request), content_type="text/javascript")
 
 
