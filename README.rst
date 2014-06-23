@@ -2,11 +2,13 @@
 
 Dependencies
 
-* SQL database (any, defaults to SQLite)
+* SQL database (SQLite for development, PostgreSQL for production recommended)
 
 * Redis
 
 * Django
+
+* Supervisor (production deployment only)
 
 blockchain.info API is used for the receiving transactions and Bitcoin wallet management.
 
@@ -131,6 +133,11 @@ ffmpeg::
     wget http://johnvansickle.com/ffmpeg/releases/ffmpeg-2.2.1-64bit-static.tar.bz2
     tar -xf ffmpeg-2.2.1-64bit-static.tar.bz2
     mv ffmpeg-2.2.1-64bit-static/ffmpeg /usr/local/bin
+
+Deployment::
+
+    ssh tatianastore
+    git pull && supervisorctl restart tatianastore_uwsgi
 
 More
 

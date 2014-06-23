@@ -12,7 +12,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', 'tatianastore.site.index', name='index'),
 
-    url(r'^blockchain_received/%s$' % settings.BLOCHAIN_RECEIVED_SETTINGS, 'tatianastore.blockchain.blockchain_received', name='blockchain_received'),
+    url(r'^blockchain_received/%s$' % settings.BLOCKCHAIN_WEBHOOK_SECRET, 'tatianastore.blockchain.blockchain_received', name='blockchain_received'),
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),

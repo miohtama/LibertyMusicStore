@@ -289,6 +289,6 @@ HUEY = {
 
 
 #: Override this value to make unguessable wallet hook URLs
-BLOCHAIN_RECEIVED_SETTINGS = ""
+BLOCKCHAIN_WEBHOOK_SECRET = ""
 
 from tatianastore.local_settings import *
