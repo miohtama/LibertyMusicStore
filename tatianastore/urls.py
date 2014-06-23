@@ -5,22 +5,20 @@ from django.conf import settings
 from django.contrib import admin
 
 from . import storefront
+from . import site
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'tatianastore.site.index', name='index'),
-    #url(r'^about/$', 'tatianastore.views.about', name='about'),
-    #url(r'^home/$', 'tatianastore.views.enter_payment', name='enter_payment'),
-    #url(r'^pay/$', 'tatianastore.views.pay', name='pay'),
 
-    # TODO: Make this URL unguessable
-    url(r'^blockchain_received/$', 'tatianastore.blockchain.blockchain_received', name='blockchain_received'),
+    url(r'^blockchain_received/%s$' % settings.BLOCHAIN_RECEIVED_SETTINGS, 'tatianastore.blockchain.blockchain_received', name='blockchain_received'),
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
     url(r'^store/', include(storefront)),
-    #(r'^accounts/', include('registration.backends.default.urls')),
+    url(r'^site/', include(site)),
+    url(r'^accounts/', include('registration.backends.default.urls')),
 )
 
 

@@ -2,44 +2,123 @@
 body {
 }
 
-.filler {
-    /*background-color: rgb(240,240,240);
-    background-image: linear-gradient(rgb(250,250,250) 50%, rgb(255, 24, 24) 50%);*/
-    background-image: repeating-linear-gradient(32deg, rgb(252,252,252), rgb(252,252,252) 35px, rgb(255,24,24) 35px, rgb(255,24,24) 70px);
-    /*background-size: 50px 50px;*/
-    text-align: center;
-    border-bottom: 4px solid #eee;
-    border: 0;
+#navbar-site {
+    min-height: 52px;
+}
+
+.navbar-brand {
+    position: relative;
+    top: -8px;
+    font-family: 'Chivo', sans-serif;
+}
+
+.navbar-default {
+    background: #0744b7;
+
+    background: #3b679e; /* Old browsers */
+    background: -moz-linear-gradient(top,  #3b679e 0%, #2b88d9 50%, #207cca 70%, #2a314f 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3b679e), color-stop(50%,#2b88d9), color-stop(70%,#207cca), color-stop(100%,#2a314f)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #3b679e 0%,#2b88d9 50%,#207cca 70%,#2a314f 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #3b679e 0%,#2b88d9 50%,#207cca 70%,#2a314f 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #3b679e 0%,#2b88d9 50%,#207cca 70%,#2a314f 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #3b679e 0%,#2b88d9 50%,#207cca 70%,#2a314f 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3b679e', endColorstr='#2a314f',GradientType=0 ); /* IE6-9 */
+
+
+    background: #3b679e; /* Old browsers */
+    background: -moz-linear-gradient(top,  #3b679e 0%, #2b88d9 50%, #207cca 99%, #2a314f 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3b679e), color-stop(50%,#2b88d9), color-stop(99%,#207cca), color-stop(100%,#2a314f)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #3b679e 0%,#2b88d9 50%,#207cca 99%,#2a314f 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #3b679e 0%,#2b88d9 50%,#207cca 99%,#2a314f 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #3b679e 0%,#2b88d9 50%,#207cca 99%,#2a314f 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #3b679e 0%,#2b88d9 50%,#207cca 99%,#2a314f 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3b679e', endColorstr='#2a314f',GradientType=0 ); /* IE6-9 */
+
+}
+
+.navbar-default .navbar-brand {
+    color: white;
+}
+
+.navbar-default .navbar-brand:hover {
+    color: #F7931A;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: white;
+}
+
+.navbar-default .navbar-nav>li>a:hover {
+    color: #F7931A;
+}
+
+.jumbotron {
+    background: blue url(/static/img/header.jpg) no-repeat bottom center;
+    background-size: cover;
     min-height: 400px;
 }
 
 
-.filler h1 {
+.jumbotron h1 {
     margin: 0;
     color: white;
-    font-size: 400%;
-    text-shadow: 0 0 2px black,
-                 0 0 2px black,
-                 0 0 2px black,
-                 0 0 2px black,
-                 0 0 2px black,
-                 0 0 2px black,
-                 0 0 2px black,
-                 0 0 2px black,
-                 0 0 2px black,
-                 0 0 2px black,
-                 0 0 2px black,
-                 0 0 2px black,
-                 0 0 2px black,
-                 0 0 2px black,
-                 0 0 2px black,
-                 0 0 2px black,
-                 0 0 2px black,
-                 0 0 2px black,
-                 0 0 2px black,
-                 0 0 2px black;
+    font-size: 600%;
+    text-shadow: 0 0 4px white, 0 0 6px rgba(0, 0, 0, 1);
+    font-family: 'Chivo', sans-serif;
 }
 
-.filler h1 > .text {
-    font-family: 'Old Standard TT', serif;
+.jumbotron .lead {
+    color: white;
+    text-shadow: 0 0 2px black, 0 0 0 black, 0 0 1px black, 0 0 4px rgba(0,0,0,0.3);
+}
+
+#bitcoin-icon {
+    color: #F7931A;
+}
+
+#bitcoin-icon .fa-circle {
+    text-shadow: 0 1px 3px rgba(32, 32, 32, 0.3);
+}
+
+#bitcoin-icon .fa-btc {
+    -moz-transform: rotate(20deg);
+    -webkit-transform: rotate(20deg);
+    transform: rotate(20deg) translateX(-1px) translateY(:;px);
+}
+
+.marketing {
+    margin-bottom: 60px;
+}
+
+.marketing .fa {
+    color: #0744b7;
+    text-shadow: 0 0 3px rgba(128, 128, 128, 0.4);
+    font-size: 300%;
+}
+
+.marketing h4 {
+    color: #0744b7;
+    font-family: 'Chivo', sans-serif;
+}
+
+.marketing .entry {
+    min-height: 140px;
+    text-align: center;
+}
+
+#examples {
+    margin-top: 40px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#examples h3 {
+    text-align: center;
+}
+
+#footer-content {
+    margin-top: 40px;
+    padding-top: 20px;
+    text-align: center;
+    border-top: 1px solid #aaaaaa;
 }

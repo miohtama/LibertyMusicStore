@@ -240,7 +240,6 @@ def transaction_check_old(request):
     transactions = customer.transaction_set.all()
     try:
 
-
         checked = succeeded = 0
 
         for address in addresses:
@@ -267,18 +266,6 @@ def transaction_check_old(request):
     except BlockChainAPIError as e:
         messages.error(request, "BlockChain wallet service error: %s" % e.message)
         return http.HttpResponseRedirect(reverse("transaction_past"))
-
-
-def profile(request):
-    """
-    """
-
-    user = request.user
-
-    if request.user.customer:
-        return http.HttpResponseRedirect(reverse("enter_payment"))
-
-    return render_to_response("profile.html", locals(), context_instance=RequestContext(request))
 
 
 urlpatterns = patterns('',

@@ -10,13 +10,10 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-{% comment %}
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
-{% endcomment %}
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Old+Standard+TT' rel='stylesheet' type='text/css'>
+
+    <link href='http://fonts.googleapis.com/css?family=Chivo' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="{% static "site.css" %}"/>
 
     <title>{% block title %}Libery Music Store{% endblock %}</title>
@@ -36,6 +33,8 @@
 
 
 {% block container %}
+{% include "site/nav.html" %}
+
 <main class="container">
 
     {% if messages %}
@@ -50,51 +49,30 @@
     </div>
     {% endif %}
 
-    {% if downtime %}
-        <div class="row">
-          <div class="col-md-12">
-              <div class="alert alert-error">
-                    <h4 class="alert-heading">
-                  {% blocktrans %}Scheduled downtime starting {{downtime}} (UTC), after {{downtime_hours}} hours.  Estimated duration
-                  {{downtime_estimated_minutes}} minutes.{% endblocktrans %}</h4>
-              </div>
-          </div>
-        </div>
-    {% endif %}
-
-
     {% block content %}{% endblock %}
 
     {% block footer %}
-        <div id="footer">
+        <footer id="footer">
             <div class="row">
-                <div class="col-md-12">
+                <div id="footer-content" class="col-md-12">
                     <p class="text text-muted">
                         © Libery Music Store 2014
                     </p>
                 </div>
             </div>
-        </div>
+        </footer>
     {% endblock footer %}
 </main>
 {% endblock container %}
 
 <script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-{% comment %}
-    <script src="{% static 'bootstrap/dist/js/bootstrap.js' %}"></script>
-{% endcomment %}
 
 {% block body_end %}
 {% endblock body_end %}
 
-{% comment %}
-<script src="{% static "moment.min.js" %}"></script>
-<script src="{% static "countdown.min.js" %}"></script>
-<script src="{% static "moment-countdown.min.js" %}"></script>
-{% endcomment %}
 {% block script %}
-<script src="{% static "main.js" %}"></script>
+<script src="{% static "site.js" %}"></script>
 {% endblock script %}
 
 {% block custom_script %}

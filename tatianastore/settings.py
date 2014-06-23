@@ -9,7 +9,6 @@ TEMPLATE_DEBUG = DEBUG
 SITE_URL = "http://localhost:8000"
 SITE_NAME = "Libery Music Store"
 
-
 PUBLIC_URL = "https://libertymusicstore.net"
 
 ADMINS = (
@@ -288,5 +287,8 @@ HUEY = {
     'consumer_options': {'workers': 1},
 }
 
+
+#: Override this value to make unguessable wallet hook URLs
+BLOCHAIN_RECEIVED_SETTINGS = ""
 
 from tatianastore.local_settings import *

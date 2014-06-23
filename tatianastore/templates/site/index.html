@@ -1,20 +1,93 @@
 {% extends "site/base.html" %}
 
 {% load i18n %}
+{% load static %}
 
-{% block container %}
-
-
-    {% comment %}
-        {% include "site/nav.html" %}
-    {% endcomment %}
+{% block content %}
 
     <div class="row">
-        <div class="span12 text-center">
-            <h2>{% trans "Libery Music Store" %}</h2>
-            <p class="lead">
-                The Bitcoin music store for artists will be opened here.
-            </p>
+        <div class="col-md-12">
+            <div class="jumbotron">
+                <h1>{% trans "Libery Music Store" %}</h1>
+                <p class="lead">
+                    The Bitcoin music store for artists.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row marketing">
+        <div class="col-lg-4">
+
+            <div class="entry">
+                <i class="fa fa-music"></i>
+                <h4>Music is your merchandise</h4>
+                <p>As an artist, sell your music directly to your fans. Name your price and place.</p>
+            </div>
+
+            <div class="entry">
+                <i class="fa fa-lock"></i>
+                <h4>Private</h4>
+                <p>Bitcoin transactions are anynomous. Bitcoin revenue is for your eyes only. No paperwork needed.</p>
+            </div>
         </div>
 
-{% endblock container %}
+        <div class="col-lg-4">
+
+            <div class="entry">
+                <i class="fa fa-heart"></i>
+                <h4>Simple</h4>
+                <p>Make your song buyable <strong>with just two clicks</strong> - no sign ups or giving out credit card details needed.</p>
+            </div>
+
+            <div class="entry">
+                <i class="fa fa-wrench"></i>
+                <h4>No separate site needed</h4>
+                <p>
+                    Embed Liberty Music Store your homepage, blog, Wordpress or Facebook.
+                    You don't need a separate place for selling music.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+
+            <div class="entry">
+                <i class="fa fa-globe"></i>
+                <h4>Reach everywhere</h4>
+                <p>Bitcoin is a global virtual currency and works in every country. Fans can pay for your music regardless where they are.</p>
+            </div>
+
+            <div class="entry">
+                <i class="fa fa-thumbs-o-up"></i>
+                <h4>Perfect for specials</h4>
+                <p>Do presales, campaigns, exclusive content.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="well" id="examples">
+                <h3>Out now</h3>
+
+                <div class="media">
+
+                  <a class="pull-left" href="http://tatianacoin.com/">
+                    <img class="media-object" src="{% static 'img/tatiana.jpg' %}" alt="">
+                  </a>
+                  <div class="media-body">
+                    <h4 class="media-heading"><a href="http://tatianacoin.com/">Tatiana Moroz - Love and Liberty</a></h4>
+                    <p>
+                        See also TatianaCoin - <a href="http://tatianacoin.com/">the first virtual currency fundraising campaign for artists.</a>
+                    <p>
+                  </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

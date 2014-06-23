@@ -27,17 +27,17 @@
 
                 <ul class="nav navbar-nav">
                     <li><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
-                    <li><a href="{% url 'index' %}">{% trans "About" %}</a></li>
+                    <li><a href="{% url 'about' %}">{% trans "About" %}</a></li>
+                    <li><a href="{% url 'info' %}">{% trans "Info" %}</a></li>
                 </ul>
 
-                {% comment %}
                 <ul class="nav navbar-nav navbar-right">
                     {% if request.user.is_anonymous %}
                         <li>
                             <a href="{% url 'auth_login' %}">{% trans "Log in" %}</a>
                         </li>
                         <li>
-                            <a href="{% url 'registration_register' %}">{% trans "Sign up" %}</a>
+                            <a href="{% url 'signup' %}">{% trans "Sign up" %}</a>
                         </li>
                     {% else %}
                         <li>
@@ -49,7 +49,6 @@
                         </li>
                     {% endif %}
                 </ul>
-                {% endcomment %}
             </div>
 
          </div>
