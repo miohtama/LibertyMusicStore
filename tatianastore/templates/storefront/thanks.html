@@ -1,6 +1,11 @@
-{% extends "base.html" %}
+{% extends "storefront/base.html" %}
 
 {% load i18n %}
+
+{% block extra_head %}
+{{ store.extra_html|safe }}
+{% endblock extra_head %}
+
 
 {% block content %}
 

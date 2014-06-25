@@ -1,4 +1,9 @@
-**Libery Music Store** is a prototype MP3 store taking Bitcoin payments.
+.. contents:: :local:
+
+Introduction
+---------------
+
+`**Libery Music Store** is a prototype MP3 store taking Bitcoin payments. <https://libertymusicstore.net>`_
 
 Dependencies
 
@@ -153,3 +158,42 @@ Codename ``tatianastore`` is used through the project.
 ``test-song.mp3`` is *I dunno* by *Grapes*.
 
 * http://ccmixter.org/files/grapes/16626
+
+Dark theme example
++++++++++++++++++++++
+
+Extra HTML for the store to make it white on black::
+
+    <link href='http://fonts.googleapis.com/css?family=Volkhov' rel='stylesheet' type='text/css'>
+    <style>
+        body {
+           background: black;
+           color: #aaa;
+           margin: 20px;
+        }
+
+        h1, h3 {
+           font-family: "Volkhov",serif;
+        }
+
+        .btn-default {
+            background: #666;
+            color: white;
+        }
+    </style>
+
+Some fonts
+++++++++++++
+
+Examples::
+
+    <link href='https://fonts.googleapis.com/css?family=Libre+Baskerville&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+Author
+------
+
+Mikko Ohtamaa (`blog <https://opensourcehacker.com>`_, `Facebook <https://www.facebook.com/?q=#/pages/Open-Source-Hacker/181710458567630>`_, `Twitter <https://twitter.com/moo9000>`_, `Google+ <https://plus.google.com/u/0/103323677227728078543/>`_)
+
+Contact for work and consulting offers.
+
+

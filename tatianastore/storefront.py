@@ -108,6 +108,8 @@ def pay(request, uuid):
             transaction.mark_cancelled()
             return redirect("store", transaction.store.slug)
 
+    store = transaction.store
+
     return render_to_response("storefront/pay.html", locals(), context_instance=RequestContext(request))
 
 
@@ -126,6 +128,8 @@ def thanks(request, uuid):
         content_type, download_name, _file = a.get_download_info()
         url = reverse("download", args=(uuid, a.content_object.uuid, download_name))
         download_links.append(dict(name=a.content_object.name, link=url))
+
+    store = transaction.store
 
     return render_to_response("storefront/thanks.html", locals(), context_instance=RequestContext(request))
 

@@ -50,6 +50,12 @@ class User(UserAdmin):
 
 class DownloadTransaction(admin.ModelAdmin):
 
+    list_display = ("uuid", "get_status", "created_at", "description", "fiat_amount")
+
+    readonly_fields = ("store", "uuid", "created_at", "description", "btc_amount", "fiat_amount", "currency", "btc_received_at", "cancelled_at")
+
+    fields = readonly_fields
+
     def has_delete_permission(self, request, obj=None):
         return False
 

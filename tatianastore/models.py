@@ -124,7 +124,7 @@ class StoreItem(models.Model):
     name = models.CharField(max_length=80, blank=True, null=True)
 
     #: Price in store currency
-    fiat_price = models.DecimalField(max_digits=16, decimal_places=8, default=Decimal(0), validators=[validators.MinValueValidator(Decimal('0.01'))],
+    fiat_price = models.DecimalField(max_digits=16, decimal_places=2, default=Decimal(0), validators=[validators.MinValueValidator(Decimal('0.01'))],
                                      verbose_name="Price in your local currency",
                                      help_text="Will be automatically converted to the Bitcoin on the moment of purchase")
 
@@ -242,7 +242,7 @@ class DownloadTransaction(models.Model):
     btc_amount = models.DecimalField(max_digits=16, decimal_places=8, default=Decimal(0))
 
     #: What's the source price of this transaction
-    fiat_amount = models.DecimalField(max_digits=16, decimal_places=8, default=Decimal(0))
+    fiat_amount = models.DecimalField(max_digits=16, decimal_places=2, default=Decimal(0))
 
     #: Either "blockchain.info" or "bitcoind"
     payment_source = models.CharField(max_length=32, blank=False, null=False)
