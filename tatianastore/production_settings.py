@@ -14,5 +14,5 @@ TEMPLATE_LOADERS = (
     )),
 )
 
-LOGGERS["loggers"][""]["handlers"] = ["file"]
-LOGGERS["loggers"][""]["level"] = ["INFO"]
+LOGGING["loggers"][""]["handlers"] = ["file"]
+LOGGING["loggers"][""]["level"] = ["INFO"]
