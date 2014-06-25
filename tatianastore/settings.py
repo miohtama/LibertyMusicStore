@@ -138,6 +138,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(os.path.basename(__file__), "..", "templates")
 )
 
 AUTH_USER_MODEL = 'tatianastore.User'
@@ -184,7 +185,7 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 # more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
 
     'formatters': {
         'verbose': {
@@ -234,9 +235,15 @@ LOGGING = {
             'propagate': True,
         },
 
+        'django.db.backends': {
+            'handlers': [],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+
         '': {
             'level': 'DEBUG',
-            'handlers': ['file'],
+            'handlers': ['rainbow'],
             'propagate': True,
         },
     }
@@ -284,9 +291,10 @@ HUEY = {
     'name': 'Huey Redis',
     'connection': {'host': 'localhost', 'port': 6379},
     'always_eager': False, # Defaults to False when running via manage.py run_huey
-    'consumer_options': {'workers': 1},
+    'consumer_options': {'workers': 3},
 }
 
+LOGIN_REDIRECT_URL = "/admin/"
 
 #: Override this value to make unguessable wallet hook URLs
 BLOCKCHAIN_WEBHOOK_SECRET = ""

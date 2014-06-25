@@ -25,6 +25,8 @@ print "Generating sample content"
 print "--------------------------"
 print ""
 
+models.update_initial_groups()
+
 if models.User.objects.filter(username="admin").count() == 0:
    admin = models.User.objects.create(username="admin")
    admin.is_superuser = True

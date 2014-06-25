@@ -1,0 +1,10 @@
+{% extends "admin/change_form.html" %}
+
+{% load i18n admin_urls admin_static admin_modify %}
+
+{% block submit_buttons_bottom %}
+{% submit_row %}
+<div style="text-align: right">
+<a target="_blank" href="{% url 'embed_code' original.slug %}" class="">Show store preview and HTML embed code</a>
+</div>
+{% endblock %}

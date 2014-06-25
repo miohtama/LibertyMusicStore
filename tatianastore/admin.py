@@ -44,17 +44,73 @@ class User(UserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 class DownloadTransaction(admin.ModelAdmin):
-    pass
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 class Store(admin.ModelAdmin):
-    pass
+
+    list_display = ("id", "name", "store_url")
+
+    change_form_template = "admin/store_form.html"
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def get_queryset(self, request):
+        qs = super(Store, self).get_queryset(request)
+
+        # Store owners can only operate their own stores
+        if not request.user.is_superuser:
+            qs = request.user.operated_stores
+        return qs
+
+    def get_readonly_fields(self, request, obj=None):
+        if not request.user.is_superuser:
+            return ("operators",)
 
 
 class Song(admin.ModelAdmin):
-    list_display = ('id', 'order', 'name', "fiat_price")
+
+    list_display = ('visible', 'album', 'name', "fiat_price")
+
+    list_display_links = ("name",)
+
+    fields = ("visible", "store", "album", "name", "fiat_price", "download_mp3", "prelisten_mp3", "prelisten_vorbis")
+
+    readonly_fields = ("order",)
+
+    def get_form(self, request, obj=None, **kwargs):
+        # https://djangosnippets.org/snippets/1558/
+        form = super(Song, self).get_form(request, obj, **kwargs)
+        # form class is created per request by modelform_factory function
+        # so it's safe to modifys
+        if not request.user.is_superuser:
+            default_store = request.user.operated_stores.first()
+            form.base_fields['store'].queryset = request.user.operated_stores
+            form.base_fields['store'].initial = default_store
+
+            form.base_fields['album'].queryset = default_store.album_set.all()
+            form.base_fields['album'].initial = default_store.album_set.first()
+
+        return form
+
+    def get_queryset(self, request):
+        qs = super(Song, self).get_queryset(request)
+
+        # Store owners can only operate their own stores
+        if not request.user.is_superuser:
+            qs = filter_user_manageable_content(request.user, qs)
+        return qs
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 class SongInline(admin.TabularInline):
@@ -62,11 +118,35 @@ class SongInline(admin.TabularInline):
     fields = ("visible", "order", "name", "fiat_price")
     extra = 0
 
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 class Album(admin.ModelAdmin):
     inlines = [SongInline]
 
-    fields = ("visible", "name", "fiat_price",)
+    fields = ("visible", "store", "name", "fiat_price", "cover", "download_zip")
+
+    def get_queryset(self, request):
+        qs = super(Album, self).get_queryset(request)
+
+        # Store owners can only operate their own stores
+        if not request.user.is_superuser:
+            qs = filter_user_manageable_content(request.user, qs)
+        return qs
+
+    def get_form(self, request, obj=None, **kwargs):
+        # https://djangosnippets.org/snippets/1558/
+        form = super(Album, self).get_form(request, obj, **kwargs)
+        # form class is created per request by modelform_factory function
+        # so it's safe to modifys
+        if not request.user.is_superuser:
+            form.base_fields['store'].queryset = request.user.operated_stores
+            form.base_fields['store'].initial = request.user.operated_stores.first()
+        return form
 
     # https://djangosnippets.org/snippets/1053/
     class Media:
@@ -80,14 +160,21 @@ class Album(admin.ModelAdmin):
             'all': ('/static/admin/hide-tabularinline-name.css',),
         }
 
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
+def filter_user_manageable_content(user, queryset):
+    """ Limit queryset so that it only contains objects for the stores the user can manabe.
+    """
 
+    if user.is_superuser:
+        # No limitations for the staff users
+        return queryset
+    else:
+        stores = user.operated_stores.all()
+        return queryset.filter(store__in=stores)
 
-from django.contrib.auth.models import Group as _Group
-from django.contrib.auth.models import User as _User
-admin.site.unregister(_Group)
-#admin.site.unregister(_User)
 
 admin.site.register(models.User, User)
 admin.site.register(models.DownloadTransaction, DownloadTransaction)

@@ -8,11 +8,16 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
+import time
 import subprocess
+import logging
 
 from django.conf import settings
 
 FFMPEG = os.environ.get('FFMPEG') or "/usr/local/bin/ffmpeg"
+
+
+logger = logging.getLogger(__name__)
 
 
 def create_prelisten_ogg(mp3, ogg, start, duration):
@@ -52,6 +57,8 @@ def create_prelisten_from_upload(song, start=10, duration=30):
     """ Create and save prelistened version of the song.
     """
 
+    logger.info("Starting prelisten production for song %d" % song.id)
+
     mp3 = song.download_mp3.file.name
 
     # convert for command line
@@ -69,3 +76,31 @@ def create_prelisten_from_upload(song, start=10, duration=30):
     song.prelisten_vorbis.name = "prelisten/" + f
 
     song.save()
+
+
+def create_prelisten_on_demand(song):
+    """ Create prelisten clips only if the song MP3 content has changed.
+    """
+
+    logger.info("Checking need for prelisten production for song %d" % song.id)
+
+    if not song.download_mp3:
+        # No need to generate the field is empty
+        return
+
+    f = "prelisten-%d.mp3" % song.id
+    outf = os.path.join(settings.MEDIA_ROOT, "prelisten", f)
+    mp3 = song.download_mp3.file.name
+
+    if os.path.exists(outf):
+        # Check modification time of the upload versus prelisten
+        prelisten_mod_time = os.path.getmtime(outf)
+        upload_mod_time = os.path.getmtime(mp3)
+
+        logger.info("Checking if the existing prelisten needs to be overwritten. Upload %f prelisten %f", upload_mod_time, prelisten_mod_time)
+
+        if upload_mod_time > prelisten_mod_time:
+            create_prelisten_from_upload(song)
+    else:
+        # Fresh Song created
+        create_prelisten_from_upload(song)

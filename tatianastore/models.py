@@ -16,10 +16,13 @@ from django.db.models import Sum
 from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import Permission
 from django.contrib.auth.models import UserManager as DjangoUserManager
 from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.contenttypes.generic import GenericRelation
 from django.contrib.contenttypes.models import ContentType
+from django.core import validators
 
 from easy_thumbnails.fields import ThumbnailerImageField
 from autoslug import AutoSlugField
@@ -47,6 +50,20 @@ def filename_gen(basedir):
     return generator
 
 
+def update_initial_groups():
+    """ Django admin controls the store owner access by using Django auth groups.
+
+    This ensures we have the group set with the correct permissions.
+    Run after the syncdb is complete.
+    """
+
+    allowed_permissions = ["change_album", "add_album", "change_song", "add_song", "change_store", "change_downloadtransaction"]
+    allowed_permissions = Permission.objects.filter(codename__in=allowed_permissions)
+    store_operators, created = Group.objects.get_or_create(name="Store operators")
+    store_operators.permissions = allowed_permissions
+    store_operators.save()
+
+
 class UserManager(DjangoUserManager):
     pass
 
@@ -61,7 +78,7 @@ class Store(models.Model):
     """ One user presents artist / store. """
 
     #: Which users can edit data for this artist
-    operators = models.ManyToManyField(User, related_name="operated_artits")
+    operators = models.ManyToManyField(User, related_name="operated_stores")
 
     objects = UserManager()
 
@@ -71,13 +88,27 @@ class Store(models.Model):
     name = models.CharField(max_length=80, blank=True, null=True)
 
     #: In which fiat currency the sales of these songs are
-    currency = models.CharField(max_length=5, blank=False, null=False, default="USD")
+    currency = models.CharField(max_length=5, blank=False, null=False, default="USD",
+                                verbose_name="Currency",
+                                help_text="Code for your local currency where you price albums and songs")
 
     #: Where this store is hosted (needed for the backlinks)
-    store_url = models.URLField()
+    store_url = models.URLField(verbose_name="Artist homepage URL")
+
+    #: The address where completed downlaod payments are credited
+    btc_address = models.CharField(verbose_name="Bitcoin address",
+                                   help_text="Your receiving Bitcoin address where paid downloads will be credited",
+                                   max_length=50,
+                                   blank=True,
+                                   null=True,
+                                   default=None)
+
+    extra_html = models.TextField(verbose_name="Store formatting HTML code",
+                                  help_text="Extra HTML code placed for the site embed &ltiframe&gt. Can include CSS &lt;style&gt; tag for the formatting purposes.",
+                                  default="")
 
     def __unicode__(self):
-        return u"%s - %s" % (self.slug, self.name)
+        return self.name
 
 
 class StoreItem(models.Model):
@@ -93,7 +124,9 @@ class StoreItem(models.Model):
     name = models.CharField(max_length=80, blank=True, null=True)
 
     #: Price in store currency
-    fiat_price = models.DecimalField(max_digits=16, decimal_places=8, default=Decimal(0))
+    fiat_price = models.DecimalField(max_digits=16, decimal_places=8, default=Decimal(0), validators=[validators.MinValueValidator(Decimal('0.01'))],
+                                     verbose_name="Price in your local currency",
+                                     help_text="Will be automatically converted to the Bitcoin on the moment of purchase")
 
     #: Hidden items are "soft-deleted" - they do not appear in the store,
     #: but still exist in db for accounting purposes and such
@@ -117,10 +150,14 @@ class Album(StoreItem):
     #: Store's description of this albums
     description = models.TextField(blank=True, null=True)
 
-    cover = ThumbnailerImageField(upload_to=filename_gen("covers/"), blank=True, null=True)
+    cover = ThumbnailerImageField(upload_to=filename_gen("covers/"), blank=True, null=True,
+                                  verbose_name="Cover art",
+                                  help_text="Cover art as JPEG file")
 
     #: Full album as a zipped file
-    download_zip = models.FileField(upload_to=filename_gen("songs/"), blank=True, null=True)
+    download_zip = models.FileField(upload_to=filename_gen("songs/"), blank=True, null=True,
+                                    verbose_name="Album download ZIP",
+                                    help_text="A ZIP file which the user can download after he/she has paid for the full album")
 
     def get_download_info(self):
         _file = self.download_zip
@@ -137,12 +174,20 @@ class Song(StoreItem):
     """
 
     #: Song can belong to album, or exist without an album
-    album = models.ForeignKey(Album, null=True)
+    album = models.ForeignKey(Album, null=True,
+                              verbose_name="Album",
+                              help_text="On which album this song belongs to. Leave empty for an albumless song. (You can reorder the songs when you edit the album after uploading the songs.)")
 
-    download_mp3 = models.FileField(upload_to=filename_gen("songs/"), blank=True, null=True)
+    download_mp3 = models.FileField(upload_to=filename_gen("songs/"), blank=True, null=True,
+                                    verbose_name="MP3 file",
+                                    help_text="The downloaded content how the user gets it after paying for it.")
 
-    prelisten_mp3 = models.FileField(upload_to=filename_gen("prelisten/"), blank=True, null=True)
-    prelisten_vorbis = models.FileField(upload_to=filename_gen("prelisten/"), blank=True, null=True)
+    prelisten_mp3 = models.FileField(upload_to=filename_gen("prelisten/"), blank=True, null=True,
+                                     verbose_name="Prelisten clip MP3 file",
+                                     help_text="For Safari and IE browsers. Leave empty: This will be automatically generated from uploaded song.")
+    prelisten_vorbis = models.FileField(upload_to=filename_gen("prelisten/"), blank=True, null=True,
+                                        verbose_name="Prelisten clip Ogg Vorbis file",
+                                        help_text="For Chrome and Firefox browsers. Leave empty: This will be automatically generated from uploaded song.")
 
     #: Song duration in seconds
     duration = models.FloatField(blank=True, null=True)
