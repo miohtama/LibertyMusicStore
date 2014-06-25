@@ -56,6 +56,14 @@ class DownloadTransaction(admin.ModelAdmin):
 
     fields = readonly_fields
 
+    def get_queryset(self, request):
+        qs = super(DownloadTransaction, self).get_queryset(request)
+
+        # Store owners can only operate their own stores
+        if not request.user.is_superuser:
+            qs = filter_user_manageable_content(request.user, qs)
+        return qs
+
     def has_delete_permission(self, request, obj=None):
         return False
 
