@@ -1,3 +1,5 @@
+import logging
+
 from tatianastore.settings import *
 
 DEBUG = False
@@ -15,4 +17,4 @@ TEMPLATE_LOADERS = (
 )
 
 LOGGING["loggers"][""]["handlers"] = ["file"]
-LOGGING["loggers"][""]["level"] = ["INFO"]
+LOGGING["loggers"][""]["level"] = "INFO"
