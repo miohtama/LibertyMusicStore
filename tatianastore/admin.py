@@ -88,6 +88,7 @@ class Store(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         if not request.user.is_superuser:
             return ("operators",)
+        return super(Store, self).get_readonly_fields(request, obj)
 
 
 class Song(admin.ModelAdmin):

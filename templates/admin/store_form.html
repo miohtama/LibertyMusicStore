@@ -4,7 +4,9 @@
 
 {% block submit_buttons_bottom %}
 {% submit_row %}
+{% if original.slug %}
 <div style="text-align: right">
 <a target="_blank" href="{% url 'embed_code' original.slug %}" class="">Show store preview and HTML embed code</a>
 </div>
+{% endif %}
 {% endblock %}
