@@ -5,41 +5,55 @@
 
 {% block content %}
 
-    <div>
-        <h1>About Liberty Music Store</h1>
+    <div class="row">
+        <div class="col-md-6">
 
-        <p>
-            Liberty Music Store is a service for selling your music and receive Bitcoin payments for them.
-            Sign up, upload songs, sets prices and then embed Liberty Music Store on your website.
-        </p>
+            <div>
+                <h1>About Liberty Music Store</h1>
 
-        <h2>History</h2>
+                <p>
+                    Liberty Music Store is a service for selling your music and receive Bitcoin payments for them.
+                    Sign up, upload songs, sets prices and then embed Liberty Music Store on your website.
+                </p>
 
-        <p>
-            Liberty Music Store is my weekend hacking project. It started as a proof-of-concept to show
-            how well Bitcoin adapts to online digital content sales. I wanted to do something in Bitcoin space,
-            which is driven mostly by my curiosity towards the upcoming virtual currency revolution. On my travels
-            I met some interesting artists with mindbogging ideas and here we are.
-        </p>
+                <h2>History</h2>
 
-        <p>
-            The product is 100% working, though some more work is needed to make it open for the great masses.
-            Thus I'll keeping the registration private until there are sales at least with 3-4 different artists
-            who have given feedback about the service usability.
-            I am especially little proud all the work that went to make Bitcoin payment process as easy as possible.
-        </p>
+                <p>
+                    Liberty Music Store is my weekend hacking project. It started as a proof-of-concept to show
+                    how well Bitcoin adapts to online digital content sales. I wanted to do something in Bitcoin space,
+                    which is driven mostly by my curiosity towards the upcoming virtual currency revolution. On my travels
+                    I met some interesting artists with mindbogging ideas and here we are.
+                </p>
 
-        <p>
-            If you have any ideas where this project could head to please drop an email.
-        </p>
+                <p>
+                    The product is 100% working, though some more work is needed to make it open for the great masses.
+                    Thus I'll keeping the registration private until there are sales at least with 3-4 different artists
+                    who have given feedback about the service usability.
+                    I am especially little proud all the work that went to make Bitcoin payment process as easy as possible.
+                </p>
 
-        <p>
-            <a href="https://github.com/miohtama/LibertyMusicStore">The source code is 100% open source and available on Github.</a>
-        </p>
+                <p>
+                    If you have any ideas where this project could head to please drop an email.
+                </p>
 
-        <p>
-            Cheers, <a href="mailto:mikko@libertymusicstore.net">Mikko Ohtamaa</a> (<a href="https://twitter.com/moo9000"><i class="fa fa-twitter">Twitter</i>)
-        </p>
+                <p>
+                    <a href="https://github.com/miohtama/LibertyMusicStore">The source code is 100% open source and available on Github.</a>
+                </p>
+
+                <p>
+                    Cheers, <a href="mailto:mikko@libertymusicstore.net">Mikko Ohtamaa</a>
+                    (<a href="https://twitter.com/moo9000"><i class="fa fa-twitter"> Twitter</i></a>,
+                    <a href="https://linkedin.com/in/ohtis"><i class="fa fa-linkedin-square"> LinkedIn</i>)
+                </p>
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+            <img class="img-responsive img-thumbnail"  src="{% static 'img/selfie.jpg' %}" alt="">
+        </div>
     </div>
+
+
 
 {% endblock content %}
