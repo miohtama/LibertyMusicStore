@@ -3,9 +3,12 @@
 Introduction
 ---------------
 
-`**Libery Music Store** is a prototype MP3 store taking Bitcoin payments. <https://libertymusicstore.net>`_
+`Liberty Music Store is a prototype MP3 store taking Bitcoin payments. <https://libertymusicstore.net>`_
 
 Dependencies
+--------------
+
+In order to get this running you need to install:
 
 * SQL database (SQLite for development, PostgreSQL for production recommended)
 
@@ -179,6 +182,12 @@ Extra HTML for the store to make it white on black::
         .btn-default {
             background: #666;
             color: white;
+        }
+
+        /* QR code must be on the white background or BlockChain mobile wallet does not pick it up */
+        .bitcoin-address-qr-container {
+            padding: 40px 0;
+            background: white;
         }
     </style>
 

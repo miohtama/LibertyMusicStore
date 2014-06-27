@@ -7,7 +7,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 SITE_URL = "http://localhost:8000"
-SITE_NAME = "Libery Music Store"
+SITE_NAME = "Liberty Music Store"
 
 PUBLIC_URL = "https://libertymusicstore.net"
 

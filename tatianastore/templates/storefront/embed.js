@@ -29,7 +29,6 @@
         placeholder.parentNode.removeChild(placeholder);
 
         // Handle dynamic iframe sizing with pym
-        var iframe = document.createElement("iframe");
         loadScript("{{ public_url }}{% static 'pym.js' %}");
     }
 
