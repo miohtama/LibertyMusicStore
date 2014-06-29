@@ -40,6 +40,14 @@
                             <a href="{% url 'signup' %}">{% trans "Sign up" %}</a>
                         </li>
                     {% else %}
+
+                        <li>
+                            <a href="{% url 'admin:index' %}">
+                                {% trans "Admin" %}
+                            </a>
+                        </li>
+
+
                         <li>
                             <a href="{% url 'auth_logout' %}">
                                 {% blocktrans with username=request.user.username %}

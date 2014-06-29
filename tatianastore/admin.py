@@ -57,6 +57,8 @@ class DownloadTransaction(admin.ModelAdmin):
 
     fields = readonly_fields
 
+    change_list_template = "admin/download_transaction_change_list.html"
+
     def get_queryset(self, request):
         qs = super(DownloadTransaction, self).get_queryset(request)
 

@@ -1,0 +1,24 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_static admin_list %}
+{% load queries %}
+
+{% block pagination %}
+{{ block.super }}
+<div>
+<h4>Status legend</h4>
+<p><i>Pending:</i> User started payment process, but never finished</p>
+<p><i>Cancelled:</i> User started payment process, but pressed Cancel button on the payment page</p>
+<p><i>Completed:</i> We received payment from the user</p>
+<p><i>Credited:</i> The payment has been credited to the Bitcoin wallet of the store owner</p>
+</div>
+
+<h4>Total payments</h4>
+<p>
+Total user payments received (completed transactions): <strong>{{cl.root_queryset|download_transaction_sum:'completed'}}</strong> BTC
+</p>
+
+<p>
+Total payments credited to your wallet (credited transactions): <strong>{{cl.root_queryset|download_transaction_sum:'credited'}}</strong> BTC
+</p>
+
+{% endblock %}
