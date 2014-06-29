@@ -5,9 +5,12 @@ from django.conf import settings
 from django.contrib import admin
 
 from . import storefront
+from . import storeadmin
 from . import site
 
+
 admin.autodiscover()
+
 
 urlpatterns = patterns('',
     url(r'^$', 'tatianastore.site.index', name='index'),
@@ -17,6 +20,7 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
     url(r'^store/', include(storefront)),
+    url(r'^storeadmin/', include(storeadmin)),
     url(r'^site/', include(site)),
     url(r'^accounts/', include('registration.backends.default.urls')),
 )

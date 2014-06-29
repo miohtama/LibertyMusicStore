@@ -7,6 +7,7 @@ from django.contrib.auth import forms as auth_forms
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.utils.decorators import method_decorator
+from django.core.urlresolvers import reverse
 
 from . import models
 
@@ -130,7 +131,8 @@ class Song(admin.ModelAdmin):
 
 class SongInline(admin.TabularInline):
     model = models.Song
-    fields = ("visible", "order", "name", "fiat_price")
+    fields = ("visible", "order", "name", "fiat_price", "edit")
+    readonly_fields = fields
     extra = 0
 
     def has_add_permission(self, request, obj=None):
@@ -138,6 +140,12 @@ class SongInline(admin.TabularInline):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+    def edit(self, obj):
+        """ Song edit links in album view.
+        """
+        return "<a href='%s'>Edit</a>" % reverse("admin:tatianastore_song_change", args=(obj.id,))
+    edit.allow_tags = True
 
 
 class Album(admin.ModelAdmin):

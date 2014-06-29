@@ -73,6 +73,20 @@ class User(AbstractUser):
 
     objects = UserManager()
 
+    def get_default_store(self):
+        """ Get the store where this user is uploading content etc.
+
+        One user can have several stores, but this always returns the first sone."
+        """
+        if self.is_superuser:
+            return Store.objects.all().first()
+        else:
+            # Assume others have specific stores
+            return self.operated_stores.first()
+
+    def __unicode__(self):
+        return self.username
+
 
 class Store(models.Model):
     """ One user presents artist / store. """

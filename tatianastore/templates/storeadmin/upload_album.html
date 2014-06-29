@@ -1,0 +1,37 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+
+{% block content %}
+
+<h1>Upload an album</h1>
+
+<ul>
+<li>The album must be ZIP file. The user can download this exact ZIP file after paying for the content.
+<li>The album must contain songs as MP3 files. Make sure the filenames are in the order they appear on the album. E.g. <i>01-first-song.mp3</i>, <i>02-second-song.mp3</i>
+<li>The album can bought as a whole (user downloads ZIP file) or each MP3 separately
+<li>The MP3 files must have ID3 tag meta information which contains the song <i>title</i>
+<li>The ZIP file must contain at least one JPEG image which will be used as the album cover art</li>
+</ul>
+
+<p>
+You can edit all files, information, prices and song order after the upload.
+</p>
+
+<p>
+<strong>Warning:</strong> The upload and processing song files may take up to 10 minutes. Just don't close the page when the files are being processed.
+</p>
+
+
+<h2>Upload ZIP file</h2>
+<p>
+Your content is priced in <strong>{{store.currency}}</strong> (you can change this later in your store settings)
+</p>
+
+<form enctype="multipart/form-data" method="POST">
+{% csrf_token %}
+{{form.as_p}}
+<button type="submit">Submit</button>
+</form>
+
+{% endblock %}

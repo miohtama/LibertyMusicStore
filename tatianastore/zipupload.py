@@ -7,7 +7,6 @@
 """
 
 import os
-from decimal import Decimal
 from zipfile import ZipFile
 import slugify
 import shutil
@@ -28,7 +27,7 @@ class BadAlbumContenException(Exception):
     pass
 
 
-def upload_song(album, original_fname, data, order):
+def upload_song(album, original_fname, data, order, song_price):
     """
     """
 
@@ -57,11 +56,10 @@ def upload_song(album, original_fname, data, order):
     f.write(data)
     f.close()
 
-    song.price = Decimal("1.00")
+    song.fiat_price = song_price
     song.download_mp3.name = os.path.join("songs", normalized)
     song.order = order
     song.save()
-
 
     # Create background tasks for doing prelisten versions
     tasks.generate_prelisten(song.id)
@@ -83,7 +81,7 @@ def upload_cover(album, data):
     album.save()
 
 
-def upload_album(store, name, zip_file):
+def upload_album(store, name, zip_file, album_price, song_price):
     """ Process an album uploaded as a zip file. """
 
     songs = []
@@ -91,17 +89,25 @@ def upload_album(store, name, zip_file):
 
     # Create the album
     album = models.Album.objects.create(name=name, store=store)
-    album.fiat_price = Decimal("9.90")
+    album.fiat_price = album_price
 
     # Set the album content as the zip
     normalized = "%d-%s-%d-%s.zip" % (store.id, slugify.slugify(store.name), album.id, slugify.slugify(album.name))
     logger.info("Setting album download_zip to %s", normalized)
+
     album_outf = os.path.join(settings.MEDIA_ROOT, "albums", normalized)
-    shutil.copy(zip_file, album_outf)
+    data = zip_file.read()
+    # shutil.copy(zip_file, album_outf)
+    # We cannot use direct, copy Django upload might be InMemoryUploadFile
+    f = open(album_outf, "wb")
+    f.write(data)
+    f.close()
+
     album.download_zip.name = os.path.join("albums", normalized)
     album.save()
 
     # Copy the zip file as is to album content
+    zip_file.seek(0)
 
     with ZipFile(zip_file, 'r') as zip:
         for info in zip.infolist():
@@ -114,9 +120,9 @@ def upload_album(store, name, zip_file):
                 continue
 
             if fname.endswith(".mp3"):
-                songs.append(fname)
+                songs.append(info.filename)
             elif fname.endswith(".jpg") or fname.endswith(".jpeg"):
-                cover = fname
+                cover = info.filename
 
         # Copy each of the songs to the
         if not cover:
@@ -131,5 +137,9 @@ def upload_album(store, name, zip_file):
         order = 0
         for s in songs:
             data = zip.read(s)
-            upload_song(album, s, data, order)
+            upload_song(album, s, data, order, song_price)
             order += 1
+
+        upload_cover(album, zip.read(cover))
+
+    return album
