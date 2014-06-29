@@ -25,6 +25,10 @@ def update_exchange_rates():
 @task()
 def generate_prelisten(song_id):
     """ Generate prelisten clips for the song on background. """
-    song = models.Song.objects.get(id=song_id)
+    try:
+        song = models.Song.objects.get(id=song_id)
+    except models.Song.DoesNotExist:
+        logger.exception("Tried to generate prelisten for non-existing song %d" % song_id)
+        raise
     logger.debug("Checking prelisten generation for song %s" % song)
     prelisten.create_prelisten_on_demand(song)

@@ -119,7 +119,9 @@ class Store(models.Model):
 
     extra_html = models.TextField(verbose_name="Store formatting HTML code",
                                   help_text="Extra HTML code placed for the site embed &ltiframe&gt. Can include CSS &lt;style&gt; tag for the formatting purposes.",
-                                  default="")
+                                  default="",
+                                  blank=True,
+                                  null=True)
 
     def __unicode__(self):
         return self.name
