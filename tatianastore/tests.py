@@ -17,7 +17,7 @@ from django.core.cache import get_cache
 
 from . import models
 from . import tasks
-
+from . import zipupload
 
 # Don't accidentally allow to run against the production Redis
 assert settings.CACHES["default"]["LOCATION"] == "127.0.0.1:6379:10", "Don't run against production Redis"
@@ -67,3 +67,19 @@ class DownloadTransactionTestCase(TestCase):
         content_manager = models.UserPaidContentManager(session_id)
         self.assertTrue(content_manager.has_item(self.test_song))
         self.assertTrue(content_manager.has_item(self.test_album))
+
+
+class UploadAlbumTestCase(TestCase):
+    """ Test album uploads as zip. """
+
+    def setUp(self):
+        models.Store.objects.all().delete()
+        self.test_store = test_store = models.Store.objects.create(name="Test Store")
+        test_store.currency = "USD"
+        test_store.store_url = "http://localhost:8000/store/test-store/"
+        test_store.save()
+
+    def test_upload_zip(self):
+        test_zip = os.path.join(os.path.dirname(__file__), "static", "testdata", "test_album_åäö.zip")
+        zipupload.upload_album(self.test_store, "Test Album",  test_zip)
+

@@ -26,3 +26,6 @@ CACHES = {
         }
     }
 }
+
+# Don't mix test uploads with actual content
+MEDIA_ROOT = "media/test"

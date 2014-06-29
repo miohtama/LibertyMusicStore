@@ -22,10 +22,15 @@ tatianastore/static/bitcoinaddress/
 logs/*
 local_settings.*
 *.sqlite3
+media/albums/*
 media/covers/*
 media/songs/*
 media/prelisten/*
 media/thumbs
+media/test/covers/*
+media/test/prelisten/*
+media/test/songs/*
+media/test/albums/*
 sample-cd
 *.key
 *.secure
