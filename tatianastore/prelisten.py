@@ -102,6 +102,9 @@ def create_prelisten_on_demand(song):
         prelisten_mod_time = os.path.getmtime(outf)
         upload_mod_time = os.path.getmtime(mp3)
 
+        assert prelisten_mod_time, "No modification time for %s" % outf
+        assert upload_mod_time, "No modification time for %s" % upload_mod_time
+
         logger.info("Checking if the existing prelisten needs to be overwritten. Upload %s prelisten %s", upload_mod_time, prelisten_mod_time)
 
         if upload_mod_time > prelisten_mod_time:
