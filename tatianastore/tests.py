@@ -83,6 +83,9 @@ class UploadAlbumTestCase(TestCase):
 
     def test_upload_zip(self):
         test_zip = os.path.join(os.path.dirname(__file__), "static", "testdata", "test_album_åäö.zip")
+
+        test_zip = open(test_zip, "rb")
+
         zipupload.upload_album(self.test_store, "Test Album",  test_zip, Decimal("9.90"), Decimal("1.0"))
 
         # Check that all extracted content is downloadable on the disk
