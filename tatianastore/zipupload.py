@@ -16,6 +16,7 @@ import tempfile
 import eyed3
 
 from django.conf import settings
+from django.db import transaction
 
 from . import models
 from . import tasks
@@ -60,9 +61,6 @@ def upload_song(album, original_fname, data, order, song_price):
     song.download_mp3.name = os.path.join("songs", normalized)
     song.order = order
     song.save()
-
-    # Create background tasks for doing prelisten versions
-    tasks.generate_prelisten(song.id)
 
 
 def upload_cover(album, data):
@@ -141,5 +139,12 @@ def upload_album(store, name, zip_file, album_price, song_price):
             order += 1
 
         upload_cover(album, zip.read(cover))
+
+    # We must commit transaction in this point, so that DB is in sync
+    # with huey async
+    transaction.commit()
+
+    for song in album.song_set.all():
+        tasks.generate_prelisten(song.id)
 
     return album
