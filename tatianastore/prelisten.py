@@ -82,6 +82,7 @@ def create_prelisten_on_demand(song):
     """ Create prelisten clips only if the song MP3 content has changed.
     """
 
+    assert song
     logger.info("Checking need for prelisten production for song %d" % song.id)
 
     if not song.download_mp3:
