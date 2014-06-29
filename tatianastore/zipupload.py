@@ -19,7 +19,7 @@ import eyed3
 from django.conf import settings
 
 from . import models
-
+from . import tasks
 
 logger = logging.getLogger(__name__)
 
@@ -28,32 +28,59 @@ class BadAlbumContenException(Exception):
     pass
 
 
-def upload_song(album, original_fname, data):
+def upload_song(album, original_fname, data, order):
     """
     """
 
+    if type(original_fname) == str:
+        original_fname = original_fname.decode("utf-8")
+
+    # Extract ID3 title for the song
     # eye3d can only operate on files, not streams
-    with tempfile.TemporaryFile(delete=True) as file_:
+    with tempfile.NamedTemporaryFile(suffix=".mp3") as file_:
         file_.write(data)
         info = eyed3.load(file_.name)
+        if not info:
+            raise BadAlbumContenException(u"Could not extract MP3 info from %s orignal filename %s" % (file_.name, original_fname))
+
         title = info.tag.title
 
     if not title:
         raise BadAlbumContenException(u"The MP3 file %s did not have ID3 title tag set" % original_fname)
 
-    song = models.Song.objects.create(album=album, name=title)
+    song = models.Song.objects.create(store=album.store, album=album, name=title)
 
-    normalized = "%d-%s-%d-%s.zip" % (album.id, slugify.slugify(album.name), song.id, slugify.slugify(song.name))
+    normalized = "%d-%s-%d-%s.mp3" % (album.id, slugify.slugify(album.name), song.id, slugify.slugify(song.name))
     logger.info("Setting song download_mp3 to %s", normalized)
     outf = os.path.join(settings.MEDIA_ROOT, "songs", normalized)
     f = open(outf, "wb")
     f.write(data)
     f.close()
 
+    song.price = Decimal("1.00")
+    song.download_mp3.name = os.path.join("songs", normalized)
+    song.order = order
+    song.save()
+
+
+    # Create background tasks for doing prelisten versions
+    tasks.generate_prelisten(song.id)
+
 
 def upload_cover(album, data):
     """
     """
+
+    #: Todo check this is a legal image file
+    normalized = "%d-%s-cover.jpg" % (album.id, slugify.slugify(album.name))
+    logger.info("Setting album cover to %s", normalized)
+    outf = os.path.join(settings.MEDIA_ROOT, "covers", normalized)
+    f = open(outf, "wb")
+    f.write(data)
+    f.close()
+
+    album.cover.name = os.path.join("covers", normalized)
+    album.save()
 
 
 def upload_album(store, name, zip_file):
@@ -71,7 +98,7 @@ def upload_album(store, name, zip_file):
     logger.info("Setting album download_zip to %s", normalized)
     album_outf = os.path.join(settings.MEDIA_ROOT, "albums", normalized)
     shutil.copy(zip_file, album_outf)
-    album.download_zip.name = album_outf
+    album.download_zip.name = os.path.join("albums", normalized)
     album.save()
 
     # Copy the zip file as is to album content
@@ -81,6 +108,11 @@ def upload_album(store, name, zip_file):
             print info.filename
 
             fname = info.filename.lower()
+
+            if fname.startswith("_"):
+                # Some OSX Finder created metadata
+                continue
+
             if fname.endswith(".mp3"):
                 songs.append(fname)
             elif fname.endswith(".jpg") or fname.endswith(".jpeg"):
@@ -96,7 +128,8 @@ def upload_album(store, name, zip_file):
         # Sort songs to alphabetic order (assume 01-xxx, 02-xxx prefix)
         songs = sorted(songs)
 
+        order = 0
         for s in songs:
-            data = zip.read()
-            upload_song(album, data)
-
+            data = zip.read(s)
+            upload_song(album, s, data, order)
+            order += 1

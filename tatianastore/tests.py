@@ -74,6 +74,8 @@ class UploadAlbumTestCase(TestCase):
 
     def setUp(self):
         models.Store.objects.all().delete()
+        models.Album.objects.all().delete()
+        models.Song.objects.all().delete()
         self.test_store = test_store = models.Store.objects.create(name="Test Store")
         test_store.currency = "USD"
         test_store.store_url = "http://localhost:8000/store/test-store/"
@@ -83,3 +85,18 @@ class UploadAlbumTestCase(TestCase):
         test_zip = os.path.join(os.path.dirname(__file__), "static", "testdata", "test_album_åäö.zip")
         zipupload.upload_album(self.test_store, "Test Album",  test_zip)
 
+        # Check that all extracted content is downloadable on the disk
+        self.assertEqual(2, models.Song.objects.all().count())
+        for s in models.Song.objects.all():
+            self.assertTrue(os.path.exists(os.path.join(settings.MEDIA_ROOT, s.download_mp3.name)), "MP3 Does not exist %s" % s.download_mp3.name)
+            self.assertTrue(os.path.exists(os.path.join(settings.MEDIA_ROOT, s.prelisten_mp3.name)))
+
+        a = models.Album.objects.first()
+        self.assertTrue(os.path.exists(os.path.join(settings.MEDIA_ROOT, a.download_zip.name)))
+        self.assertTrue(os.path.exists(os.path.join(settings.MEDIA_ROOT, a.cover.name)))
+
+        s = models.Song.objects.all()[0]
+        self.assertEqual(u'Title åäö', s.name)
+
+        s = models.Song.objects.all()[1]
+        self.assertEqual(u'Title 2', s.name)

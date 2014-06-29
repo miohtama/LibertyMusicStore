@@ -29,3 +29,11 @@ CACHES = {
 
 # Don't mix test uploads with actual content
 MEDIA_ROOT = "media/test"
+
+HUEY = {
+    'backend': 'huey.backends.redis_backend',  # required.
+    'name': 'Huey Redis',
+    'connection': {'host': 'localhost', 'port': 6379},
+    'always_eager': True, # Execute background tasks immediately
+    'consumer_options': {'workers': 3},
+}
