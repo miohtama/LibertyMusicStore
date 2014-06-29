@@ -83,7 +83,7 @@ def create_prelisten_on_demand(song):
     """
 
     assert song
-    logger.info("Checking need for prelisten production for song %d" % song.id)
+    logger.info("Checking need for prelisten production for song %d", song.id)
 
     if not song.download_mp3:
         # No need to generate the field is empty
