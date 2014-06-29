@@ -93,7 +93,7 @@ def create_prelisten_on_demand(song):
     outf = os.path.join(settings.MEDIA_ROOT, "prelisten", f)
     mp3 = song.download_mp3.file.name
 
-    if not os.path.exist(mp3):
+    if not os.path.exists(mp3):
         logger.warn("The MP3 did not exist when tried to start creating prelisten %s", mp3)
         return
 
