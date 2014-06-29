@@ -93,6 +93,8 @@ def create_prelisten_on_demand(song):
     outf = os.path.join(settings.MEDIA_ROOT, "prelisten", f)
     mp3 = song.download_mp3.file.name
 
+    assert os.path.exists(mp3), "The MP3 file %s did not exist" % mp3
+
     if os.path.exists(outf):
         # Check modification time of the upload versus prelisten
         prelisten_mod_time = os.path.getmtime(outf)
