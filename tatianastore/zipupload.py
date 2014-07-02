@@ -82,63 +82,64 @@ def upload_cover(album, data):
 def upload_album(store, name, zip_file, album_price, song_price):
     """ Process an album uploaded as a zip file. """
 
-    songs = []
-    cover = None
+    with transaction.atomic():
+        songs = []
+        cover = None
 
-    # Create the album
-    album = models.Album.objects.create(name=name, store=store)
-    album.fiat_price = album_price
+        # Create the album
+        album = models.Album.objects.create(name=name, store=store)
+        album.fiat_price = album_price
 
-    # Set the album content as the zip
-    normalized = "%d-%s-%d-%s.zip" % (store.id, slugify.slugify(store.name), album.id, slugify.slugify(album.name))
-    logger.info("Setting album download_zip to %s", normalized)
+        # Set the album content as the zip
+        normalized = "%d-%s-%d-%s.zip" % (store.id, slugify.slugify(store.name), album.id, slugify.slugify(album.name))
+        logger.info("Setting album download_zip to %s", normalized)
 
-    album_outf = os.path.join(settings.MEDIA_ROOT, "albums", normalized)
-    data = zip_file.read()
-    # shutil.copy(zip_file, album_outf)
-    # We cannot use direct, copy Django upload might be InMemoryUploadFile
-    f = open(album_outf, "wb")
-    f.write(data)
-    f.close()
+        album_outf = os.path.join(settings.MEDIA_ROOT, "albums", normalized)
+        data = zip_file.read()
+        # shutil.copy(zip_file, album_outf)
+        # We cannot use direct, copy Django upload might be InMemoryUploadFile
+        f = open(album_outf, "wb")
+        f.write(data)
+        f.close()
 
-    album.download_zip.name = os.path.join("albums", normalized)
-    album.save()
+        album.download_zip.name = os.path.join("albums", normalized)
+        album.save()
 
-    # Copy the zip file as is to album content
-    zip_file.seek(0)
+        # Copy the zip file as is to album content
+        zip_file.seek(0)
 
-    with ZipFile(zip_file, 'r') as zip:
-        for info in zip.infolist():
-            print info.filename
+        with ZipFile(zip_file, 'r') as zip:
+            for info in zip.infolist():
+                print info.filename
 
-            fname = info.filename.lower()
+                fname = info.filename.lower()
 
-            if fname.startswith("_"):
-                # Some OSX Finder created metadata
-                continue
+                if fname.startswith("_"):
+                    # Some OSX Finder created metadata
+                    continue
 
-            if fname.endswith(".mp3"):
-                songs.append(info.filename)
-            elif fname.endswith(".jpg") or fname.endswith(".jpeg"):
-                cover = info.filename
+                if fname.endswith(".mp3"):
+                    songs.append(info.filename)
+                elif fname.endswith(".jpg") or fname.endswith(".jpeg"):
+                    cover = info.filename
 
-        # Copy each of the songs to the
-        if not cover:
-            raise BadAlbumContenException("Zip file did not contain cover.jpg file")
+            # Copy each of the songs to the
+            if not cover:
+                raise BadAlbumContenException("Zip file did not contain cover.jpg file")
 
-        if not songs:
-            raise BadAlbumContenException("Zip file did not contain any MP3 files")
+            if not songs:
+                raise BadAlbumContenException("Zip file did not contain any MP3 files")
 
-        # Sort songs to alphabetic order (assume 01-xxx, 02-xxx prefix)
-        songs = sorted(songs)
+            # Sort songs to alphabetic order (assume 01-xxx, 02-xxx prefix)
+            songs = sorted(songs)
 
-        order = 0
-        for s in songs:
-            data = zip.read(s)
-            upload_song(album, s, data, order, song_price)
-            order += 1
+            order = 0
+            for s in songs:
+                data = zip.read(s)
+                upload_song(album, s, data, order, song_price)
+                order += 1
 
-        upload_cover(album, zip.read(cover))
+            upload_cover(album, zip.read(cover))
 
     # We must commit transaction in this point, so that DB is in sync
     # with huey async
