@@ -7,6 +7,7 @@ from django.conf.urls import patterns
 from django.conf.urls import url
 from django.template import RequestContext
 from django.forms.util import ErrorList
+from django.db import transaction
 
 from django.shortcuts import render_to_response
 
@@ -28,6 +29,7 @@ class AlbumUploadForm(forms.Form):
 
 
 @staff_member_required
+@transaction.non_atomic_requests
 def upload_album(request):
     """ Allow the artist to upload an album to the store. """
 
