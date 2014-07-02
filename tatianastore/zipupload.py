@@ -141,6 +141,8 @@ def upload_album(store, name, zip_file, album_price, song_price):
 
             upload_cover(album, zip.read(cover))
 
+    logger.info("Committing and starting processing prelisten samples")
+
     # We must commit transaction in this point, so that DB is in sync
     # with huey async
     transaction.commit()
