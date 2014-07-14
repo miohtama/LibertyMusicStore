@@ -49,20 +49,23 @@ def credit_transactions(store, transactions):
 
 
 def credit_store(store):
+    """
+    :return: Number of download transactions credited
+    """
 
     credited = 0
 
     if not store.email:
         logger.error("Store lacks email %s", store.name)
-        return
+        return 0
 
     if not store.btc_address:
         logger.error("Store lacks BTC address %s", store.name)
-        return
+        return 0
 
     if not bitcoinaddress.validate(store.btc_address):
         logger.error("Store %s not valid BTC address %s", store.name, store.btc_address)
-        return
+        return 0
 
     # Some additional protection against not accidentelly running
     # parallel with distributed lock
@@ -85,7 +88,7 @@ def credit_store(store):
 
             if total == 0:
                 logger.info("Store %s no transactions to credit", store.name)
-                return
+                return 0
 
             credit_transactions(store, uncredited_transactions)
 
