@@ -12,6 +12,7 @@ import slugify
 import shutil
 import logging
 import tempfile
+from decimal import Decimal
 
 import eyed3
 
@@ -81,6 +82,9 @@ def upload_cover(album, data):
 
 def upload_album(store, name, zip_file, album_price, song_price):
     """ Process an album uploaded as a zip file. """
+
+    album_price = album_price.quantize(Decimal("1.00"))
+    song_price = song_price.quantize(Decimal("1.00"))
 
     with transaction.atomic():
         songs = []

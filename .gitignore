@@ -37,4 +37,4 @@ sample-cd
 *.csr
 *.crt
 manage.py
-
+*.sublime-workspace
