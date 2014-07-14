@@ -18,9 +18,20 @@ from django.core.cache import get_cache
 from . import models
 from . import tasks
 from . import zipupload
+from . import blockchain
 
 # Don't accidentally allow to run against the production Redis
 assert settings.CACHES["default"]["LOCATION"] == "127.0.0.1:6379:10", "Don't run against production Redis"
+
+
+def clear():
+    models.Store.objects.all().delete()
+    models.Album.objects.all().delete()
+    models.Song.objects.all().delete()
+    models.User.objects.all().delete()
+
+    redis = get_cache("default")
+    redis.clear()
 
 
 class DownloadTransactionTestCase(TestCase):
@@ -73,9 +84,7 @@ class UploadAlbumTestCase(TestCase):
     """ Test album uploads as zip. """
 
     def setUp(self):
-        models.Store.objects.all().delete()
-        models.Album.objects.all().delete()
-        models.Song.objects.all().delete()
+        clear()
         self.test_store = test_store = models.Store.objects.create(name="Test Store")
         test_store.currency = "USD"
         test_store.store_url = "http://localhost:8000/store/test-store/"
@@ -103,3 +112,51 @@ class UploadAlbumTestCase(TestCase):
 
         s = models.Song.objects.all()[1]
         self.assertEqual(u'Title 2', s.name)
+
+
+class CreditTransactionTestCase(TestCase):
+    """ See that the store owner receives the payment. """
+
+    def setUp(self):
+
+        clear()
+
+        owner = models.User.objects.create(username="foobar", email="foobar@example.com")
+
+        self.test_store = test_store = models.Store.objects.create(name=u"Test Store åäö")
+        test_store.currency = "USD"
+        test_store.store_url = "http://localhost:8000/store/test-store/"
+        test_store.operators = [owner]
+        test_store.btc_address = "19356KxTs9Bw5AAdxens5hoxDSp5bsUKse"
+        test_store.save()
+
+        test_song1 = models.Song.objects.create(name="Song A", store=test_store)
+        test_song1.fiat_price = Decimal("0.01")
+        test_song1.save()
+
+        self.test_store = test_store
+        self.test_song = test_song1
+
+        tasks.update_exchange_rates()
+
+    def test_credit(self):
+
+        # Create a transaction
+        session_id = "123"
+        transaction = models.DownloadTransaction.objects.create()
+        user_currency = "USD"
+        items = [self.test_song]
+        transaction.prepare(items, description="Test download", session_id=session_id, ip="1.1.1.1", user_currency=user_currency)
+        transaction.mark_payment_received()
+
+        # Mock out outgoing Bitcoin payments
+        with patch.object(blockchain, 'send_to_address') as mock_send:
+            mock_send.return_value = "txhash_xyz"
+
+            # Now credit the download
+            credited = tasks.credit_stores()
+            self.assertEqual(1, credited)
+
+        transaction = models.DownloadTransaction.objects.get(id=transaction.id)
+        self.assertIsNotNone(transaction.credited_at)
+        self.assertEquals("txhash_xyz", transaction.credit_transaction_hash)

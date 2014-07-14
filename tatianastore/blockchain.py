@@ -43,8 +43,68 @@ def create_new_receiving_address(label):
     return data["address"]
 
 
-def send_to_wallet():
+def balance():
+    """ Return BlockChain wallet balance in BTC.
+    """
+
+    params = {
+        "password": settings.BLOCKCHAIN_WALLET_PASSWORD
+    }
+
+    url = URL + "merchant/%s/balance" % settings.BLOCKCHAIN_WALLET_ID
+
+    r = requests.get(url, params=params)
+    data = r.json()
+    satoshis = data["balance"]
+
+    return Decimal(satoshis) / Decimal(100000000)
+
+
+def archive(addresses):
+    """ Archive the used address. """
+
+    for address in addresses:
+        params = {
+            "password": settings.BLOCKCHAIN_WALLET_PASSWORD,
+            "address": address,
+        }
+
+        logger.info("Archiving address %s", address)
+        url = URL + "merchant/%s/archive_address" % settings.BLOCKCHAIN_WALLET_ID
+        r = requests.get(url, params=params)
+        data = r.json()
+
+        assert "archived" in data, "Got blockchain reply %s" % data
+
+
+def send_to_address(address, btc_amount, note):
     """ Send money from blockchain wallet to somewhere else. """
+
+    # This is completely unnecessary check,
+    # but is now here for debugging BlockChain API problems
+    balance_ = balance()
+    assert balance_ > btc_amount, "Not enough funds in BlockChain wallet, got %s" % balance_
+
+    logger.info("Sending from BlockChain wallet %s, has %s BTC, sending %s to %s", settings.BLOCKCHAIN_WALLET_ID, balance_, btc_amount, address)
+
+    satoshi_amount = int(btc_amount * Decimal(100000000))
+
+    params = {
+        "password": settings.BLOCKCHAIN_WALLET_PASSWORD,
+        "amount": satoshi_amount,
+        "note": note,
+        "to": address,
+    }
+
+    url = URL + "/merchant/%s/payment" % settings.BLOCKCHAIN_WALLET_ID
+
+    r = requests.get(url, params=params)
+    data = r.json()
+
+    tx_hash = data.get("tx_hash")
+    assert tx_hash, "BlockChain did not return a transaction hash %s" % data
+
+    return tx_hash
 
 
 def blockchain_received(request):

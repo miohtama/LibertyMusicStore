@@ -1,5 +1,4 @@
 import logging
-from decimal import Decimal
 
 from django.utils import timezone
 from django.conf import settings
@@ -10,6 +9,8 @@ from huey.djhuey import task
 
 from . import models
 from . import prelisten
+from . import creditor
+
 
 logger = logging.getLogger(__name__)
 
@@ -32,3 +33,14 @@ def generate_prelisten(song_id):
         return
     logger.info("Checking prelisten generation for song %s" % song)
     prelisten.create_prelisten_on_demand(song)
+
+
+@db_periodic_task(crontab(hour='1'))
+def credit_stores():
+    """ Credit authors for their purchased songs every 24 h"""
+
+    credited = 0
+    for store in models.Store.objects.all():
+        credited += creditor.credit_store(store)
+
+    return credited

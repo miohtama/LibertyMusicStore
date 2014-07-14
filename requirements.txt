@@ -34,3 +34,5 @@ mock==1.0.1
 python-slugify=0.0.7
 django-autoslug==1.7.2
 eyeD3==0.7.4
+retools==0.4.1
+python-bitcoinaddress==0.2.1

@@ -51,7 +51,7 @@ class User(UserAdmin):
 
 class DownloadTransaction(admin.ModelAdmin):
 
-    list_display = ("uuid", "get_status", "created_at", "description", "fiat_amount")
+    list_display = ("uuid", "get_status", "created_at", "description", "fiat_amount", "credited_at", "credit_transaction_hash")
 
     readonly_fields = ("store", "uuid", "created_at", "description", "btc_amount", "fiat_amount", "currency", "btc_received_at", "cancelled_at")
 

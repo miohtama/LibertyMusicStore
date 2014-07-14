@@ -126,6 +126,13 @@ class Store(models.Model):
     def __unicode__(self):
         return self.name
 
+    @property
+    def email(self):
+        """ Return the email where we should send notifications regarding this store. """
+        if self.operators.all().count() > 0:
+            return self.operators.all()[0].email
+        return None
+
 
 class StoreItem(models.Model):
     """ Base class for buyable content. """
@@ -284,6 +291,12 @@ class DownloadTransaction(models.Model):
     # Track where the orders are coming from
     # for the support
     ip = models.IPAddressField(blank=True, null=True)
+
+    #: When this transaction was credited to the store owner
+    credited_at = models.DateTimeField(blank=True, null=True)
+
+    #: Bitcoin transaction id for the crediting payment
+    credit_transaction_hash = models.CharField(max_length=256, blank=True, null=True)
 
     def update_new_btc_address(self):
         if self.payment_source == DownloadTransaction.PAYMENT_SOURCE_BLOCKCHAIN:
