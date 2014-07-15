@@ -7,6 +7,7 @@ from django.contrib import admin
 from . import storefront
 from . import storeadmin
 from . import site
+from . import signup
 
 
 admin.autodiscover()
@@ -22,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^store/', include(storefront)),
     url(r'^storeadmin/', include(storeadmin)),
     url(r'^site/', include(site)),
+    url(r'^signup/', include(signup)),
     url(r'^accounts/', include('registration.backends.default.urls')),
 )
 
