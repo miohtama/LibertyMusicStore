@@ -12,11 +12,14 @@ from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 from django.conf.urls import patterns
 from django.conf.urls import url
+from django.contrib.auth.models import Group
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
 from slugify import slugify
+from . import models
+
 
 CURRENCIES = [
     ("USD", "USD"),
@@ -31,6 +34,10 @@ class SignupForm(forms.Form):
 
     email = forms.CharField(label="Email", required=True, help_text="We'll email you the username and the password")
 
+    password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
+
+    password2 = forms.CharField(label=_("Password confirmation"), widget=forms.PasswordInput, help_text=_("Enter the same password as above, for verification."))
+
     artist_name = forms.CharField(label="Artist / band name", help_text="The name used on the store")
 
     btc_address = forms.CharField(label="Bitcoin address",
@@ -39,9 +46,44 @@ class SignupForm(forms.Form):
 
     currency = forms.ChoiceField(label="Currency", help_text="Your local currency", choices=CURRENCIES)
 
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        if models.User.objects.filter(email=email).count() > 0:
+            raise forms.ValidationError("This email address is already registered")
+        return email
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Passwords do not match")
+        return password2
+
     def create_user(self):
-        username =
-        u = User.objects.craete()
+        """ Create user and corresponding store. """
+        data = self.cleaned_data
+
+        artist_name = data["artist_name"]
+        username = slugify(artist_name)
+        password = data["password1"]
+        email = data["email"]
+        btc_address = data["btc_address"]
+        currency = data["currency"]
+
+        u = models.User.objects.create(email=email)
+        u.username = username
+        u.first_name = artist_name
+        u.set_password(password)
+        u.is_staff = True
+
+        group = Group.objects.get(name="Store operators")
+        u.groups = [group]
+        u.save()
+
+        store = models.Store.objects.create(name=artist_name, btc_address=btc_address, currency=currency)
+        store.operators = [u]
+        store.save()
+
 
 def signup(request):
 
@@ -49,7 +91,7 @@ def signup(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             form.create_user()
-            return shortcuts.redirect("signup_thank_you")
+
     else:
         form = SignupForm()
 
@@ -59,11 +101,6 @@ def signup(request):
     return shortcuts.render_to_response("site/signup.html", locals(), context_instance=RequestContext(request))
 
 
-def thank_you(request):
-    return shortcuts.render_to_response("site/signup_thank_you.html", locals(), context_instance=RequestContext(request))
-
-
 urlpatterns = patterns('',
     url(r'^$', signup, name="signup"),
-    url(r'^thank-you/$', thank_you, name="signup_thank_you"),
 )
