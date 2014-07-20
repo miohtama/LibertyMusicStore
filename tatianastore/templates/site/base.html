@@ -16,9 +16,11 @@
     <link href='http://fonts.googleapis.com/css?family=Chivo' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="{% static "site.css" %}"/>
 
-    <title>{% block title %}Liberty Music Store - Sell music online, receive Bitcoin{% endblock %}</title>
+    <title>{% block title %}Liberty Music Store - Sell music, receive Bitcoin{% endblock %}</title>
 
-    {% block description %}{% endblock %}
+    {% block description %}
+    <meta name="description" content="Create your own page for selling songs with Bitcoin">
+    {% endblock %}
 
     <meta name="viewport" content="width=device-width" />
     {% block extra_head %}
