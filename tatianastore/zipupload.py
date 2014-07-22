@@ -47,7 +47,10 @@ def upload_song(album, original_fname, data, order, song_price):
         title = info.tag.title
 
     if not title:
-        raise BadAlbumContenException(u"The MP3 file %s did not have ID3 title tag set" % original_fname)
+        # No title on this file, use filename
+        title = os.path.basename(original_fname)
+        title, ext = os.path.splitext(title)
+        # raise BadAlbumContenException(u"The MP3 file %s did not have ID3 title tag set" % original_fname)
 
     song = models.Song.objects.create(store=album.store, album=album, name=title)
 
