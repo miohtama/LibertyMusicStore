@@ -32,7 +32,7 @@
         loadScript("{{ public_url }}{% static 'pym.js' %}");
     }
 
-    if (document.readyState == "complete" || document.readyState == "loaded" || document.readyState == "interactive") {
+    if (document.readyState == "complete" || document.readyState == "loaded" || document.readyState == "interactive") {
         init();
     } else {
         document.addEventListener("DOMContentLoaded", function(event) {
