@@ -33,6 +33,8 @@ def upload_song(album, original_fname, data, order, song_price):
     """
     """
 
+    title = None
+
     if type(original_fname) == str:
         original_fname = original_fname.decode("utf-8")
 
@@ -44,7 +46,8 @@ def upload_song(album, original_fname, data, order, song_price):
         if not info:
             raise BadAlbumContenException(u"Could not extract MP3 info from %s orignal filename %s" % (file_.name, original_fname))
 
-        title = info.tag.title
+        if info.tag and info.tag.title:
+            title = info.tag.title
 
     if not title:
         # No title on this file, use filename
