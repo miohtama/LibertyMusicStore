@@ -1,3 +1,4 @@
+import logging
 from decimal import Decimal
 
 from django import forms
@@ -13,6 +14,9 @@ from django.shortcuts import render_to_response
 
 from . import models
 from . import zipupload
+
+
+logger = logging.getLogger(__name__)
 
 
 class AlbumUploadForm(forms.Form):
@@ -55,8 +59,10 @@ def upload_album(request):
                 return shortcuts.redirect('admin:tatianastore_album_change', album.id)
             except zipupload.BadAlbumContenException as e:
                 # Handle bad upload content errors
+                logger.error("Bad album content")
+                logger.exception(e)
                 errors = form._errors.setdefault("zip_upload", ErrorList())
-                errors.append(e.msg)
+                errors.append(unicode(e))
     else:
         form = AlbumUploadForm()
 
