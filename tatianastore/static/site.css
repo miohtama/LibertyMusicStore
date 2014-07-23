@@ -152,3 +152,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0744b7', end
     font-size: 133%;
 }
 
+#sign-up {
+    max-width: 500px;
+    margin: 0 auto;
+}
+

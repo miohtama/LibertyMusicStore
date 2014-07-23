@@ -9,18 +9,10 @@
     <div>
         <h1>Sign up and start selling your music</h1>
 
-        <div class="well">
-            <p class="lead">How to get started in 5 minutes</p>
-            <ol>
-                <li>Sign up to the site</li>
-                <li>Upload albums and songs</li>
-                <li>Publish the music store on your homepage</li>
-            </ol>
+        <div id="sign-up">
+            <h2>Sign up details</h2>
+            {% crispy form %}
         </div>
-
-        <h2>Sign up details</h2>
-        {% crispy form %}
-
     </div>
 
 {% endblock content %}

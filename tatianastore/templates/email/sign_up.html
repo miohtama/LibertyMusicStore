@@ -1,0 +1,22 @@
+{% comment %}
+    Notify store owners of new paymnets
+{% endcomment %}
+
+<h2>Thank you for signing up to <a href="{{ site_url }}">Liberty Music Store!</a></h2>
+
+<p>
+    Your user account details below. Please <a href="{% url 'auth_login' %}">log in here</a>.
+</p>
+
+<p>
+    Store name: <strong>{{store.name}}</strong>
+</p>
+
+<p>
+    Username: <strong>{{user.username}}</strong>
+</p>
+
+<p>
+    Email: <strong>{{user.email}}</strong>
+</p>
+

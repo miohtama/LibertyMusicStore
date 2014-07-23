@@ -171,7 +171,7 @@ class SignUpTestCase(TestCase):
         models.update_initial_groups()
 
     def test_sign_up(self):
-        data = dict(email="foo@example.com", password1="x", password2="x", btc_address="", artist_name="Foo Bar", currency="USD")
+        data = dict(email="foo@example.com", password1="x", password2="x", store_url="https://example.com", artist_name="Foo Bar", currency="USD")
         form = signup.SignupForm(data)
         assert form.is_valid(), form._errors
         form.create_user()
