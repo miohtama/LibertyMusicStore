@@ -101,13 +101,16 @@ class Converter(object):
 
         data = self.get_data()
         if data is None:
-            raise UnknownCurrencyException("Currenct data not available - check currency data cache storage")
+            raise UnknownCurrencyException("Currency data not available - check currency data cache storage")
 
         currency_data = data.get(source)
         if not currency_data:
             raise UnknownCurrencyException("The currency %s was not available in data %s" % (source, self.api_url))
 
         rate = currency_data[determiner]
+        if not rate:
+            logger.error("currency_data %s", currency_data)
+            raise UnknownCurrencyException("The currency %s lacks rate variable %s" % (source, determiner))
 
         if inverse:
             result = amount * Decimal(rate)

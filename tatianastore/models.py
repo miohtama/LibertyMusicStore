@@ -29,11 +29,12 @@ from autoslug import AutoSlugField
 
 _rate_converter = None
 
+from . import btcaverage
+
 logger = logging.getLogger("__name__")
 
 
 def get_rate_converter():
-    from tatianastore import btcaverage
     global _rate_converter
     if not _rate_converter:
         redis = get_cache("default").raw_client
@@ -161,7 +162,10 @@ class StoreItem(models.Model):
     def get_btc_price(self):
         """ """
         converter = get_rate_converter()
-        return converter.convert(self.store.currency, "BTC", self.fiat_price)
+        try:
+            return converter.convert(self.store.currency, "BTC", self.fiat_price)
+        except btcaverage.UnknownCurrencyException:
+            return Decimal(-1)
 
 
 class Album(StoreItem):
