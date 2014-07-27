@@ -1,5 +1,13 @@
 {% extends "admin/base.html" %}
 
+{% block extrastyle %}
+<style>
+.step-done {
+    text-decoration: line-through;
+}
+</style>
+{% endblock %}
+
 {% block branding %}
 <h1 id="site-name">Liberty Music Store</h1>
 {% endblock %}

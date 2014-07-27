@@ -1,19 +1,22 @@
 {% load i18n %}
 <div class="module" id="checklist-module">
-    <h2>{% trans 'Checklist' %}</h2>
+    <h2>{% trans 'Setting up your store' %}</h2>
     <ol>
         {% if store %}
-            <li><a href="{% url 'admin:tatianastore_store_change' store.id %}">Check your store details</a></li>
+            <li class="{{ step_class.check_store_details }}"><a href="{% url 'admin:tatianastore_store_change' store.id %}">Check your store details</a></li>
         {% endif %}
         <li>
             <a href="{% url 'upload_album' %}">Upload an album</a>
         </li>
+
         <li>
             <a href="{% url 'embed_code' store.slug %}">Preview your store</a>
         </li>
+
         <li>
             <a href="{% url 'embed_code' store.slug %}">Add to website</a>
         </li>
+
         <li>
             <a href="{% url 'embed_code' store.slug %}">Add to Facebook</a>
         </li>
