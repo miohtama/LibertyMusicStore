@@ -56,6 +56,10 @@ def upload_album(request):
                                                form.cleaned_data["album_price"],
                                                form.cleaned_data["song_price"],
                                                )
+
+                wizard = models.WelcomeWizard(request.user)
+                wizard.set_step_status("upload_album", True)
+
                 return shortcuts.redirect('admin:tatianastore_album_change', album.id)
             except zipupload.BadAlbumContenException as e:
                 # Handle bad upload content errors

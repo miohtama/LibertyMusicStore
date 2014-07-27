@@ -5,20 +5,20 @@
         {% if store %}
             <li class="{{ step_class.check_store_details }}"><a href="{% url 'admin:tatianastore_store_change' store.id %}">Check your store details</a></li>
         {% endif %}
-        <li>
+        <li class="{{ step_class.upload_album }}">
             <a href="{% url 'upload_album' %}">Upload an album</a>
         </li>
 
-        <li>
-            <a href="{% url 'embed_code' store.slug %}">Preview your store</a>
+        <li class="{{ step_class.preview_store }}">
+            <a href="{% url 'embed_preview' store.slug %}">Preview your store</a>
         </li>
 
-        <li>
-            <a href="{% url 'embed_code' store.slug %}">Add to website</a>
+        <li class="{{ step_class.embed_website_store }}">
+            <a href="{% url 'embed_code' store.slug %}">Add store on your website</a>
         </li>
 
-        <li>
-            <a href="{% url 'embed_code' store.slug %}">Add to Facebook</a>
+        <li class="{{ step_class.embed_facebook_store }}">
+            <a href="javascript:alert('This feature is not available yet')">Add store on your Facebook page</a>
         </li>
     </ol>
 </div>

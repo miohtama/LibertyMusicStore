@@ -105,7 +105,7 @@ class Store(models.Model):
     #: In which fiat currency the sales of these songs are
     currency = models.CharField(max_length=5, blank=False, null=False, default="USD",
                                 verbose_name="Currency",
-                                help_text="Code for your local currency where you price albums and songs")
+                                help_text="Currency code for your local currency which you user to price your albums and songs")
 
     #: Where this store is hosted (needed for the backlinks)
     store_url = models.URLField(verbose_name="Homepage", help_text="Link to home page or Facebook page")
@@ -520,7 +520,7 @@ class WelcomeWizard(object):
     steps = ["check_store_details",
              "upload_album",
              "preview_store",
-             "website_store",
+             "embed_website_store",
              "facebook_store"]
 
     def __init__(self, user):
@@ -549,7 +549,7 @@ class WelcomeWizard(object):
         """
         """
         content = self.get_step_statuses()
-        assert step_id in content
+        assert step_id in content, "No step %s in %s" % (step_id, content)
         content[step_id] = status
         self._update_content(content)
 
