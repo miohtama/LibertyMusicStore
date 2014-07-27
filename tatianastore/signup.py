@@ -14,6 +14,10 @@ from django.conf.urls import patterns
 from django.conf.urls import url
 from django.contrib.auth.models import Group
 from django.conf import settings
+from django.contrib import messages
+
+from django.contrib.auth import authenticate
+from django.contrib.auth import login
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -35,7 +39,7 @@ class SignupForm(forms.Form):
     """ Signing up for the service.
     """
 
-    email = forms.EmailField(label="Email", required=True, help_text="We'll email you the username and the password")
+    email = forms.EmailField(label="Email", required=True)
 
     password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
 
@@ -49,7 +53,7 @@ class SignupForm(forms.Form):
     #                              help_text="The receiving Bitcoin address where you get the payments for the purchases. You can fill in this later if you don't have Bitcoin wallet right now.",
     #                              required=False)
 
-    currency = forms.ChoiceField(label="Currency", help_text="Your local currency", choices=CURRENCIES)
+    currency = forms.ChoiceField(label="Currency", help_text="In which currency you will set the prices", choices=CURRENCIES)
 
     def clean_email(self):
         email = self.cleaned_data["email"]
@@ -69,9 +73,9 @@ class SignupForm(forms.Form):
         data = self.cleaned_data
 
         artist_name = data["artist_name"]
-        username = slugify(artist_name)
         password = data["password1"]
         email = data["email"]
+        username = email
         store_url = data["store_url"]
         # btc_address = data["btc_address"]
         currency = data["currency"]
@@ -81,6 +85,7 @@ class SignupForm(forms.Form):
         u.first_name = artist_name
         u.set_password(password)
         u.is_staff = True
+        u.is_active = True
 
         group = Group.objects.get(name="Store operators")
         u.groups = [group]
@@ -93,13 +98,22 @@ class SignupForm(forms.Form):
         site_url = settings.SITE_URL
         emailer.mail_store_owner(store, "Liberty Music Store sign up confirmation", "email/sign_up.html", dict(store=store, user=u, site_url=site_url))
 
+        user = authenticate(username=username, password=password)
+        return user
+
 
 def signup(request):
 
     if request.method == "POST":
         form = SignupForm(request.POST)
         if form.is_valid():
-            form.create_user()
+            user = form.create_user()
+
+            # Automatically login the user
+            if user is not None:
+                messages.success(request, "You are now logged in. A verification email has been sent to your email %s" % user.email)
+                login(request, user)
+            return shortcuts.redirect("admin:index")
 
     else:
         form = SignupForm()
