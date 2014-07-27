@@ -108,18 +108,18 @@ class Store(models.Model):
                                 help_text="Code for your local currency where you price albums and songs")
 
     #: Where this store is hosted (needed for the backlinks)
-    store_url = models.URLField(verbose_name="Artist homepage URL")
+    store_url = models.URLField(verbose_name="Homepage", help_text="Link to home page or Facebook page")
 
     #: The address where completed downlaod payments are credited
     btc_address = models.CharField(verbose_name="Bitcoin address",
-                                   help_text="Your receiving Bitcoin address where paid downloads will be credited",
+                                   help_text="Bitcoin receiving address where the purchases will be credited. If you do not have Bitcoin wallet yet you can leave this empty - the site will keep your Bitcoins until you get your Bitcoin wallet.",
                                    max_length=50,
                                    blank=True,
                                    null=True,
                                    default=None)
 
     extra_html = models.TextField(verbose_name="Store formatting HTML code",
-                                  help_text="Extra HTML code placed for the site embed &ltiframe&gt. Can include CSS &lt;style&gt; tag for the formatting purposes.",
+                                  help_text="Style your shop with extra HTML code placed for the site embed &ltiframe&gt. Please ask your webmaster for the details. This can include CSS &lt;style&gt; tag for the formatting purposes.",
                                   default="",
                                   blank=True,
                                   null=True)
@@ -507,3 +507,49 @@ class UserPaidContentManager(object):
         self.content[str(item.uuid)] = str(transaction.uuid)
         # Save back to redis
         self.redis.hset(UserPaidContentManager.REDIS_HASH_KEY, self.session_id, json.dumps(self.content))
+
+
+class WelcomeWizard(object):
+    """ Store welcome wizard steps in Redis.
+
+    """
+
+    #: username -> JSON'ed welcome step status dictionary
+    REDIS_HASH_KEY = "user_welcome_wizard_steps"
+
+    steps = ["check_store_details",
+             "upload_album",
+             "preview_store",
+             "website_store",
+             "facebook_store"]
+
+    def __init__(self, user):
+        self.redis = get_cache("default").raw_client
+        self.user = user
+
+    def _create_default_content(self):
+        """ By default set all steps not completed. """
+        content = {step: False for step in self.steps}
+        return content
+
+    def _update_content(self, content):
+        self.redis.hset(WelcomeWizard.REDIS_HASH_KEY, self.user.username, json.dumps(content))
+
+    def get_step_statuses(self):
+        """
+        """
+        content = self.redis.hget(WelcomeWizard.REDIS_HASH_KEY, self.user.username)
+        if not content:
+            content = self._create_default_content()
+        else:
+            content = json.loads(content)
+        return content
+
+    def set_step_status(self, step_id, status):
+        """
+        """
+        content = self.get_step_statuses()
+        assert step_id in content
+        content[step_id] = status
+        self._update_content(content)
+

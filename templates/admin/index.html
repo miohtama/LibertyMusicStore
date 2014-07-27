@@ -1,5 +1,6 @@
 {% extends "admin/base_site.html" %}
 {% load i18n admin_static %}
+{% load checklist %}
 
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}" />{% endblock %}
 
@@ -26,11 +27,15 @@
     {% for app in app_list %}
         <div class="app-{{ app.app_label }} module">
         <table>
-        <caption>
-            <a href="{{ app.app_url }}" class="section" title="{% blocktrans with name=app.name %}Models in the {{ name }} application{% endblocktrans %}">
-                {% blocktrans with name=app.name %}{{ name }}{% endblocktrans %}
-            </a>
-        </caption>
+
+        {% if user.is_superuser %}
+            <caption>
+                <a href="{{ app.app_url }}" class="section" title="{% blocktrans with name=app.name %}Models in the {{ name }} application{% endblocktrans %}">
+                    {% blocktrans with name=app.name %}{{ name }}{% endblocktrans %}
+                </a>
+            </caption>
+        {% endif %}
+
         {% for model in app.models %}
             <tr class="model-{{ model.object_name|lower }}">
             {% if model.admin_url %}
@@ -63,6 +68,9 @@
 
 {% block sidebar %}
 <div id="content-related">
+
+    {% checklist %}
+
     <div class="module" id="recent-actions-module">
         <h2>{% trans 'Recent Actions' %}</h2>
         <h3>{% trans 'My Actions' %}</h3>

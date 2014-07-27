@@ -178,3 +178,25 @@ class SignUpTestCase(TestCase):
 
         store = models.Store.objects.all()[0]
         self.assertEqual("foo-bar", store.operators.all()[0].username)
+
+
+class WelcomeWizardTestCase(TestCase):
+    """ Test welcome wizard functionality. """
+
+    def setUp(self):
+        clear()
+        models.update_initial_groups()
+        self.user = models.User.objects.create(username="foobar")
+
+    def test_set_status(self):
+        wizard = models.WelcomeWizard(self.user)
+        wizard.set_step_status("check_store_details", True)
+
+    def test_get_status(self):
+        wizard = models.WelcomeWizard(self.user)
+        self.assertFalse(wizard.get_step_statuses()["check_store_details"])
+        wizard.set_step_status("check_store_details", True)
+        self.assertTrue(wizard.get_step_statuses()["check_store_details"])
+
+
+
