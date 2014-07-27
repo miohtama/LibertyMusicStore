@@ -78,41 +78,71 @@
 
     <div class="row">
         <div class="col-md-12">
-
-            <div class="well" id="examples">
+            <div class="text-center">
                 <h3>Out now</h3>
-
-                <p class="text-center lead">See these stores</p>
-
-                <div class="media">
-
-                  <a class="pull-left" href="http://tatianacoin.com/bitcoin-store/">
-                    <img class="media-object" src="{% static 'img/tatiana.jpg' %}" alt="">
-                  </a>
-                  <div class="media-body">
-                    <h4 class="media-heading"><a href="http://tatianacoin.com/bitcoin-store/"><i class="fa fa-music"></i> Tatiana Moroz - Love and Liberty</a></h4>
-                    <p>
-                        See also TatianaCoin - <a href="http://tatianacoin.com/">the first virtual currency fundraising campaign for artists.</a>
-                    <p>
-                  </div>
-                </div>
-
-
-                <div class="media">
-
-                  <a class="pull-left" href="http://yesconnie.com/btc">
-                    <img class="media-object" src="{% static 'img/yesconnie.jpg' %}" alt="">
-                  </a>
-                  <div class="media-body">
-                    <h4 class="media-heading"><a href="http://yesconnie.com/btc"><i class="fa fa-music"></i>  YESConnie - High Vibes Volume I</a></h4>
-                    <p>
-                        Spiritual Rap by <a href="http://yesconnie.com/">YESConnie</a>.
-                    <p>
-                  </div>
-                </div>
-
+                <p class="lead"><i class="fa fa-music"></i> See these stores <i class="fa fa-music"></i></p>
             </div>
         </div>
+    </div>
+
+    <div class="row" id="examples">
+        <div class="col-md-4 col-md-offset-2">
+
+            <a class="media tile-link" href="http://tatianacoin.com/bitcoin-store/">
+
+              <img class="media-object pull-left" src="{% static 'img/tatiana.jpg' %}" alt="">
+
+              <div class="media-body">
+                <h4 class="media-heading">Tatiana Moroz</h4>
+                <p>
+                    Country. <small>See TatianaCoin - the first artist fundraising coin created.</small>
+                <p>
+              </div>
+            </a>
+
+            <a class="media tile-link" href="http://yesconnie.com/btc">
+
+              <img class="media-object pull-left" src="{% static 'img/yesconnie.jpg' %}" alt="">
+
+              <div class="media-body">
+                <h4 class="media-heading">YESConnie</h4>
+                <p>
+                    Spiritual Rap.
+                <p>
+              </div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+
+            <a class="media tile-link" href="http://www.thehollowcircle.com/">
+
+              <img class="media-object pull-left" src="{% static 'img/hollowcircle.jpg' %}" alt="">
+
+              <div class="media-body">
+                <h4 class="media-heading">The Hollow Circle</h4>
+                <p>
+                    Goth rock in the style of 80s
+                <p>
+              </div>
+            </a>
+
+
+            <a class="media tile-link" href="http://dharmafire-music.blogspot.it/">
+
+              <img class="media-object pull-left" src="{% static 'img/dharmafire.jpg' %}" alt="">
+
+              <div class="media-body">
+                <h4 class="media-heading">The Dharma Fire</h4>
+                <p>
+                    Psychedelic meditation music
+                <p>
+              </div>
+            </a>
+
+        </div>
+
+
     </div>
 
 {% endblock content %}

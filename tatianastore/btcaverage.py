@@ -112,7 +112,7 @@ class Converter(object):
             logger.error("currency_data %s", currency_data)
             raise UnknownCurrencyException("The currency %s lacks rate variable %s" % (source, determiner))
 
-        assert rate > 0, "Rate was %s", rate
+        assert rate > 0, "Rate was %s" % rate
 
         if inverse:
             result = amount * Decimal(rate)

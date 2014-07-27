@@ -101,12 +101,47 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0744b7', end
 
 #examples {
     margin-top: 40px;
-    max-width: 600px;
     margin: 0 auto;
 }
 
 #examples h3 {
     text-align: center;
+}
+
+#examples img {
+    width: 64px;
+    height: 64px;
+}
+
+/* centered columns styles */
+.row-centered {
+    text-align:center;
+}
+.col-centered {
+    display:inline-block;
+    float:none;
+    /* reset the text-align */
+    text-align:left;
+    /* inline-block space fix */
+    margin-right:-4px;
+}
+
+.tile-link {
+    color: black;
+    display: block;
+}
+
+.tile-link {
+    padding: 10px;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.tile-link:hover {
+    background: #eee;
+    display: block;
+    padding: 10px;
+    text-decoration: none;
 }
 
 #footer-content {
