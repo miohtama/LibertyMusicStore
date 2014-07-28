@@ -43,6 +43,16 @@ def store(request, slug):
     request.session._get_or_create_session_key()
     request.session["initialized"] = datetime.datetime.now()
 
+    # MArk that the user has succesfully loaded the store from his/her site
+    if request.user.is_authenticated():
+        for unlikely_user_website_host in ("http://localhost:8000", "https://libertymusicstore"):
+            if request.META.get("HTTP_REFERER", "").startswith(unlikely_user_website_host):
+                break
+        else:
+            # Succesfully loaded embed from the user website
+            wizard = models.WelcomeWizard(request.user)
+            wizard.set_step_status("embed_website_store", True)
+
     store = get_object_or_404(models.Store, slug=slug)
     albums = store.album_set.all()
     songs_without_album = models.Song.objects.filter(store=store, album__isnull=True)
@@ -173,6 +183,20 @@ def embed_code(request, slug):
     return render_to_response("storefront/embed_code.html", locals(), context_instance=RequestContext(request))
 
 
+@login_required
+def embed_preview(request, slug):
+    """ View the preview of the store """
+    store = get_object_or_404(models.Store, slug=slug)
+    public_url = settings.PUBLIC_URL
+    embed_src = request.build_absolute_uri(reverse("embed", args=(store.slug,)))
+
+    # The user managed to preview their store
+    wizard = models.WelcomeWizard(request.user)
+    wizard.set_step_status("preview_store", True)
+
+    return render_to_response("storefront/embed_preview.html", locals(), context_instance=RequestContext(request))
+
+
 def transaction_poll(request, uuid):
     """ Open a long-standing HTTP connection to get transaction info.
 
@@ -275,6 +299,7 @@ def transaction_check_old(request):
 urlpatterns = patterns('',
     url(r'^(?P<slug>[-_\w]+)/embed/$', embed, name="embed"),
     url(r'^(?P<slug>[-_\w]+)/embed-code/$', embed_code, name="embed_code"),
+    url(r'^(?P<slug>[-_\w]+)/embed-preview/$', embed_preview, name="embed_preview"),
     url(r'^(?P<slug>[-_\w]+)/$', store, name="store"),
     url(r'^order/(?P<item_type>[\w]+)/(?P<item_id>[\d]+)/$', order, name="order"),
     url(r'^pay/(?P<uuid>[^/]+)/$', pay, name="pay"),

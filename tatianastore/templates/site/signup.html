@@ -2,18 +2,16 @@
 
 {% load i18n %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 
     <div>
-        <h1>Sign up and start selling your music</h1>
 
-        <div class="question">
-            <p>
-                <a href="{% url 'about' %}">The sign up is currently open by request only.</a>
-                Please drop me an <a href="mailto:mikko@libertymusicstore.net">email</a> and I'll create a user account for you
-                if you are an artist who is enthusiastic about Bitcoin.
-            </p>
+        <div id="sign-up">
+            <h3>Sign up and start selling your music</h3>
+            {% crispy form %}
         </div>
+    </div>
 
 {% endblock content %}

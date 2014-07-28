@@ -1,5 +1,6 @@
 {% extends "admin/base_site.html" %}
 {% load i18n admin_static %}
+{% load checklist %}
 
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}" />{% endblock %}
 
@@ -11,26 +12,19 @@
 
 {% block content %}
 <div id="content-main">
-
-<p style="font-size: 133%">
-    <a href="{% url 'upload_album' %}">→ Upload new album ZIP file</a>
-</p>
-
-{% if user.get_default_store %}
-<p style="font-size: 133%">
-    <a href="{% url 'embed_code' user.get_default_store.slug %}">→ Preview and embed your store</a>
-</p>
-{% endif %}
-
 {% if app_list %}
     {% for app in app_list %}
         <div class="app-{{ app.app_label }} module">
         <table>
-        <caption>
-            <a href="{{ app.app_url }}" class="section" title="{% blocktrans with name=app.name %}Models in the {{ name }} application{% endblocktrans %}">
-                {% blocktrans with name=app.name %}{{ name }}{% endblocktrans %}
-            </a>
-        </caption>
+
+        {% if user.is_superuser %}
+            <caption>
+                <a href="{{ app.app_url }}" class="section" title="{% blocktrans with name=app.name %}Models in the {{ name }} application{% endblocktrans %}">
+                    {% blocktrans with name=app.name %}{{ name }}{% endblocktrans %}
+                </a>
+            </caption>
+        {% endif %}
+
         {% for model in app.models %}
             <tr class="model-{{ model.object_name|lower }}">
             {% if model.admin_url %}
@@ -63,32 +57,28 @@
 
 {% block sidebar %}
 <div id="content-related">
-    <div class="module" id="recent-actions-module">
-        <h2>{% trans 'Recent Actions' %}</h2>
-        <h3>{% trans 'My Actions' %}</h3>
-            {% load log %}
-            {% get_admin_log 10 as admin_log for_user user %}
-            {% if not admin_log %}
-            <p>{% trans 'None available' %}</p>
-            {% else %}
-            <ul class="actionlist">
-            {% for entry in admin_log %}
-            <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
-                {% if entry.is_deletion or not entry.get_admin_url %}
-                    {{ entry.object_repr }}
-                {% else %}
-                    <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
-                {% endif %}
-                <br/>
-                {% if entry.content_type %}
-                    <span class="mini quiet">{% filter capfirst %}{% trans entry.content_type.name %}{% endfilter %}</span>
-                {% else %}
-                    <span class="mini quiet">{% trans 'Unknown content' %}</span>
-                {% endif %}
-            </li>
-            {% endfor %}
-            </ul>
-            {% endif %}
+    {% checklist %}
+
+    <div class="module" id="checklist-module">
+        <h2>{% trans 'Need help?' %}</h2>
+        <p>
+            Email:
+        </p>
+
+        <p>
+            <strong>mikko@libertymusicstore.net</strong>
+        </p>
+
+        <p>
+            Skype:
+        </p>
+
+        <p>
+            <strong>mikko.ohtamaa</strong>
+        </p>
     </div>
 </div>
+
+
+
 {% endblock %}

@@ -38,5 +38,4 @@ def signup(request):
 urlpatterns = patterns('',
     url(r'^about/$', about, name="about"),
     url(r'^info/$', info, name="info"),
-    url(r'^signup/$', signup, name="signup"),
 )

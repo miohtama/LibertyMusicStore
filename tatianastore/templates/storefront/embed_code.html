@@ -1,4 +1,4 @@
-{% extends "storefront/base.html" %}
+{% extends "admin/base_site.html" %}
 
 {% load i18n %}
 
@@ -25,7 +25,7 @@ body {
             {% endblocktrans %}</p>
 
             <p>
-                {% trans "Put the following code on your web page" %}
+                {% trans "Put the following HTML code on your web page and the store will appear where you put the code." %}
             </p>
 
 <pre style="text-align: left; font-size: 77%">
@@ -41,22 +41,9 @@ body {
 </pre>
 
             <p>
-                {% trans "Store example below" %}
+                If you are unsure how to insert HTML code on your website please
+                ask your webmaster or email a question to <strong>mikko@libertymusicstore.net</strong>.
             </p>
-
-<a id="store-embed" href="{{ public_url }}">Liberty Music Store for Bitcoin</a>
-<script>
-(function() {
-    window.libertyMusicStore =  {
-        storeURL: "{{ store.store_url }}"
-    };
-    var t = document.createElement('script'); t.type = 'text/javascript'; t.async = true;
-    t.src = "{{ embed_src }}";
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(t, s);
-})();
-</script>
-<noscript style="color: red">Store only works when your browser has JavaScript enabled</noscript>
-
         </div>
     </div>
 

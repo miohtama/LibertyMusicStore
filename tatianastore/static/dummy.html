@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>Manual embed test against static HTML file</title>
+</head>
+<body>
+<a id="store-embed" href="http://localhost:8000">Liberty Music Store for Bitcoin</a>
+<script>
+(function() {
+    window.libertyMusicStore =  { storeURL: "http://tatianacoin.com/" };
+    var t = document.createElement('script'); t.type = 'text/javascript'; t.async = true; t.src = "http://localhost:8000/store/asdf/embed/";
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(t, s);
+})();
+</script>
+<noscript style="color: red">Store only works when your browser has JavaScript enabled</noscript>
+</body>
+</html>

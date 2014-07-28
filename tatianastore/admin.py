@@ -93,6 +93,13 @@ class Store(admin.ModelAdmin):
             return ("operators",)
         return super(Store, self).get_readonly_fields(request, obj)
 
+    def save_model(self, request, obj, form, change):
+        super(Store, self).save_model(request, obj, form, change)
+
+        # Mark wizard step complete
+        wizard = models.WelcomeWizard(request.user)
+        wizard.set_step_status("check_store_details", True)
+
 
 class Song(admin.ModelAdmin):
 
@@ -154,6 +161,10 @@ class Album(admin.ModelAdmin):
     inlines = [SongInline]
 
     fields = ("visible", "store", "name", "fiat_price", "cover", "download_zip")
+
+    def has_add_permission(self, request):
+        """ Disable 'add' button without zip upload. """
+        return False
 
     def get_queryset(self, request):
         qs = super(Album, self).get_queryset(request)

@@ -19,6 +19,7 @@ from . import models
 from . import tasks
 from . import zipupload
 from . import blockchain
+from . import signup
 
 # Don't accidentally allow to run against the production Redis
 assert settings.CACHES["default"]["LOCATION"] == "127.0.0.1:6379:10", "Don't run against production Redis"
@@ -160,3 +161,42 @@ class CreditTransactionTestCase(TestCase):
         transaction = models.DownloadTransaction.objects.get(id=transaction.id)
         self.assertIsNotNone(transaction.credited_at)
         self.assertEquals("txhash_xyz", transaction.credit_transaction_hash)
+
+
+class SignUpTestCase(TestCase):
+    """ Check sign up form basic functionality. """
+
+    def setUp(self):
+        clear()
+        models.update_initial_groups()
+
+    def test_sign_up(self):
+        data = dict(email="foo@example.com", password1="x", password2="x", store_url="https://example.com", artist_name="Foo Bar", currency="USD")
+        form = signup.SignupForm(data)
+        assert form.is_valid(), form._errors
+        form.create_user()
+
+        store = models.Store.objects.all()[0]
+        self.assertEqual("foo-bar", store.operators.all()[0].username)
+
+
+class WelcomeWizardTestCase(TestCase):
+    """ Test welcome wizard functionality. """
+
+    def setUp(self):
+        clear()
+        models.update_initial_groups()
+        self.user = models.User.objects.create(username="foobar")
+
+    def test_set_status(self):
+        wizard = models.WelcomeWizard(self.user)
+        wizard.set_step_status("check_store_details", True)
+
+    def test_get_status(self):
+        wizard = models.WelcomeWizard(self.user)
+        self.assertFalse(wizard.get_step_statuses()["check_store_details"])
+        wizard.set_step_status("check_store_details", True)
+        self.assertTrue(wizard.get_step_statuses()["check_store_details"])
+
+
+

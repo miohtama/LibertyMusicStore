@@ -14,27 +14,13 @@ from django.utils.timezone import now
 from django.db import transaction
 
 from . import blockchain
+from . import emailer
 
 import bitcoinaddress
 from retools.lock import Lock
 
 
 logger = logging.getLogger(__name__)
-
-
-def mail_store_owner(store, subject, template, template_data):
-
-    assert store.email
-
-    #: Let's not bother with plain-text email anymore
-    text_body = "Please open the attached HTML email"
-
-    html_body = render_to_string(template, template_data)
-
-    msg = EmailMultiAlternatives(subject=subject, from_email="no-reply@libertymusicstore.net",
-                                 to=[store.email], body=text_body)
-    msg.attach_alternative(html_body, "text/html")
-    msg.send()
 
 
 def credit_transactions(store, transactions):
