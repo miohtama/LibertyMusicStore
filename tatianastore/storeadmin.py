@@ -1,6 +1,7 @@
 import logging
 from decimal import Decimal
 
+from django import http
 from django import forms
 from django import shortcuts
 from django.contrib.admin.views.decorators import staff_member_required
@@ -9,6 +10,7 @@ from django.conf.urls import url
 from django.template import RequestContext
 from django.forms.util import ErrorList
 from django.db import transaction
+from django.core.urlresolvers import reverse
 
 from django.shortcuts import render_to_response
 
@@ -23,11 +25,11 @@ class AlbumUploadForm(forms.Form):
     """ The store owner can upload the whole album as a zip file.
     """
 
-    album_name = forms.CharField(label="Album name")
+    album_name = forms.CharField(label="Album name", help_text="The price when the user purchases the full album.")
 
     album_price = forms.DecimalField(initial=Decimal("9.90"))
 
-    song_price = forms.DecimalField(initial=Decimal("0.90"))
+    song_price = forms.DecimalField(initial=Decimal("0.90"), help_text="Individual song price")
 
     zip_file = forms.FileField(label="Choose ZIP file from your local computer")
 
@@ -60,7 +62,8 @@ def upload_album(request):
                 wizard = models.WelcomeWizard(request.user)
                 wizard.set_step_status("upload_album", True)
 
-                return shortcuts.redirect('admin:tatianastore_album_change', album.id)
+                # JavaScript redirect to this URL
+                return http.HttpResponse(reverse('admin:tatianastore_album_change', args=(album.id,)))
             except zipupload.BadAlbumContenException as e:
                 # Handle bad upload content errors
                 logger.error("Bad album content")
