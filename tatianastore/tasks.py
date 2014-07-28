@@ -39,6 +39,10 @@ def generate_prelisten(song_id):
 def credit_stores():
     """ Credit authors for their purchased songs every 24 h"""
 
+    if settings.SITE_URL.startswith("http://localhost"):
+        # Prevent accidetal creditations on the developement server
+        return 0
+
     credited = 0
     for store in models.Store.objects.all():
         credited += creditor.credit_store(store)

@@ -61,6 +61,11 @@
 {% endblock content %}
 
 {% block footer %}
+<div class="row">
+    <div class="col-md-12">
+        {% include "bitcoin_accepted_here.html" with target="_target" %}
+    </div>
+</div>
 {% endblock footer %}
 
 {% block custom_script %}

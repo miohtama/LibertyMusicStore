@@ -5,64 +5,95 @@
 
 {% block content %}
 
-    <div>
-        <h1>Frequently asked questions</h1>
+    <div class="row">
 
-        <div class="question">
-            <h2>How can I sign up?</h2>
-            <p>
-                <a href="{% url 'about' %}">The sign up is currently open by request only.</a>
-                Please drop me an <a href="mailto:mikko@libertymusicstore.net">email</a> and I'll create a user account for you
-                if you are an artist who is enthusiastic about Bitcoin. <strong>We are looking for more beta users</strong>.
-            </p>
+        <div class="col-md-3">
+            <div id="toc"></div>
         </div>
 
-        <div class="question">
-            <h2>How can I add Liberty Music Store on my site?</h2>
-            <p>
-                After the sign up, you can upload your songs and name their prices.
-                Then you'll get HTML embed code which you can add on your site.
-                It works similar to Google Analytics, Facebook Like box and other
-                embedded web components technology. See <a href="{% url 'index' %}">the front page</a> for examples.
-                Because back office still needs some polishing, let's have an
-                walkthrough in Skype how to upload songs and set the prices for the content.
-            </p>
+        <div class="col-md-9">
+
+            <h1>How Liberty Music Store works</h1>
+
+            <div class="question">
+                <h2>How can I sign up?</h2>
+                <p>
+                    <a href="{% url 'signup' %}">The sign up is is a self service process.</a>
+                    It has been opened recently and might have rought edgees. Please drop me an <a href="mailto:mikko@libertymusicstore.net">email</a> and I can help you with details.
+                </p>
+            </div>
+
+            <div class="question">
+                <h2>How can I add Liberty Music Store on my site?</h2>
+                <p>
+                    After the sign up you get a code you can put on your website. For Facebook page you need to be the page manager
+                    in order to add the store there.
+            </div>
+
+            <div class="question">
+                <h2>How much fee the Liberty Music Store takes from the sales?</h2>
+                <p>
+                    Currently the artist can keep 100% of the purchase price. I am not doing this for money.
+                    However if the thing catches fire, I'll set 15% fee to cover the cost of running the service.
+                </p>
+            </div>
+
+            <div class="question">
+                <h2>Why Bitcoin is good for selling music?</h2>
+                <p>
+                    People can purchase Bitcoins through various means (credit card, cash, ATM.)
+                    <a href="https://localbitcoins.com">Bitcoins can be purchased in any country, even in countries
+                    where PayPal, iTunes et. al. don't work</a>.
+                    Purchased Bitcoins can be then used to buy all kinds of stuff. Bitcoin transactions are very cheap
+                    and scale globally - they fit quite well for doing
+                    small payments for the online content. After people obtain their first Bitcoins and Bitcoin wallet, the
+                    purchase process is much sleeker and safer than with credit cards. With Bitcoin, you are in control
+                    of your money, no one can take it away. As long as Bitcoins stay within Bitcoin the economy,
+                    no hidden fees incur. If you cash out Bitcoins back to fiat currency (USD, EUR, GBP) you may need
+                    to pay some fee, usually few percents, for the exchange process.
+                </p>
+
+                <p>
+                    <a href="{% url 'bitcoin' %}">Read more about Bitcoin payments</a>.
+                </p>
+            </div>
+
+
+            <div class="question">
+                <h2>Can I manage multiple stores / bands?</h2>
+                <p>
+                    For now it is one store per user account. I plan to lift this limit in the near future.
+                </p>
+            </div>
+
+            <div class="question">
+                <h2>How to contact Liberty Music Store staff?</h2>
+                <p>
+                    <a href="mailto:mikko@libertymusicstore.net">Drop me an email</a> or mention me in <a href="https://twitter.com/moo9000">Twitter</i>
+                </p>
+            </div>
+
+
+            </div>
+
         </div>
 
-        <div class="question">
-            <h2>How much fee the store takes?</h2>
-            <p>
-                Currently the artist can keep 100% of the purchase price. I am not doing this for money.
-                However if the thing catches fire, I'll set 15% fee to cover the cost of running the service.
-            </p>
-        </div>
-
-        <div class="question">
-            <h2>How Bitcoin works for buying music?</h2>
-            <p>
-                People can purchase Bitcoins through various means (credit card, cash, ATM.)
-                <a href="https://localbitcoins.com">Bitcoins can be purchased in any country, even in countries
-                where PayPal, iTunes et. al. don't work</a>.
-                Purchased Bitcoins can be then used to buy all kinds of stuff. Bitcoin transactions are very cheap
-                and scale globally - they fit quite well for doing
-                small payments for the online content. After people obtain their first Bitcoins and Bitcoin wallet, the
-                purchase process is much sleeker and safer than with credit cards. With Bitcoin, you are in control
-                of your money, no one can take it away. As long as Bitcoins stay within Bitcoin the economy,
-                no hidden fees incur. If you cash out Bitcoins back to fiat currency (USD, EUR, GBP) you may need
-                to pay some fee, usually few percents, for the exchange process.
-            </p>
-
-            <p>
-                See <a href="https://www.youtube.com/watch?v=LP4GSvQUtBw&noredirect=1">What is Bitcoin</a> video.
-            </p>
-        </div>
-
-        <div class="question">
-            <h2>How to contact Liberty Music Store staff?</h2>
-            <p>
-                <a href="mailto:mikko@libertymusicstore.net">Drop me an email</a> or mention me in <a href="https://twitter.com/moo9000">Twitter</i>
-            </p>
-        </div>
     </div>
 
+
+
 {% endblock content %}
+
+{% block custom_script %}
+<script type="text/javascript" src="{% static "toc.js" %}"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#toc').toc({
+      container: "main",
+      selectors: "h2, h3"
+    });
+
+    $("#toc ul").addClass("nav nav-list well");
+  });
+</script>
+{% endblock custom_script %}

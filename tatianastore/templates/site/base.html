@@ -14,7 +14,9 @@
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
     <link href='http://fonts.googleapis.com/css?family=Chivo' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{% static "bitcoin.css" %}"/>
     <link rel="stylesheet" href="{% static "site.css" %}"/>
+
 
     <title>{% block title %}Liberty Music Store - Sell music, receive Bitcoin{% endblock %}</title>
 
@@ -60,6 +62,14 @@
                     <p class="text text-muted">
                         © <a href="https://libertymusicstore.net">Liberty Music Store</a> 2014 <span id="social-icons"><a href="https://twitter.com/LibertyMusicNet"> <i class="fa fa-twitter"></i></a> <a href="mailto:mikko@libertymusicstore.net"> <i class="fa fa-envelope"></i></a> <a href="https://github.com/miohtama/LibertyMusicStore"> <i class="fa fa-github"></i></a>
                     </p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 text-center">
+
+                    {% include "bitcoin_accepted_here.html" %}
+
                 </div>
             </div>
         </footer>

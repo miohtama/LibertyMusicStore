@@ -144,6 +144,10 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0744b7', end
     text-decoration: none;
 }
 
+footer {
+    margin-bottom: 10px;
+}
+
 #footer-content {
     margin-top: 40px;
     padding-top: 20px;
@@ -156,4 +160,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0744b7', end
     max-width: 500px;
     margin: 0 auto;
 }
+
+
+
 

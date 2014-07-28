@@ -1,0 +1,112 @@
+/**
+ * Bitcoin accepted here.
+ *
+ * roboneko 2013
+ *
+ * http://codepen.io/anon/pen/jKDJA
+ */
+
+#pay-with-btc {
+  position:relative;
+  width:205px;
+  height:60px;
+  overflow:hidden;
+  margin: 0 auto;
+}
+
+#pay-with-btc a {
+  text-decoration:none;
+  color:#4d4d4d;
+}
+
+#shine {
+  position:absolute;
+  width:45px;
+  height:60px;
+  background: -moz-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(255,255,255,0)), color-stop(50%,rgba(255,255,255,0.3)), color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,0.3) 50%,rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,0.3) 50%,rgba(255,255,255,0) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(left, rgba(255,255,255,0) 0%,rgba(255,255,255,0.3) 50%,rgba(255,255,255,0) 100%); /* IE10+ */
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%,rgba(255,255,255,0.3) 50%,rgba(255,255,255,0) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#00ffffff',GradientType=1 ); /* IE6-9 */
+  -webkit-animation:slide 5s linear infinite;
+  -moz-animation:slide 5s linear infinite;
+  animation:slide 5s linear infinite;
+  z-index:2;
+}
+
+#logo {
+  position:relative;
+  line-height:44px;
+}
+
+#coin {
+  position:relative;
+  float:left;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border-radius:50px;
+  background:#f7931a;
+  color:#fff;
+  font-size:28px;
+  line-height:38px;
+  z-index:5;
+}
+
+#pay-with-btc .fa-btc {
+  transform:rotate(14deg);
+  -ms-transform:rotate(14deg); /* IE 9 */
+  -webkit-transform:rotate(14deg); /* Safari and Chrome */
+  -webkit-animation:spincoin 5s linear infinite;
+  -moz-animation:spincoin 5s linear infinite;
+  animation:spincoin 5s linear infinite;
+}
+
+.logo-text {
+  position:relative;
+  font-style:italic;
+  font-weight:bold;
+  font-size: 48px;
+}
+
+.accept {
+  position:relative;
+  margin-left:84px;
+  font-style: italic;
+  font-weight: normal;
+  font-size:14px;
+}
+
+@-moz-keyframes spincoin {
+  0%  { -moz-transform: rotate(-346deg); }
+  8% { -moz-transform: rotate(14deg); }
+}
+@-webkit-keyframes spincoin {
+  0%  { -webkit-transform: rotate(-346deg); }
+  8% { -webkit-transform: rotate(14deg); }
+}
+@keyframes spincoin {
+  0%  { -webkit-transform: rotate(-346deg);
+        transform:rotate(-346deg); }
+  8% { -webkit-transform: rotate(14deg);
+        transform:rotate(14deg); }
+}
+
+@-moz-keyframes slide {
+  10%  { margin-left:0; }
+  30%  { margin-left:220px; }
+  100% { margin-left:220px; }
+}
+@-webkit-keyframes slide {
+  10%  { margin-left:0; }
+  30%  { margin-left:220px; }
+  100% { margin-left:220px; }
+}
+@keyframes slide {
+  10%  { margin-left:0; }
+  30%  { margin-left:220px; }
+  100% { margin-left:220px; }
+}
+

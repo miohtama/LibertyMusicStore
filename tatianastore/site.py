@@ -30,12 +30,13 @@ def info(request):
     return render_to_response("site/info.html", locals(), context_instance=RequestContext(request))
 
 
-def signup(request):
+def bitcoin(request):
     """ """
-    return render_to_response("site/signup.html", locals(), context_instance=RequestContext(request))
+    return render_to_response("site/bitcoin.html", locals(), context_instance=RequestContext(request))
 
 
 urlpatterns = patterns('',
     url(r'^about/$', about, name="about"),
     url(r'^info/$', info, name="info"),
+    url(r'^bitcoin/$', bitcoin, name="bitcoin"),
 )
