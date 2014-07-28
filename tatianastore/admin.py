@@ -107,7 +107,7 @@ class Song(admin.ModelAdmin):
 
     list_display_links = ("name",)
 
-    fields = ("visible", "store", "album", "name", "fiat_price", "download_mp3", "prelisten_mp3", "prelisten_vorbis")
+    fields = ("visible", "album", "name", "fiat_price", "download_mp3", "cover", "prelisten_mp3", "prelisten_vorbis")
 
     readonly_fields = ("order",)
 
@@ -118,8 +118,8 @@ class Song(admin.ModelAdmin):
         # so it's safe to modifys
         if not request.user.is_superuser:
             default_store = request.user.operated_stores.first()
-            form.base_fields['store'].queryset = request.user.operated_stores
-            form.base_fields['store'].initial = default_store
+            #form.base_fields['store'].queryset = request.user.operated_stores
+            #form.base_fields['store'].initial = default_store
 
             form.base_fields['album'].queryset = default_store.album_set.all()
             form.base_fields['album'].initial = default_store.album_set.first()

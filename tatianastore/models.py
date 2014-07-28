@@ -102,6 +102,9 @@ class Store(models.Model):
 
     name = models.CharField(max_length=80, blank=True, null=True)
 
+    genre = models.CharField(max_length=256, blank=True, null=True,
+                             help_text="Describe the music style with few words")
+
     #: In which fiat currency the sales of these songs are
     currency = models.CharField(max_length=5, blank=False, null=False, default="USD",
                                 verbose_name="Currency",
@@ -149,12 +152,12 @@ class StoreItem(models.Model):
 
     #: Price in store currency
     fiat_price = models.DecimalField(max_digits=16, decimal_places=2, default=Decimal(0), validators=[validators.MinValueValidator(Decimal('0.01'))],
-                                     verbose_name="Price in your local currency",
-                                     help_text="Will be automatically converted to the Bitcoin on the moment of purchase")
+                                     verbose_name="Price",
+                                     help_text="The price in your local currency. This is converted to the Bitcoins on the moment of purchase based on the market exchange rate.")
 
     #: Hidden items are "soft-deleted" - they do not appear in the store,
     #: but still exist in db for accounting purposes and such
-    visible = models.BooleanField(default=True)
+    visible = models.BooleanField(default=True, help_text="Set item to hidden to prevent the users to see or purchase it.")
 
     class Meta:
         abstract = True
@@ -179,7 +182,7 @@ class Album(StoreItem):
 
     cover = ThumbnailerImageField(upload_to=filename_gen("covers/"), blank=True, null=True,
                                   verbose_name="Cover art",
-                                  help_text="Cover art as JPEG file")
+                                  help_text="A song specific cover art as JPEG file")
 
     #: Full album as a zipped file
     download_zip = models.FileField(upload_to=filename_gen("songs/"), blank=True, null=True,
@@ -201,9 +204,13 @@ class Song(StoreItem):
     """
 
     #: Song can belong to album, or exist without an album
-    album = models.ForeignKey(Album, null=True,
+    album = models.ForeignKey(Album, null=True, blank=True,
                               verbose_name="Album",
                               help_text="On which album this song belongs to. Leave empty for an albumless song. (You can reorder the songs when you edit the album after uploading the songs.)")
+
+    cover = ThumbnailerImageField(upload_to=filename_gen("covers/"), blank=True, null=True,
+                                  verbose_name="Cover art",
+                                  help_text="Cover art for this song as JPEG file")
 
     download_mp3 = models.FileField(upload_to=filename_gen("songs/"), blank=True, null=True,
                                     verbose_name="MP3 file",
@@ -211,10 +218,10 @@ class Song(StoreItem):
 
     prelisten_mp3 = models.FileField(upload_to=filename_gen("prelisten/"), blank=True, null=True,
                                      verbose_name="Prelisten clip MP3 file",
-                                     help_text="For Safari and IE browsers. Leave empty: This will be automatically generated from uploaded song.")
+                                     help_text="Leave empty: This will be automatically generated from uploaded song.")
     prelisten_vorbis = models.FileField(upload_to=filename_gen("prelisten/"), blank=True, null=True,
                                         verbose_name="Prelisten clip Ogg Vorbis file",
-                                        help_text="For Chrome and Firefox browsers. Leave empty: This will be automatically generated from uploaded song.")
+                                        help_text="Leave empty: This will be automatically generated from uploaded song.")
 
     #: Song duration in seconds
     duration = models.FloatField(blank=True, null=True)
@@ -335,6 +342,8 @@ class DownloadTransaction(models.Model):
         source_currency = None
 
         for s in items:
+
+            assert s.visible, "Cannot buy hidden items"
 
             # Make sure everything is from the same artist,
             # as currently artist determinates the currency
