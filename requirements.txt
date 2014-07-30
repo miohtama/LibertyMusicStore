@@ -40,3 +40,4 @@ django-jsonfield==0.9.13
 
 # Facebook development
 django-sslserver==0.12
+facepy==1.0.3

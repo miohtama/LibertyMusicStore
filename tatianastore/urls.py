@@ -1,8 +1,12 @@
+import os
+import sys
+
 from django.conf.urls import patterns, include, url
 from django.conf import settings
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+from django.conf.urls.static import static
 
 from . import storefront
 from . import storeadmin
@@ -33,3 +37,9 @@ if settings.DEBUG:
     urlpatterns += patterns('',
         (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
         'document_root': settings.MEDIA_ROOT}))
+
+# This is a hack to make static resources to load
+# when doing runsslserver testing against FB
+if "runsslserver" in sys.argv:
+    static_path = os.path.join(os.path.dirname(__file__), "static")
+    urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=static_path)

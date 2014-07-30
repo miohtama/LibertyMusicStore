@@ -138,6 +138,18 @@ class Store(models.Model):
             return self.operators.all()[0].email
         return None
 
+    @classmethod
+    def find_by_facebook_page_id(self, page_id):
+        # XXX: Add index for this
+        for s in Store.objects.all().filter(facebook_data__isnull=False):
+            tabs = s.facebook_data.get("tabs_added")
+            if tabs:
+                if tabs.get(page_id) is True:
+                    return s
+
+        return None
+
+
 
 class StoreItem(models.Model):
     """ Base class for buyable content. """
