@@ -36,3 +36,7 @@ django-autoslug==1.7.2
 eyeD3==0.7.4
 retools==0.4.1
 python-bitcoinaddress==0.2.1
+django-jsonfield==0.9.13
+
+# Facebook development
+django-sslserver==0.12

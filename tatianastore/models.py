@@ -24,6 +24,7 @@ from django.contrib.contenttypes.generic import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core import validators
 
+from jsonfield import JSONField
 from easy_thumbnails.fields import ThumbnailerImageField
 from autoslug import AutoSlugField
 
@@ -123,6 +124,9 @@ class Store(models.Model):
                                   default="",
                                   blank=True,
                                   null=True)
+
+    #: Data needed for the Facebook integration
+    facebook_data = JSONField(verbose_name="Facebook page info", default={})
 
     def __unicode__(self):
         return self.name

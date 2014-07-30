@@ -1,0 +1,48 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+
+    <h1>Add store to your Facebook page</h1>
+
+    <ul>
+    <li>You must have a page in Facebook (not a group)
+    <li>You must be the manager or the page
+    </ul>
+
+    <p>Fist log in to Facebook</p>
+
+    <button id="login-to-fb">Login to Facebook</button>
+    </p>
+
+    <p>
+    Then press the button below
+    </p>
+
+    <p>
+    <button id="add-to-fb" type="button">Add store to Facebook</button>
+    </p>
+
+
+    <script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+    {% include "fb-js-sdk.html" %}
+    <script>
+    $(document).ready(function() {
+
+        $("#add-to-fb").click(function() {
+            FB.ui({
+              method: 'pagetab',
+              display: 'popup',
+              redirect_uri: "{{ facebook_redirect_url }}",
+            }, function(response) {
+                // Grab the data
+                $.post("{% url store_facebook_data %}", response);
+                console.log(response);
+                alert("The store was added to your facebook page.");
+            });
+        });
+    });
+    </script>
+
+{% endblock %}

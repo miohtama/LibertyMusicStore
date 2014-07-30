@@ -11,6 +11,7 @@ from django.template import RequestContext
 from django.forms.util import ErrorList
 from django.db import transaction
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
 from django.shortcuts import render_to_response
 
@@ -76,6 +77,36 @@ def upload_album(request):
     return render_to_response("storeadmin/upload_album.html", locals(), context_instance=RequestContext(request))
 
 
+@staff_member_required
+def add_to_facebook(request):
+    """ The page giving the button for adding the store to Facebook. """
+
+    if request.user.is_superuser:
+        # Test as superuser admin
+        store = models.Store.objects.first()
+    else:
+        store = request.user.get_default_store()
+
+    # Facebook signals back if the add was succesful
+    added = request.GET.get("added")
+    site_url = settings.SITE_URL
+    store_url = reverse("store", args=(store.slug,))
+    facebook_redirect_url = request.build_absolute_uri(store_url) + "?facebook=true"
+
+    # Development mode -> the page must be accessible through
+    # SSH reverse tunnel
+    if settings.DEBUG:
+        facebook_redirect_url = facebook_redirect_url.replace("http://localhost:8000", "http://libertymusicstore.net:9999")
+
+    return render_to_response("storeadmin/add_to_facebook.html", locals(), context_instance=RequestContext(request))
+
+
+@staff_member_required
+def store_facebook_data_ajax(request):
+    """ Because how Facebook works we need to play this trickery here. """
+
+
 urlpatterns = patterns('',
     url(r'^upload-album/$', upload_album, name="upload_album"),
+    url(r'^add-to-facebook/$', add_to_facebook, name="add_to_facebook"),
 )
