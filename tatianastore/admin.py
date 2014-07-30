@@ -75,6 +75,8 @@ class Store(admin.ModelAdmin):
 
     list_display = ("id", "name", "store_url")
 
+    readonly_fields = ("facebook_data",)
+
     change_form_template = "admin/store_form.html"
 
     def has_delete_permission(self, request, obj=None):

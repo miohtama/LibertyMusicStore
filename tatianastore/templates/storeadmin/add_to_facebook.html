@@ -34,12 +34,11 @@
             FB.ui({
               method: 'pagetab',
               display: 'popup',
-              redirect_uri: "{{ facebook_redirect_url }}",
+              redirect_uri: "{{ facebook_redirect_url }}"
             }, function(response) {
                 // Grab the data
-                $.post("{% url store_facebook_data %}", response);
-                console.log(response);
-                alert("The store was added to your facebook page.");
+                $.post("{% url 'store_facebook_data' %}", {data:JSON.stringify(response)});
+                alert("The store has been added to your Facebook page. Please use Manage Tabs on your Facebook page to bring Buy Songs tab visible, as instructed below.");
             });
         });
     });
