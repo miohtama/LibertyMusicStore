@@ -154,6 +154,7 @@ THUMBNAIL_BASEDIR = 'thumbs'
 THUMBNAIL_DEBUG = True
 
 INSTALLED_APPS = (
+    'sslserver',  # Facebook page tab development
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
