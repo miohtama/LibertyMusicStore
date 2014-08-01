@@ -20,6 +20,7 @@ from django.shortcuts import render_to_response
 
 from . import models
 from . import zipupload
+from .utils import merge_dicts
 
 
 logger = logging.getLogger(__name__)
@@ -93,13 +94,13 @@ def add_to_facebook(request):
     # Facebook signals back if the add was succesful
     added = request.GET.get("added")
     site_url = settings.SITE_URL
+
+    assert not site_url.startswith("http://localhost"), "Facebook app cannot be tested without public domain (SSH TUNNEL) and runsslserver"
+
     store_url = reverse("store", args=(store.slug,))
     facebook_redirect_url = request.build_absolute_uri(store_url) + "?facebook=true"
 
-    # Development mode -> the page must be accessible through
-    # SSH reverse tunnel
-    if settings.DEBUG:
-        facebook_redirect_url = facebook_redirect_url.replace("http://localhost:8000", "http://libertymusicstore.net:9999")
+    facebook_data_json = json.dumps(store.facebook_data)
 
     return render_to_response("storeadmin/add_to_facebook.html", locals(), context_instance=RequestContext(request))
 
@@ -110,6 +111,8 @@ def store_facebook_data(request):
     """ Because how Facebook works we need to play this trickery here.
 
     AJAX call grabs the data from the Facebook response.
+
+    Return the current facebook_data status as JSON.
     """
 
     if request.user.is_superuser:
@@ -118,10 +121,12 @@ def store_facebook_data(request):
     else:
         store = request.user.get_default_store()
 
-    store.facebook_data = json.loads(request.POST["data"])
+    print request.POST.items()
+
+    store.facebook_data = merge_dicts(store.facebook_data, json.loads(request.POST["data"]))
     store.save(update_fields=("facebook_data",))
 
-    return http.HttpResponse("OK")
+    return http.HttpResponse(json.dumps(store.facebook_data), content_type="application/json")
 
 
 urlpatterns = patterns('',

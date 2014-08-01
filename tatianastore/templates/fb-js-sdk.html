@@ -1,12 +1,14 @@
 <div id="fb-root"></div>
 <script>
     window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '315418408638637',
-      xfbml      : true,
-      version    : 'v2.0',
-      status     : true
-    });
+        FB.init({
+          appId      : '315418408638637',
+          xfbml      : true,
+          version    : 'v2.0',
+          status     : true
+        });
+
+        $(document).trigger("facebookloaded");
     };
 
     (function(d, s, id){

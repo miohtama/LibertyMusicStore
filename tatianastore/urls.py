@@ -41,5 +41,9 @@ if settings.DEBUG:
 # This is a hack to make static resources to load
 # when doing runsslserver testing against FB
 if "runsslserver" in sys.argv:
+    # XXX: Hardcoded for now for FB testing
+    urlpatterns += static("/static/admin/", document_root="/Users/mikko/code/tatianastore/venv/lib/python2.7/site-packages/django/contrib/admin/static/admin")
+
     static_path = os.path.join(os.path.dirname(__file__), "static")
-    urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=static_path)
+    urlpatterns += static(settings.STATIC_URL, document_root=static_path)
+
