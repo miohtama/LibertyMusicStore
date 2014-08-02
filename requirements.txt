@@ -31,7 +31,7 @@ flake8
 djrill==1.0.0
 huey==0.4.2
 mock==1.0.1
-python-slugify=0.0.7
+python-slugify==0.0.7
 django-autoslug==1.7.2
 eyeD3==0.7.4
 retools==0.4.1

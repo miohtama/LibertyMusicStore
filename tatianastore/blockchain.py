@@ -83,7 +83,7 @@ def send_to_address(address, btc_amount, note):
     # This is completely unnecessary check,
     # but is now here for debugging BlockChain API problems
     balance_ = balance()
-    assert balance_ > btc_amount, "Not enough funds in BlockChain wallet, got %s" % balance_
+    assert Decimal(balance_) >= Decimal(btc_amount), "Not enough funds in BlockChain wallet, got %s need %s" % (balance_, btc_amount)
 
     logger.info("Sending from BlockChain wallet %s, has %s BTC, sending %s to %s", settings.BLOCKCHAIN_WALLET_ID, balance_, btc_amount, address)
 

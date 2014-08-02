@@ -53,6 +53,8 @@ def credit_store(store):
         logger.error("Store %s not valid BTC address %s", store.name, store.btc_address)
         return 0
 
+    logger.debug("Starting to credit store %s", store.name)
+
     # Some additional protection against not accidentelly running
     # parallel with distributed lock
     with Lock("credit_store_%d" % store.id):
@@ -84,7 +86,7 @@ def credit_store(store):
         # Archive addresses as used
         blockchain.archive(uncredited_transactions.values_list("btc_address", flat=True))
 
-        mail_store_owner(store, "Liberty Music Store payments", "email/credit_transactions.html", dict(store=store, transactions=uncredited_transactions))
+        emailer.mail_store_owner(store, "Liberty Music Store payments", "email/credit_transactions.html", dict(store=store, transactions=uncredited_transactions))
 
         credited += uncredited_transactions.count()
 
