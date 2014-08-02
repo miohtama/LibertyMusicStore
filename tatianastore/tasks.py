@@ -39,9 +39,9 @@ def generate_prelisten(song_id):
 def credit_stores():
     """ Credit authors for their purchased songs every 24 h"""
 
-    if settings.SITE_URL.startswith("http://localhost"):
-        logger.error("Cannot do crediting on localhost")
-        # Prevent accidetal creditations on the developement server
+    # Prevent accidetal creditations on the developement server
+    if settings.SITE_URL not in settings.ALLOWED_CREDIT_SITE_URLS:
+        logger.error("Cannot credit store owners on dev server")
         return 0
 
     credited = 0

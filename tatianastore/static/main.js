@@ -49,6 +49,7 @@
               appId: '315418408638637',
             });
             FB.Canvas.setSize();
+            FB.Canvas.scrollTo(0, 0);
         });
     }
 
