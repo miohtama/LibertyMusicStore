@@ -134,8 +134,8 @@ def upload_album(store, name, zip_file, album_price, song_price):
                     cover = info.filename
 
             # Copy each of the songs to the
-            if not cover:
-                raise BadAlbumContenException("Zip file did not contain cover.jpg file")
+            # if not cover:
+            #    raise BadAlbumContenException("Zip file did not contain cover.jpg file")
 
             if not songs:
                 raise BadAlbumContenException("Zip file did not contain any MP3 files")
@@ -149,7 +149,8 @@ def upload_album(store, name, zip_file, album_price, song_price):
                 upload_song(album, s, data, order, song_price)
                 order += 1
 
-            upload_cover(album, zip.read(cover))
+            if cover:
+                upload_cover(album, zip.read(cover))
 
     logger.info("Committing and starting processing prelisten samples")
 

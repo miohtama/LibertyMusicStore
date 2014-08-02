@@ -298,4 +298,8 @@ LOGIN_REDIRECT_URL = "/admin/"
 #: Override this value to make unguessable wallet hook URLs
 BLOCKCHAIN_WEBHOOK_SECRET = ""
 
+# Only run actual Bitcoin payments to the artist if the site URLs matches these
+# (to avoid sending payments out accidentally)
+ALLOWED_CREDIT_SITE_URLS = ["https://libertymusicstore.net"]
+
 from tatianastore.local_settings import *

@@ -537,11 +537,17 @@ class WelcomeWizard(object):
              "upload_album",
              "preview_store",
              "embed_website_store",
-             "facebook_store"]
+             "embed_facebook_store"]
 
     def __init__(self, user):
         self.redis = get_cache("default").raw_client
         self.user = user
+
+    @classmethod
+    def clear(self):
+        """ Reset the state of all welcome wizards. """
+        redis = get_cache("default").raw_client
+        redis.delete(WelcomeWizard.REDIS_HASH_KEY)
 
     def _create_default_content(self):
         """ By default set all steps not completed. """

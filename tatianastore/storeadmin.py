@@ -70,7 +70,7 @@ def upload_album(request):
                 # JavaScript redirect to this URL
                 return http.HttpResponse(reverse('admin:tatianastore_album_change', args=(album.id,)))
             except zipupload.BadAlbumContenException as e:
-                # Handle bad upload content errors
+                # Handle b(ad upload content errors
                 logger.error("Bad album content")
                 logger.exception(e)
                 errors = form._errors.setdefault("zip_upload", ErrorList())
@@ -122,6 +122,12 @@ def store_facebook_data(request):
         store = request.user.get_default_store()
 
     print request.POST.items()
+
+    # On FB Page Add ancel you get empty array from FB,
+    # though it should be empty object.
+    # Obviously FB employees many PHP coders
+    if store.facebook_data.get("tabs_added") == []:
+        store.facebook_data["tabs_added"] = {}
 
     store.facebook_data = merge_dicts(store.facebook_data, json.loads(request.POST["data"]))
     store.save(update_fields=("facebook_data",))
