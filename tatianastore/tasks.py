@@ -40,6 +40,7 @@ def credit_stores():
     """ Credit authors for their purchased songs every 24 h"""
 
     if settings.SITE_URL.startswith("http://localhost"):
+        logger.error("Cannot do crediting on localhost")
         # Prevent accidetal creditations on the developement server
         return 0
 
