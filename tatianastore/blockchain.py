@@ -133,6 +133,8 @@ def blockchain_received(request):
         return http.HttpResponse("*ok*")
 
     success = t.check_balance(value, transaction_hash)
+    if not success:
+        logger.error("The transaction %s had not enough value", transaction_hash)
 
     # Blockchain return values, don't know if meaningful
     return http.HttpResponse("*ok*") if success else http.HttpResponse("*error*")

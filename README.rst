@@ -153,6 +153,21 @@ More
 
 * http://od-eon.com/blogs/calvin/postgresql-cheat-sheet-beginners/
 
+Facebook app testing
+----------------------
+
+Register a faux app on Facebook.
+
+Use `runsslserver` to run a local development server.
+
+Tunnel localhost:8000 to remoto IP:9999.
+
+Set this publicly accessible port to your FB app settings.
+
+Making a dummy BTC payment when running in FB test mode::
+
+    wget -S --no-check-certificate --output-document="-" "https://libertymusicstore.net:9999/blockchain_received/?transaction_hash=x&value=10000&address=1CAEmjdasqskBEJMsCeY9wUeBuofiw21cA"
+
 Other
 -----
 
