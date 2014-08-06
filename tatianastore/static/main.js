@@ -3,7 +3,20 @@
     "use strict";
 
     var paymentProgress = 0;
+
+    /* PYM frame embedder helper */
     var pymChild = null;
+
+    /**
+     * Are we embedded inside Facebook Page Tab
+     * @return {Boolean}
+     */
+    function isInsideFacebook() {
+        if(window.self.name.indexOf("app_runner") >= 0) {
+            return true;
+        }
+        return false;
+    }
 
     // http://stackoverflow.com/a/13164238/315168
     function writeCookie(key, value, days) {
@@ -27,13 +40,35 @@
 
     /**
      * Handle <iframe> embed and signalling with the parent frame.
+     * Load FB JS SDK and signal it to resize the iframe inside parent
+     */
+    function loadFacebookAndResizeCanvas() {
+        console.log("Doing FB frame resize");
+        $.ajaxSetup({ cache: true });
+        $.getScript('//connect.facebook.net/en_UK/all.js', function() {
+            FB.init({
+              appId: '315418408638637',
+            });
+            FB.Canvas.setSize();
+            FB.Canvas.scrollTo(0, 0);
+        });
+    }
+
+    /**
+     * Communicate <iframe> size to the parent frame.
      */
     function initEmbed() {
         pymChild = new pym.Child({id: "store-embed-iframe-wrapper"});
 
         $(window).load(function() {
-            console.log("foo");
-            pymChild.sendHeightToParent();
+            if(isInsideFacebook()) {
+                // In Facebook do as the Facebook does
+                loadFacebookAndResizeCanvas();
+            } else {
+                // Use Pym embed to signal the parent frame
+                // about the required size of iframe
+                pymChild.sendHeightToParent();
+            }
         });
     }
 

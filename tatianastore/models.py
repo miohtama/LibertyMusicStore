@@ -24,6 +24,7 @@ from django.contrib.contenttypes.generic import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core import validators
 
+from jsonfield import JSONField
 from easy_thumbnails.fields import ThumbnailerImageField
 from autoslug import AutoSlugField
 
@@ -124,6 +125,9 @@ class Store(models.Model):
                                   blank=True,
                                   null=True)
 
+    #: Data needed for the Facebook integration
+    facebook_data = JSONField(verbose_name="Facebook page info", default={})
+
     def __unicode__(self):
         return self.name
 
@@ -133,6 +137,18 @@ class Store(models.Model):
         if self.operators.all().count() > 0:
             return self.operators.all()[0].email
         return None
+
+    @classmethod
+    def find_by_facebook_page_id(self, page_id):
+        # XXX: Add index for this
+        for s in Store.objects.all().filter(facebook_data__isnull=False):
+            tabs = s.facebook_data.get("tabs_added")
+            if tabs:
+                if tabs.get(page_id) is True:
+                    return s
+
+        return None
+
 
 
 class StoreItem(models.Model):
@@ -521,11 +537,17 @@ class WelcomeWizard(object):
              "upload_album",
              "preview_store",
              "embed_website_store",
-             "facebook_store"]
+             "embed_facebook_store"]
 
     def __init__(self, user):
         self.redis = get_cache("default").raw_client
         self.user = user
+
+    @classmethod
+    def clear(self):
+        """ Reset the state of all welcome wizards. """
+        redis = get_cache("default").raw_client
+        redis.delete(WelcomeWizard.REDIS_HASH_KEY)
 
     def _create_default_content(self):
         """ By default set all steps not completed. """

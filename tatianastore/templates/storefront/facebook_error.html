@@ -1,0 +1,36 @@
+{% extends "storefront/base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12 text-center" id="faecbook-error">
+            <h2>{% trans "Oopsie. Looks like there has been an error." %}</h2>
+
+            <div class="text-left">
+                <p>Liberty Music Store tried to load a music store here. However, some information appears to be missing.
+
+                <p>
+                    If this is your own Facebook page:
+                </p>
+
+                <ul>
+                    <li>Make sure you have created user account in <a target="_blank" href="{{ site_url }}">Liberty Music Store</a></li>
+                    <li>Make sure you have used <em>Add store to Facebook</em> button in Liberty Music Store administration</li>
+                </ul>
+
+                <p>
+                    If this is somebody else's Facebook page
+                </p>
+
+                <ul>
+                    <li>Report this problem to <a target="_blank" href="{{ site_url }}{% url 'info' %}">Liberty Music Store</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock content %}
+

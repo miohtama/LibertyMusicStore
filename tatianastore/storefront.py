@@ -26,6 +26,9 @@ from django.core.cache import cache
 from django.utils.translation import ugettext_lazy as _
 from django.conf.urls import patterns
 from django.conf.urls import url
+from django.views.decorators.csrf import csrf_exempt
+
+import facepy
 
 from . import models
 from . import forms
@@ -50,10 +53,43 @@ def store(request, slug):
                 break
         else:
             # Succesfully loaded embed from the user website
+            # TODO: Make sure we are the store owner
             wizard = models.WelcomeWizard(request.user)
             wizard.set_step_status("embed_website_store", True)
 
     store = get_object_or_404(models.Store, slug=slug)
+    albums = store.album_set.all()
+    songs_without_album = models.Song.objects.filter(store=store, album__isnull=True)
+    session_id = get_session_id(request)
+    content_manager = models.UserPaidContentManager(session_id)
+    public_url = settings.PUBLIC_URL
+    return render_to_response("storefront/store.html", locals(), context_instance=RequestContext(request))
+
+
+@csrf_exempt
+def facebook(request):
+
+    signed_request = facepy.SignedRequest.parse(request.POST["signed_request"], settings.FACEBOOK_SECRET_KEY)
+
+    page_id = signed_request["page"]["id"]
+
+    site_url = settings.SITE_URL
+
+    store = models.Store.find_by_facebook_page_id(page_id)
+    if not store:
+        # Something seriously foobared by Facebook?
+        return render_to_response("storefront/facebook_error.html", locals(), context_instance=RequestContext(request))
+
+    # Force creation of session key
+    request.session._get_or_create_session_key()
+    request.session["initialized"] = datetime.datetime.now()
+
+    # Mark that the user has succesfully loaded the store from his/her site
+    if request.user.is_authenticated():
+        # TODO: Make sure we are the store owner
+        wizard = models.WelcomeWizard(request.user)
+        wizard.set_step_status("embed_facebook_store", True)
+
     albums = store.album_set.all()
     songs_without_album = models.Song.objects.filter(store=store, album__isnull=True)
     session_id = get_session_id(request)
@@ -297,6 +333,7 @@ def transaction_check_old(request):
 
 
 urlpatterns = patterns('',
+    url(r'^facebook/$', facebook, name="facebook"),
     url(r'^(?P<slug>[-_\w]+)/embed/$', embed, name="embed"),
     url(r'^(?P<slug>[-_\w]+)/embed-code/$', embed_code, name="embed_code"),
     url(r'^(?P<slug>[-_\w]+)/embed-preview/$', embed_preview, name="embed_preview"),

@@ -70,3 +70,17 @@ def convert_to_btc(amount, currency):
 
 def get_session_id(request):
     return request.session._session_key
+
+
+def merge_dicts(dictionary1, dictionary2):
+    """ Courtesy of http://stackoverflow.com/a/18424201/315168 """
+    output = {}
+    for item, value in dictionary1.iteritems():
+        if dictionary2.has_key(item):
+            if isinstance(dictionary2[item], dict):
+                output[item] = merge_dicts(value, dictionary2.pop(item))
+        else:
+            output[item] = value
+    for item, value in dictionary2.iteritems():
+         output[item] = value
+    return output

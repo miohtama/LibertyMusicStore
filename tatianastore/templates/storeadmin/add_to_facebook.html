@@ -1,0 +1,151 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+
+    <h1>Add store to your Facebook page</h1>
+
+    <ul>
+    <li>You must have a page in Facebook (not a group)
+    <li>You must be the manager or the page
+    <li>You can add the store to multiple Facebook pages
+    </ul>
+
+    {% comment %}
+        Needs special approval from FB
+
+        <p>
+        <button id="login-to-fb" type="button">Login to Facebook</button>
+        </p>
+
+    {% endcomment %}
+
+    <p>
+    <button id="add-to-fb" type="button">Add your store to Facebook page</button>
+    </p>
+
+    <div id="pages">
+        <p>
+            Currently the store is on the following pages
+        </p>
+
+        <div id="pages-content">
+        </div>
+    </div>
+
+    <div id="fb-instructions" style="display: none">
+        <h2>Instructions to make your store visible in Facebook</h2>
+
+        <p style="color: red">You need to take manual actions on your Facebook page to make your music store visible</p>
+
+        <p>
+            Go to <strong>More</strong> &rarr; <strong>Manage tabs</strong> menu on your Facebook fan page
+        </p>
+
+        <p>
+            <img src="{% static "img/fb1.png" %}" alt="" style="margin: 20px; border: 2px solid #eee">
+        </p>
+
+        <p>
+            Drag and drop <strong>Buy music</strong> to be the second tab after About.
+        </p>
+
+        <p>
+            <img src="{% static "img/fb2.png" %}" alt="" style="margin: 20px; border: 2px solid #eee">
+        </p>
+
+        <p>After this please share the link to your Buy Music Facebook page everywhere :)</p>
+
+    </div>
+
+    <h2>Is my store already on my Facebook page?</h2>
+    <p>
+        <a href="https://facebook.com">Visit Facebook to see the pages you manage</a> and whether Liberty Musics Store has been added there.
+    </p>
+
+
+    <script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+    {% include "fb-js-sdk.html" %}
+    <script>
+    $(document).ready(function() {
+
+        // FB OAuth 2 access token
+        var accessToken = null;
+
+        /**
+         * Update the list of page links
+         *
+         * http://stackoverflow.com/a/13024318/315168
+         *
+         * @param  {Object} data store.facebook_data from the server
+         */
+        function updatePages(data) {
+
+            console.log("Updating the page list");
+
+            $("#pages-content").empty();
+
+            if(data && data.tabs_added) {
+                // Use FB SDK to reverse look up these pages
+                $.each(data.tabs_added, function(pageId, added) {
+                    FB.api(pageId, function(response) {
+                        var a = $("a").attr("href", response.link).text("foobar")
+                        var p = $("p").append(a);
+                        $("#pages-content").append(p);
+                    });
+                });
+            } else {
+                $("#pages-content").text("Not yet on any Facebook page");
+            console.log("Updating page status with ", data)
+            if(!$.isEmptyObject(data.tabs_added)) {
+                $(("#fb-instructions")).show();
+            }
+        }
+
+        /**
+         * http://stackoverflow.com/questions/1370636/adding-a-tab-to-facebook-page
+         *
+         *
+         */
+        $("#add-to-fb").click(function() {
+            FB.ui({
+              method: 'pagetab',
+              display: 'popup'
+              /*redirect_uri: "{{ facebook_redirect_url }}"*/
+            }, function(response) {
+                console.log("Response", response);
+                // Grab the data
+                if(response.tabs_added) {
+
+                    console.log("Informing the server about the new pages")
+                    // tabsAdded has content -> user did not cancel the operation on FB dialog
+                    $.post("{% url 'store_facebook_data' %}", {data:JSON.stringify(response)}, function(response) {
+                        updatePages(response);
+                    });
+                    alert("The store has been added to your Facebook page. Please use Manage Tabs on your Facebook page to bring Buy Songs tab visible, as instructed below.");
+                    if(!$.isEmptyObject(response.tabs_added)) {
+                        console.log("Informing the server about the new pages")
+                        // tabsAdded has content -> user did not cancel the operation on FB dialog
+                        $.post("{% url 'store_facebook_data' %}", {data:JSON.stringify(response)}, function(response) {
+                            updatePages(response);
+                            alert("The store has been added to your Facebook page. Please visit your Facebook page and use Manage Tabs on your Facebook page to bring Buy Songs tab visible, as instructed below.");
+                        });
+                    } else {
+                        alert("Please try again when you have a page where you wish to add the store");
+                    }
+                }
+            });
+        });
+
+        $(document).on("facebookloaded", function() {
+            updatePages(window.facebookData);
+        });
+    });
+
+    </script>
+
+    <script>
+        window.facebookData = {{ facebook_data_json|safe }}
+    </script>
+{% endblock %}
