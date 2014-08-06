@@ -140,8 +140,8 @@ class Song(admin.ModelAdmin):
 
 class SongInline(admin.TabularInline):
     model = models.Song
-    fields = ("visible", "order", "name", "fiat_price", "edit")
-    readonly_fields = fields
+    fields = ["order", "visible", "name", "fiat_price", "edit"]
+    readonly_fields = ["visible", "name", "fiat_price", "edit"]
     extra = 0
 
     def has_add_permission(self, request, obj=None):
@@ -193,7 +193,10 @@ class Album(admin.ModelAdmin):
         )
 
         css = {
-            'all': ('/static/admin/hide-tabularinline-name.css',),
+            'all': (
+                '/static/admin/hide-tabularinline-name.css',
+                '/static/admin/admin-custom.css',
+                ),
         }
 
     def has_delete_permission(self, request, obj=None):
