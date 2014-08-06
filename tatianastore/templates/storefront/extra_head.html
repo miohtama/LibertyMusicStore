@@ -1,0 +1,5 @@
+{% if request.session.inside_facebook %}
+    {{ store.extra_facebook_html|safe }}
+{% else %}
+    {{ store.extra_html|safe }}
+{% endif %}

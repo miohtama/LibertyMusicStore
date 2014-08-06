@@ -119,11 +119,18 @@ class Store(models.Model):
                                    null=True,
                                    default=None)
 
-    extra_html = models.TextField(verbose_name="Store formatting HTML code",
+    extra_html = models.TextField(verbose_name="Store styles code",
                                   help_text="Style your shop with extra HTML code placed for the site embed &ltiframe&gt. Please ask your webmaster for the details. This can include CSS &lt;style&gt; tag for the formatting purposes.",
                                   default="",
                                   blank=True,
                                   null=True)
+
+    extra_facebook_html = models.TextField(verbose_name="Facebook styles code",
+                                  help_text="Style your shop with extra HTML code placed on the shop when it is on a Facebook page.",
+                                  default="",
+                                  blank=True,
+                                  null=True)
+
 
     #: Data needed for the Facebook integration
     facebook_data = JSONField(verbose_name="Facebook page info", default={})

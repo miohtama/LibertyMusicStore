@@ -38,6 +38,10 @@ from utils import get_session_id
 logger = logging.getLogger(__name__)
 
 
+def _is_facebook_request(request):
+    """ """
+
+
 def store(request, slug):
     """ Show artist show inside embed <iframe>.
     """
@@ -46,6 +50,10 @@ def store(request, slug):
     request.session._get_or_create_session_key()
     request.session["initialized"] = datetime.datetime.now()
 
+    # TODO: Using sessions to manage tracking if we are
+    # using iframe inside Facebook or somewhere else causes its problems
+    # but it is the cheapest solution to do it now
+    request.session["inside_facebook"] = False
     # MArk that the user has succesfully loaded the store from his/her site
     if request.user.is_authenticated():
         for unlikely_user_website_host in ("http://localhost:8000", "https://libertymusicstore"):
@@ -83,6 +91,7 @@ def facebook(request):
     # Force creation of session key
     request.session._get_or_create_session_key()
     request.session["initialized"] = datetime.datetime.now()
+    request.session["inside_facebook"] = True
 
     # Mark that the user has succesfully loaded the store from his/her site
     if request.user.is_authenticated():
@@ -95,6 +104,7 @@ def facebook(request):
     session_id = get_session_id(request)
     content_manager = models.UserPaidContentManager(session_id)
     public_url = settings.PUBLIC_URL
+
     return render_to_response("storefront/store.html", locals(), context_instance=RequestContext(request))
 
 
