@@ -26,12 +26,6 @@
     </p>
 
     <div id="pages">
-        <p>
-            Currently the store is on the following pages
-        </p>
-
-        <div id="pages-content">
-        </div>
     </div>
 
     <div id="fb-instructions" style="display: none">
@@ -97,15 +91,11 @@
                 });
             } else {
                 $("#pages-content").text("Not yet on any Facebook page");
-            console.log("Updating page status with ", data)
-            if(!$.isEmptyObject(data.tabs_added)) {
-                $(("#fb-instructions")).show();
             }
         }
 
         /**
          * http://stackoverflow.com/questions/1370636/adding-a-tab-to-facebook-page
-         *
          *
          */
         $("#add-to-fb").click(function() {
