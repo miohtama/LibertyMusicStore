@@ -73,12 +73,19 @@ def facebook(request):
 
     page_id = signed_request["page"]["id"]
 
+<<<<<<< HEAD
     site_url = settings.SITE_URL
 
     store = models.Store.find_by_facebook_page_id(page_id)
     if not store:
         # Something seriously foobared by Facebook?
         return render_to_response("storefront/facebook_error.html", locals(), context_instance=RequestContext(request))
+=======
+    store = models.Store.find_by_facebook_page_id(page_id)
+    if not store:
+        # Something seriously foobared by Facebook?
+        return http.HttpResponse("Liberty Music Store could not find the record store for this Facebook page. Please remove the tab from your page and re-add Liberty Music Store to your Facebook page through Liberty Music Store admin.")
+>>>>>>> 037d32f6b6b016324e994777e2818745ed661462
 
     # Force creation of session key
     request.session._get_or_create_session_key()
