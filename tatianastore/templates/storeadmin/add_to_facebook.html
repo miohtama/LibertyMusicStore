@@ -25,9 +25,6 @@
     <button id="add-to-fb" type="button">Add your store to Facebook page</button>
     </p>
 
-    <div id="pages">
-    </div>
-
     <div id="fb-instructions" style="display: none">
         <h2>Instructions to make your store visible in Facebook</h2>
 
@@ -55,7 +52,7 @@
 
     <h2>Is my store already on my Facebook page?</h2>
     <p>
-        <a href="https://facebook.com">Visit Facebook to see the pages you manage</a> and whether Liberty Musics Store has been added there.
+        Did you already try to add it? <a href="https://facebook.com">Visit Facebook to see the pages you manage</a> and whether Liberty Musics Store has been added there.
     </p>
 
 
@@ -75,27 +72,15 @@
          * @param  {Object} data store.facebook_data from the server
          */
         function updatePages(data) {
-
-            console.log("Updating the page list");
-
-            $("#pages-content").empty();
-
-            if(data && data.tabs_added) {
-                // Use FB SDK to reverse look up these pages
-                $.each(data.tabs_added, function(pageId, added) {
-                    FB.api(pageId, function(response) {
-                        var a = $("a").attr("href", response.link).text("foobar")
-                        var p = $("p").append(a);
-                        $("#pages-content").append(p);
-                    });
-                });
-            } else {
-                $("#pages-content").text("Not yet on any Facebook page");
+            console.log("Updating page status with ", data)
+            if(!$.isEmptyObject(data.tabs_added)) {
+                $(("#fb-instructions")).show();
             }
         }
 
         /**
          * http://stackoverflow.com/questions/1370636/adding-a-tab-to-facebook-page
+         *
          *
          */
         $("#add-to-fb").click(function() {
@@ -107,13 +92,6 @@
                 console.log("Response", response);
                 // Grab the data
                 if(response.tabs_added) {
-
-                    console.log("Informing the server about the new pages")
-                    // tabsAdded has content -> user did not cancel the operation on FB dialog
-                    $.post("{% url 'store_facebook_data' %}", {data:JSON.stringify(response)}, function(response) {
-                        updatePages(response);
-                    });
-                    alert("The store has been added to your Facebook page. Please use Manage Tabs on your Facebook page to bring Buy Songs tab visible, as instructed below.");
                     if(!$.isEmptyObject(response.tabs_added)) {
                         console.log("Informing the server about the new pages")
                         // tabsAdded has content -> user did not cancel the operation on FB dialog
@@ -128,9 +106,22 @@
             });
         });
 
-        $(document).on("facebookloaded", function() {
-            updatePages(window.facebookData);
-        });
+        updatePages(window.facebookData);
+
+        /* This needs special approval from FB
+
+        The following permissions have not been approved for use: manage_pages.
+        If you make your app public, they will not be shown to people using your app. Submit them for review or learn more.
+
+        $("#login-to-fb").click(function() {
+            console.log("Trying FB login");
+            console.log(FB.getAuthResponse());
+            FB.login(function(response) {
+                console.log(response);
+                accessToken = response.authResponse.accessToken;
+                }, {scope:'manage_pages'});
+            });
+        */
     });
 
     </script>
