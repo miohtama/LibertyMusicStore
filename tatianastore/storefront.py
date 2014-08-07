@@ -38,10 +38,6 @@ from utils import get_session_id
 logger = logging.getLogger(__name__)
 
 
-def _is_facebook_request(request):
-    """ """
-
-
 def store(request, slug):
     """ Show artist show inside embed <iframe>.
     """
@@ -53,7 +49,11 @@ def store(request, slug):
     # TODO: Using sessions to manage tracking if we are
     # using iframe inside Facebook or somewhere else causes its problems
     # but it is the cheapest solution to do it now
-    request.session["inside_facebook"] = False
+
+    # We can get "enter the Facebook iframe mode"
+    # as a parameter, besides normal Facebook entry point with a get parameter
+    request.session["inside_facebook"] = ("facebook" in request.GET)
+
     # MArk that the user has succesfully loaded the store from his/her site
     if request.user.is_authenticated():
         for unlikely_user_website_host in ("http://localhost:8000", "https://libertymusicstore"):
@@ -76,7 +76,7 @@ def store(request, slug):
 
 @csrf_exempt
 def facebook(request):
-
+    """ Facebook Page Tab iframe entry point via signed HTTP POST request. """
     signed_request = facepy.SignedRequest.parse(request.POST["signed_request"], settings.FACEBOOK_SECRET_KEY)
 
     page_id = signed_request["page"]["id"]
@@ -162,7 +162,14 @@ def pay(request, uuid):
     if request.method == "POST":
         if "cancel" in request.POST:
             transaction.mark_cancelled()
-            return redirect("store", transaction.store.slug)
+            resp = redirect("store", transaction.store.slug)
+
+            # Keep Facebook mode activated
+            if request.session.get("inside_facebook"):
+                resp['Location'] += '?facebook=true'
+
+            return resp
+        logger.error("Received pay() page handling %s %s", request.method, request.POST)
 
     store = transaction.store
 
