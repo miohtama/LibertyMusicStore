@@ -92,7 +92,7 @@ class Store(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         if not request.user.is_superuser:
-            return ("operators",)
+            return ("operators", "facebook_data", )
         return super(Store, self).get_readonly_fields(request, obj)
 
     def save_model(self, request, obj, form, change):
