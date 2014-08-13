@@ -23,6 +23,11 @@ blockchain.info API is used for the receiving transactions and Bitcoin wallet ma
 Development environment setup
 ------------------------------
 
+Checkout::
+
+    git checkout
+    git submodule update --init --recursive
+
 Setup virtualenv::
 
     export PATH=/usr/local/mysql/bin:$PATH
