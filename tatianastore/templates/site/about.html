@@ -10,12 +10,11 @@
 
 
 {% block content %}
+<section id="about">
 
-    <div class="row">
-        <div class="col-md-6">
-
-            <div>
-                <h1>About Liberty Music Store</h1>
+        <div class="row">
+            <div class="col-md-8 info-lead">
+                <h1>About <strong>Liberty Music Store</strong></h1>
 
                 <p>
                     Liberty Music Store is a service where musicians can open their own record store to sell music and receive Bitcoin as the payment.
@@ -44,40 +43,67 @@
                     If you have any ideas where this project could head to please drop an email.
                 </p>
 
-                <p>
-                    <a href="https://github.com/miohtama/LibertyMusicStore">The source code is 100% open source and available on Github.</a>
+                <p class="pull-right">
+                    <em>Cheers, Mikko Ohtamaa</em>
                 </p>
 
-                <p>
-                    Cheers, <a href="mailto:mikko@libertymusicstore.net">Mikko Ohtamaa</a>
-                    (<a href="https://twitter.com/moo9000"><i class="fa fa-twitter"> Twitter</i></a>,
-                    <a href="https://linkedin.com/in/ohtis"><i class="fa fa-linkedin-square"> LinkedIn</i></a>)
-                </p>
-
-                <h2>In media</h2>
-
-                <p>
-                    <a href="https://bitcointalk.org/index.php?topic=668423.0">BitcoinTalk</a>
-                </p>
-
-                <p>
-                    <a href="http://www.cryptocoinsnews.com/news/liberty-music-store-selling-indie-music-bitcoin-made-easy/">CryptoCoinsNews</a>
-                </p>
-
-                <p>
-                    <a href="http://novitabitcoin.blogspot.it/2014/07/liberty-music-store-vendere-musica-in.html">
-                        Liberty Music Store: vendere musica in bitcoin (Italian)
-                    </a>
-                </p>
             </div>
 
-        </div>
 
-        <div class="col-md-6">
-            <img class="img-responsive img-thumbnail"  src="{% static 'img/selfie.jpg' %}" alt="">
+            <div class="col-md-4">
+
+                <img class="img-responsive img-thumbnail"  src="{% static "img/selfie.jpg" %}" alt="">
+
+                <p class="panel-spacer"></p>
+
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <h3>In media</h3>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <p>
+                            <a href="https://bitcointalk.org/index.php?topic=668423.0">BitcoinTalk</a>
+                        </p>
+
+                        <p>
+                            <a href="http://www.cryptocoinsnews.com/news/liberty-music-store-selling-indie-music-bitcoin-made-easy/">CryptoCoinsNews</a>
+                        </p>
+
+                        <p>
+                            <a href="http://novitabitcoin.blogspot.it/2014/07/liberty-music-store-vendere-musica-in.html">
+                                Liberty Music Store: vendere musica in bitcoin (Italian)
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+                <p class="panel-spacer"></p>
+
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <h3>Other</h3>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <p>
+                            <a href="https://github.com/miohtama/LibertyMusicStore"><i class="fa fa-github-alt"></i> 100% open source</a>
+                        </p>
+
+                        <p>
+                            <a href="https://linkedin.com/in/ohtis"><i class="fa fa-linkedin-square"></i> LinkedIn</a>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
-
+</section>
 
 
 {% endblock content %}

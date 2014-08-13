@@ -8,10 +8,6 @@
 		{
 			"follow_symlinks": true,
 			"path": "/Users/mikko/code/tatianastore"
-		},
-		{
-			"follow_symlinks": true,
-			"path": "/Users/mikko/code/bootstrap-theme-libertymusicstore"
 		}
 	],
 	"settings":

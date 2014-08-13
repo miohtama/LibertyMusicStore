@@ -13,9 +13,10 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
-    <link href='http://fonts.googleapis.com/css?family=Chivo' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="{% static "bitcoin.css" %}"/>
-    <link rel="stylesheet" href="{% static "site.css" %}"/>
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,300,700,100' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="{% static 'css/libertymusicstore.min.css' %}"/>
 
     <link rel="icon" type="image/png" href="{% static 'icon/16x16.png' %}" />
 
@@ -34,76 +35,62 @@
 
 </head>
 
-<body>
+<body
+    {% block body_classes %}
+    {% endblock body_classes %}
+    >
 
+    <div id="sticky-footer-rwap">
 
-{% block container %}
-{% include "site/nav.html" %}
+        {% include "site/nav.html" %}
 
-<main class="container">
-
-    {% if messages %}
-    <div class="row">
-      <div class="span12">
-          {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} {% if message.tags == "error" %}alert-danger{% endif %}">
-                {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
+        {% if messages %}
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} {% if message.tags == "error" %}alert-danger{% endif %}">
+                                {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-          {% endfor %}
-      </div>
-    </div>
-    {% endif %}
+        {% endif %}
 
-    {% block content %}{% endblock %}
+        {% block content %}{% endblock %}
+    </div>
 
     {% block footer %}
-        <footer id="footer">
-            <div class="row">
-                <div id="footer-content" class="col-md-12">
-                    <p class="text text-muted">
-                        © <a href="https://libertymusicstore.net">Liberty Music Store</a> 2014 <span id="social-icons"><a href="https://twitter.com/LibertyMusicNet"> <i class="fa fa-twitter"></i></a> <a href="mailto:mikko@libertymusicstore.net"> <i class="fa fa-envelope"></i></a> <a href="https://github.com/miohtama/LibertyMusicStore"> <i class="fa fa-github"></i></a>
-                    </p>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12 text-center">
-
-                    {% include "bitcoin_accepted_here.html" %}
-
-                </div>
-            </div>
-        </footer>
+        {% include "site/footer.html" %}
     {% endblock footer %}
-</main>
-{% endblock container %}
 
-<script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 
-{% block body_end %}
-{% endblock body_end %}
+    {% block body_end %}
+    {% endblock body_end %}
 
-{% block script %}
-<script src="{% static "site.js" %}"></script>
-{% endblock script %}
+    {% block script %}
+    <script src="{% static "site.js" %}"></script>
+    {% endblock script %}
 
-{% block custom_script %}
-{% endblock custom_script %}
+    {% block custom_script %}
+    {% endblock custom_script %}
 
-{% comment %}
-    Site tracking
-{% endcomment %}
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    {% comment %}
+        Site tracking
+    {% endcomment %}
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-52366166-2', 'auto');
-  ga('send', 'pageview');
+      ga('create', 'UA-52366166-2', 'auto');
+      ga('send', 'pageview');
 
-</script>
+    </script>
 
 </body>
 

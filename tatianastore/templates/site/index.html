@@ -3,146 +3,194 @@
 {% load i18n %}
 {% load static %}
 
+{% block body_classes %}
+class="front-page"
+{% endblock body_classes %}
+
 {% block content %}
 
-    <div class="row">
-        <div class="col-md-12">
+    <!-- Header -->
+    <header>
+        <div class="container">
             <div class="jumbotron">
-                <h1>{% trans "Liberty Music Store" %}</h1>
-                <p class="lead">
-                    The Bitcoin music store for artists.
+                <img alt="Liberty Music Store" src="{% static "img/logo-1000.png" %}">
+                <p class="lead text-center">
+                    <span class="lead-inner">The Bitcoin music store for artists</span>
                 </p>
             </div>
         </div>
-    </div>
+    </header>
 
-    <div id="slogan" class="row">
-        <div class="col-md-12">
-            <p class="lead text-center">
-                Sell songs on your homepage, receive Bitcoin.
+    <section id="features">
+        <div class="container marketing">
+             <div class="row">
+                <div class="col-lg-12 text-center">
+                    <p class="lead lead-highlight">Sell songs on your page, receive Bitcoin</p>
+                </div>
+            </div>
+            <div class="row text-center">
+
+                <div class="col-md-4">
+
+                    <!-- Left -->
+                    <div class="entry">
+                        <span class="fa-stack fa-4x">
+                            <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fa fa-music fa-stack-1x fa-inverse"></i>
+                        </span>
+                        <h4>Music is your merchandise</h4>
+                        <p>As an artist, sell your music directly to your fans. Name your price and place.</p>
+                    </div>
+
+                    <div class="entry">
+                        <span class="fa-stack fa-4x">
+                            <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fa fa-lock fa-stack-1x fa-inverse"></i>
+                        </span>
+                        <h4>For your eyes only</h4>
+                        <p>Bitcoin transactions are anonymous. Bitcoin revenue is for your eyes only. No paperwork needed.</p>
+                    </div>
+                </div>
+
+                <!-- Middle -->
+                <div class="col-md-4">
+
+                    <div class="entry">
+                        <span class="fa-stack fa-4x">
+                            <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fa fa-heart fa-stack-1x fa-inverse"></i>
+                        </span>
+                        <h4>Patent-free two-click downloads</h4>
+                        <p>ake your song buyable <strong>with just two clicks</strong> - no sign ups or credit card numbers.</p>
+                    </div>
+
+                    <div class="entry">
+                        <span class="fa-stack fa-4x">
+                            <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                        </span>
+                        <h4>A store on your page</h4>
+                        <p>Sell music directly on your Facebook page or website. 100% customizable and faithful to your style.</p>
+                    </div>
+                </div>
+
+                <!-- Right -->
+                <div class="col-md-4">
+
+                    <div class="entry">
+                        <span class="fa-stack fa-4x">
+                            <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fa fa-globe fa-stack-1x fa-inverse"></i>
+                        </span>
+                        <h4>Reach everywhere</h4>
+                        <p>Bitcoin is the first global virtual currency. Fans can pay for the music regardless where they come from.</p>
+                    </div>
+
+                    <div class="entry">
+                        <span class="fa-stack fa-4x">
+                            <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
+                        </span>
+                        <h4>Perfect for specials</h4>
+                        <p>Do presales, campaigns, exclusive content. You control the sales channel.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="sign-up">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="text-center">
+                    <span>Get started</span>
+                </h2>
+            </div>
+
+            <p class="lead lead-highlight  text-center">
+                Sign up now and open your own record store in 5 minutes.
+            </p>
+
+            <p class="text-center">
+                <a class="btn btn-primary btn-mega pulse" href="#"><i class="fa fa-arrow-right"></i> Sign up free</a>
             </p>
         </div>
-    </div>
+    </section>
 
-    <div class="row marketing">
-        <div class="col-lg-4">
+    <section id="out-now">
 
-            <div class="entry">
-                <i class="fa fa-music"></i>
-                <h4>Music is your merchandise</h4>
-                <p>As an artist, sell your music directly to your fans. Name your price and place.</p>
-            </div>
+      <div class="container">
+             <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="text-center">
+                        <span>Out now</span>
+                    </h2>
+                </div>
 
-            <div class="entry">
-                <i class="fa fa-lock"></i>
-                <h4>For your eyes only</h4>
-                <p>Bitcoin transactions are anonymous. Bitcoin revenue is for your eyes only. No paperwork needed.</p>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-
-            <div class="entry">
-                <i class="fa fa-heart"></i>
-                <h4>Patent-free 2-click downloads</h4>
-                <p>Make your song buyable <strong>with just two clicks</strong> - no sign ups or credit card numbers.</p>
-            </div>
-
-            <div class="entry">
-                <i class="fa fa-home"></i>
-                <h4>A store on your site</h4>
-                <p>
-                    Sell music directly on your website.
-                    Embed Liberty Music Store on your homepage, blog or Facebook page.
-                    100% customizable and faithful to your style.
+                <p class="lead lead-highlight text-center">
+                    See the stores below
                 </p>
             </div>
-        </div>
 
-        <div class="col-lg-4">
+            <div class="row">
 
-            <div class="entry">
-                <i class="fa fa-globe"></i>
-                <h4>Reach everywhere</h4>
-                <p>Bitcoin is a global virtual currency and works in every country. Fans can pay for your music regardless where they are.</p>
+                <div class="col-md-12" id="example-stores">
+
+                    <a class="media tile-link" href="http://tatianacoin.com/bitcoin-store/">
+
+                      <img class="media-object pull-left" src="{% static "img/tatiana.jpg" %}" alt="">
+
+                      <div class="media-body">
+                        <h4 class="media-heading">Tatiana Moroz</h4>
+                        <p>
+                            Country - crypto crowdfunding
+                        <p>
+                      </div>
+                    </a>
+
+                    <a class="media tile-link" href="http://yesconnie.com/btc">
+
+                      <img class="media-object pull-left" src="{% static "img/yesconnie.jpg" %}" alt="">
+
+                      <div class="media-body">
+                        <h4 class="media-heading">YESConnie</h4>
+                        <p>
+                            Spiritual Rap
+                        <p>
+                      </div>
+                    </a>
+
+                    <a class="media tile-link" href="http://www.thehollowcircle.com/">
+
+                      <img class="media-object pull-left" src="{% static "img/hollowcircle.jpg" %}" alt="">
+
+                      <div class="media-body">
+                        <h4 class="media-heading">The Hollow Circle</h4>
+                        <p>
+                            Goth rock in the style of 80s
+                        <p>
+                      </div>
+                    </a>
+
+
+                    <a class="media tile-link" href="http://dharmafire-music.blogspot.it/">
+
+                      <img class="media-object pull-left" src="{% static "img/dharmafire.jpg" %}" alt="">
+
+                      <div class="media-body">
+                        <h4 class="media-heading">The Dharma Fire</h4>
+                        <p>
+                            Psychedelic meditation music
+                        <p>
+                      </div>
+                    </a>
+
+                    <div style="clear: both"></div>
+
+                </div>
+
             </div>
-
-            <div class="entry">
-                <i class="fa fa-thumbs-o-up"></i>
-                <h4>Perfect for specials</h4>
-                <p>Do presales, campaigns, exclusive content.</p>
-            </div>
         </div>
-
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="text-center">
-                <h3>Out now</h3>
-                <p class="lead"><i class="fa fa-music"></i> See these stores <i class="fa fa-music"></i></p>
-            </div>
-        </div>
-    </div>
-
-    <div class="row" id="examples">
-        <div class="col-md-4 col-md-offset-2">
-
-            <a class="media tile-link" href="http://tatianacoin.com/bitcoin-store/">
-
-              <img class="media-object pull-left" src="{% static 'img/tatiana.jpg' %}" alt="">
-
-              <div class="media-body">
-                <h4 class="media-heading">Tatiana Moroz</h4>
-                <p>
-                    Country. <small>See TatianaCoin - the first artist fundraising coin created.</small>
-                <p>
-              </div>
-            </a>
-
-            <a class="media tile-link" href="http://yesconnie.com/btc">
-
-              <img class="media-object pull-left" src="{% static 'img/yesconnie.jpg' %}" alt="">
-
-              <div class="media-body">
-                <h4 class="media-heading">YESConnie</h4>
-                <p>
-                    Spiritual Rap
-                <p>
-              </div>
-            </a>
-        </div>
-
-        <div class="col-md-4">
-
-            <a class="media tile-link" href="http://www.thehollowcircle.com/">
-
-              <img class="media-object pull-left" src="{% static 'img/hollowcircle.jpg' %}" alt="">
-
-              <div class="media-body">
-                <h4 class="media-heading">The Hollow Circle</h4>
-                <p>
-                    Goth rock in the style of 80s
-                <p>
-              </div>
-            </a>
-
-
-            <a class="media tile-link" href="http://dharmafire-music.blogspot.it/">
-
-              <img class="media-object pull-left" src="{% static 'img/dharmafire.jpg' %}" alt="">
-
-              <div class="media-body">
-                <h4 class="media-heading">The Dharma Fire</h4>
-                <p>
-                    Psychedelic meditation music
-                <p>
-              </div>
-            </a>
-
-        </div>
-
-
-    </div>
+    </section>
 
 {% endblock content %}

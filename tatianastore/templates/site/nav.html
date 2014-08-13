@@ -1,66 +1,65 @@
 {% load i18n %}
 {% load debug %}
+{% load static from staticfiles %}
 
-<header class="navbar navbar-default" id="navbar-site">
-    <div class="navbar-inner">
-        <div class="container-fluid">
+<!-- Navigation -->
+<nav class="navbar navbar-default">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'index' %}"><img alt="Liberty Music Store" src="{% static 'img/logo-400.png' %}"></a>
+        </div>
 
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle"
-                 data-toggle="collapse"
-                 data-target="#tatianastore-navbar-collapse-1">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="{% url 'index' %}">
-                    <span class="fa-stack" id="bitcoin-icon">
-                        <i class="fa fa-circle fa-stack-2x"></i>
-                        <i class="fa fa-btc fa-stack fa-inverse fa-stack-1x"></i>
-                    </span>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="hidden">
+                    <a href="#page-top"></a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="{% url 'about' %}">About</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="{% url 'bitcoin' %}">Bitcoin</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="{% url 'info' %}">Info</a>
+                </li>
 
-                    Liberty Music Store
+                {% if not request.user.is_authenticated %}
+                    <li>
+                        <a class="plain" href="{% url 'auth_login' %}">{% trans "Log in" %}</a>
+                    </li>
+                    <li class="plain">
+                        <a class="plain" href="{% url 'signup' %}">{% trans "Sign up" %}</a>
+                    </li>
+                {% else %}
 
-                  </a>
-            </div>
-
-            <div class="collapse navbar-collapse" id="tatianastore-navbar-collapse-1">
-
-                <ul class="nav navbar-nav">
-                    <li><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
-                    <li><a href="{% url 'about' %}">{% trans "About" %}</a></li>
-                    <li><a href="{% url 'info' %}">{% trans "Info" %}</a></li>
-                    <li><a href="{% url 'bitcoin' %}">{% trans "Bitcoin payments" %}</a></li>
-                </ul>
-
-                <ul class="nav navbar-nav navbar-right">
-                    {% if not request.user.is_authenticated %}
-                        <li>
-                            <a href="{% url 'auth_login' %}">{% trans "Log in" %}</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'signup' %}">{% trans "Sign up" %}</a>
-                        </li>
-                    {% else %}
-
-                        <li>
-                            <a href="{% url 'admin:index' %}">
-                                {% trans "Your store" %}
-                            </a>
-                        </li>
+                    <li class="plain">
+                        <a class="plain" href="{% url 'admin:index' %}">
+                            <i class="fa fa-home"></i>
+                            {% trans "Your store" %}
+                        </a>
+                    </li>
 
 
-                        <li>
-                            <a href="{% url 'auth_logout' %}">
-                                {% blocktrans with username=request.user.username %}
-                                    Logout <strong>{{username}}</strong>
-                                {% endblocktrans %}
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-
-         </div>
-     </div>
-</header>
+                    <li class="plain">
+                        <a class="plain" href="{% url 'auth_logout' %}">
+                            {% blocktrans with username=request.user.username %}
+                                Logout <strong>{{username}}</strong>
+                            {% endblocktrans %}
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>

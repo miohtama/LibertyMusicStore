@@ -38,3 +38,4 @@ sample-cd
 *.crt
 manage.py
 *.sublime-workspace
+*.rdb
