@@ -36,11 +36,8 @@ django-autoslug==1.7.2
 eyeD3==0.7.4
 retools==0.4.1
 python-bitcoinaddress==0.2.1
-<<<<<<< HEAD
-=======
 django-jsonfield==0.9.13
 
 # Facebook development
 django-sslserver==0.12
 facepy==1.0.3
->>>>>>> origin/facebook-2
