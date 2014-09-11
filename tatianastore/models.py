@@ -224,7 +224,7 @@ class Song(StoreItem):
     """
 
     #: Song can belong to album, or exist without an album
-    album = models.ForeignKey(Album, null=True,
+    album = models.ForeignKey(Album, null=True, blank=True,
                               verbose_name="Album",
                               help_text="On which album this song belongs to. Leave empty for an albumless song. (You can reorder the songs when you edit the album after uploading the songs.)")
 
