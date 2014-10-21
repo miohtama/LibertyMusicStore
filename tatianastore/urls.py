@@ -28,7 +28,9 @@ urlpatterns = patterns('',
     url(r'^storeadmin/', include(storeadmin)),
     url(r'^site/', include(site)),
     url(r'^signup/', include(signup)),
-    url(r'^accounts/', include('registration.backends.default.urls')),
+    url(r'^registration/', include('registration.backends.default.urls')),
+    url(r'^account/', include('django.contrib.auth.urls')),
+
 )
 
 
