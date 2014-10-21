@@ -29,7 +29,7 @@ urlpatterns = patterns('',
     url(r'^site/', include(site)),
     url(r'^signup/', include(signup)),
     url(r'^registration/', include('registration.backends.default.urls')),
-    url(r'^account/', include('django.contrib.auth.urls')),
+    url(r'^accounts/', include('django.contrib.auth.urls')),
 
 )
 
