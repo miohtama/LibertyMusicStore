@@ -74,10 +74,10 @@ class DownloadTransaction(admin.ModelAdmin):
 class Store(admin.ModelAdmin):
 
     list_display = ("id", "name", "store_url")
-
     readonly_fields = ("facebook_data",)
-
     change_form_template = "admin/store_form.html"
+
+    actions = []
 
     def has_delete_permission(self, request, obj=None):
         return False
@@ -106,11 +106,8 @@ class Store(admin.ModelAdmin):
 class Song(admin.ModelAdmin):
 
     list_display = ('visible', 'album', 'name', "fiat_price")
-
     list_display_links = ("name",)
-
     fields = ("visible", "store", "album", "name", "fiat_price", "download_mp3", "prelisten_mp3", "prelisten_vorbis")
-
     readonly_fields = ("order",)
 
     def get_form(self, request, obj=None, **kwargs):
@@ -222,3 +219,5 @@ admin.site.register(models.DownloadTransaction, DownloadTransaction)
 admin.site.register(models.Album, Album)
 admin.site.register(models.Song, Song)
 admin.site.register(models.Store, Store)
+
+admin.site.disable_action('delete_selected')
