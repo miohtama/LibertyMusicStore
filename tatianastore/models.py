@@ -176,7 +176,7 @@ class StoreItem(models.Model):
 
     #: Hidden items are "soft-deleted" - they do not appear in the store,
     #: but still exist in db for accounting purposes and such
-    visible = models.BooleanField(default=True, verbose_name="Visible / deleted", help_text="Uncheck this checkbox to make this item disappear on your store. The site still retains the copy of the item for the while before it is permanently deleted.")
+    visible = models.BooleanField(default=True, verbose_name="Visible / deleted", help_text="Uncheck this to make the item disappear from your store. The site still retains the copy of this item for a while before it is permanently deleted.")
 
     class Meta:
         abstract = True
