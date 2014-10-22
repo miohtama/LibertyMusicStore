@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="songs col-md-6">
-                    {% include "storefront/song_purchase_list.html" with songs=album.song_set.all %}
+                    {% include "storefront/song_purchase_list.html" with songs=album.get_visible_songs %}
                 </div>
             </div>
         {% endfor %}

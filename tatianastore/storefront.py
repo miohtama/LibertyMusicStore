@@ -66,8 +66,8 @@ def store(request, slug):
             wizard.set_step_status("embed_website_store", True)
 
     store = get_object_or_404(models.Store, slug=slug)
-    albums = store.album_set.all()
-    songs_without_album = models.Song.objects.filter(store=store, album__isnull=True)
+    albums = store.album_set.filter(visible=True)
+    songs_without_album = models.Song.objects.filter(store=store, album__isnull=True, visible=True)
     session_id = get_session_id(request)
     content_manager = models.UserPaidContentManager(session_id)
     public_url = settings.PUBLIC_URL
@@ -127,6 +127,11 @@ def order(request, item_type, item_id):
         items = songs
     else:
         raise RuntimeError("Bad item type")
+
+    # Don't allow purchase hidden items
+    for item in items:
+        if not item.visible:
+            raise RuntimeError("Tried purchase non-visible item: %s" % item)
 
     transaction = models.DownloadTransaction.objects.create()
 

@@ -157,7 +157,6 @@ class Store(models.Model):
         return None
 
 
-
 class StoreItem(models.Model):
     """ Base class for buyable content. """
 
@@ -177,7 +176,7 @@ class StoreItem(models.Model):
 
     #: Hidden items are "soft-deleted" - they do not appear in the store,
     #: but still exist in db for accounting purposes and such
-    visible = models.BooleanField(default=True)
+    visible = models.BooleanField(default=True, verbose_name="Visible / deleted", help_text="Uncheck this checkbox to make this item disappear on your store. The site still retains the copy of the item for the while before it is permanently deleted.")
 
     class Meta:
         abstract = True
@@ -214,6 +213,9 @@ class Album(StoreItem):
         download_name = self.name + ".zip"
         content_type = "application/zip"
         return content_type, download_name, _file
+
+    def get_visible_songs(self):
+        return self.song_set.filter(visible=True)
 
     def __unicode__(self):
         return u"%s: %s" % (self.store.name, self.name)
