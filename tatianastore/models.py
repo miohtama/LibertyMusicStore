@@ -112,8 +112,8 @@ class Store(models.Model):
     store_url = models.URLField(verbose_name="Homepage", help_text="Link to home page or Facebook page")
 
     #: The address where completed downlaod payments are credited
-    btc_address = models.CharField(verbose_name="Bitcoin address",
-                                   help_text="Bitcoin receiving address where the purchases will be credited. If you do not have Bitcoin wallet yet you can leave this empty - the site will keep your Bitcoins until you get your Bitcoin wallet.",
+    btc_address = models.CharField(verbose_name="{} address".format(settings.COIN_NAME),
+                                   help_text="Receiving address where the purchases will be credited. If you do not have Bitcoin wallet yet you can leave this empty - the site will keep your coins until you get your own wallet.",
                                    max_length=50,
                                    blank=True,
                                    null=True,
@@ -265,6 +265,7 @@ class DownloadTransaction(models.Model):
 
     PAYMENT_SOURCE_BLOCKCHAIN = "blockchain.info"
     PAYMENT_SOURCE_BITCOIND = "bitcoind"
+    PAYMENT_SOURCE_CRYPTOASSETS = "cryptoassets"
 
     #: Who we notify when the transaction is complete
     customer_email = models.CharField(max_length=64, blank=True, null=True)
@@ -330,6 +331,8 @@ class DownloadTransaction(models.Model):
     def update_new_btc_address(self):
         if self.payment_source == DownloadTransaction.PAYMENT_SOURCE_BLOCKCHAIN:
             self.update_new_btc_address_blockchain()
+        elif self.payment_source == DownloadTransaction.PAYMENT_SOURCE_CRYPTOASSETS:
+            self.update_new_btc_address_cryptoasset()
         else:
             raise RuntimeError("Unknown payment soucre")
 
@@ -341,13 +344,21 @@ class DownloadTransaction(models.Model):
         self.btc_address = blockchain.create_new_receiving_address(label=label)
         return self.btc_address
 
+    def update_new_btc_address_cryptoasset(self):
+        """ Get blockchain.info payment address for this order.
+        """
+        from . import payment
+        label = self.description + u" Total: %s %s Order: %s" % (self.fiat_amount, self.currency, self.uuid)
+        self.btc_address = payment.create_new_receiving_address(accout=self.store.id, label=label)
+        return self.btc_address
+
     def prepare(self, items, description, session_id, ip, user_currency):
         """ Prepares this transaction for the payment phase.
 
         Count order total, initialize BTC addresses, etc.
         """
         self.ip = ip
-        self.payment_source = DownloadTransaction.PAYMENT_SOURCE_BLOCKCHAIN
+        self.payment_source = settings.PAYMENT_SOURCE
         self.user_currency = user_currency
         self.expires_at = self.created_at + datetime.timedelta(days=1)
         self.session_id = session_id
@@ -384,7 +395,7 @@ class DownloadTransaction(models.Model):
         self.btc_amount = converter.convert(source_currency, "BTC", fiat_amount)
 
         self.description = description
-        self.update_new_btc_address_blockchain()
+        self.update_new_btc_address()
 
         # Make sure we don't accidentally create negative orders
         assert self.btc_amount > 0, "Cannot make empty or negative orders (btc) "

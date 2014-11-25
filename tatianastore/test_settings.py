@@ -37,3 +37,35 @@ HUEY = {
     'always_eager': True, # Execute background tasks immediately
     'consumer_options': {'workers': 3},
 }
+
+
+#: Human readable labels
+COIN_NAME = "AppleByte"
+
+COIN_NAME_SHORT = "ABY"
+
+PAYMENT_SOURCE = "cryptoassets"
+
+from cryptoassets.core.coin.bitcoin.models import BitcoinWallet
+PAYMENT_WALLET_CLASS = BitcoinWallet
+
+PAYMENT_CURRENCY = "btc"
+
+PAYMENT_CONFIG = {
+    "database": {
+        "url": "sqlite:////tmp/payments.sqlite"
+    },
+
+    # What cryptocurrencies we are configuring to the database
+    "models": {
+        "btc": "cryptoassets.core.coin.bitcoin.models"
+    },
+
+    # Locally running bitcoind in testnet
+    "backends": {
+        "btc": {
+            "class": "cryptoassets.core.backend.bitcoind.Bitcoind",
+            "url": "http://foo:bar@127.0.0.1:8332/"
+        }
+    }
+}

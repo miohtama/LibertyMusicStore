@@ -199,4 +199,39 @@ class WelcomeWizardTestCase(TestCase):
         self.assertTrue(wizard.get_step_statuses()["check_store_details"])
 
 
+class CryptoassetsPaymentTestCase(TestCase):
+    """See that we can receive payments using cryptoassets framework. """
+
+    def setUp(self):
+        models.DownloadTransaction.objects.all().delete()
+
+        test_store = models.Store.objects.create(name="Test Store")
+        test_store.currency = "USD"
+        test_store.store_url = "http://localhost:8000/store/test-store/"
+        test_store.save()
+
+        test_album = models.Album.objects.create(name="Test Album", store=test_store)
+        test_album.fiat_price = Decimal("8.90")
+        test_album.description = u"My very first album åäö"
+        test_album.save()
+
+        test_song1 = models.Song.objects.create(name="Song A", album=test_album, store=test_store)
+        test_song1.fiat_price = Decimal("0.95")
+        test_song1.save()
+
+        self.test_store = test_store
+        self.test_album = test_album
+        self.test_song = test_song1
+
+        redis = get_cache("default")
+        redis.clear()
+        tasks.update_exchange_rates()
+
+    def test_create_receiving_address(self):
+        session_id = "123"
+        transaction = models.DownloadTransaction.objects.create()
+        user_currency = "USD"
+        items = [self.test_album, self.test_song]
+        transaction.prepare(items, description="Test download", session_id=session_id, ip="1.1.1.1", user_currency=user_currency)
+        print transaction.btc_address
 
