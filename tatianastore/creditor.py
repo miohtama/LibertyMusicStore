@@ -16,7 +16,7 @@ from django.db import transaction
 from . import blockchain
 from . import emailer
 
-import bitcoinaddress
+#import bitcoinaddress
 from retools.lock import Lock
 
 
@@ -49,9 +49,10 @@ def credit_store(store):
         logger.error("Store lacks BTC address %s", store.name)
         return 0
 
-    if not bitcoinaddress.validate(store.btc_address):
-        logger.error("Store %s not valid BTC address %s", store.name, store.btc_address)
-        return 0
+    # No Py3k compatibility
+    #if not bitcoinaddress.validate(store.btc_address):
+    #    logger.error("Store %s not valid BTC address %s", store.name, store.btc_address)
+    #    return 0
 
     logger.debug("Starting to credit store %s", store.name)
 

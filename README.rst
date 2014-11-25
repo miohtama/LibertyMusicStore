@@ -33,7 +33,8 @@ Setup virtualenv::
     export PATH=/usr/local/mysql/bin:$PATH
     virtualenv-2.7 venv
     source venv/bin/activate
-    pip install -r requirements.txt
+    # https://bitbucket.org/nicfit/eyed3/issue/80/pypi-hosted-release
+    pip install --allow-all-external -r requirements.txt
 
 Example ``local_settings.py``::
 

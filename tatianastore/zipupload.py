@@ -14,7 +14,7 @@ import logging
 import tempfile
 from decimal import Decimal
 
-import eyed3
+import stagger
 
 from django.conf import settings
 from django.db import transaction
@@ -42,12 +42,12 @@ def upload_song(album, original_fname, data, order, song_price):
     # eye3d can only operate on files, not streams
     with tempfile.NamedTemporaryFile(suffix=".mp3") as file_:
         file_.write(data)
-        info = eyed3.load(file_.name)
+        info = stagger.read_tag(file_.name)
         if not info:
             raise BadAlbumContenException(u"Could not extract MP3 info from %s orignal filename %s" % (file_.name, original_fname))
 
-        if info.tag and info.tag.title:
-            title = info.tag.title
+        if info.title:
+            title = info.title
 
     if not title:
         # No title on this file, use filename
