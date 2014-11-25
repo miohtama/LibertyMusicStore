@@ -32,7 +32,7 @@ import os
 import shelve
 import requests
 import logging
-import cPickle as pickle
+import pickle
 
 # How often we attempt to refresh
 REFRESH_DELAY = datetime.timedelta(hours=1)

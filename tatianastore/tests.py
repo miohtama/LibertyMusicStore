@@ -233,5 +233,4 @@ class CryptoassetsPaymentTestCase(TestCase):
         user_currency = "USD"
         items = [self.test_album, self.test_song]
         transaction.prepare(items, description="Test download", session_id=session_id, ip="1.1.1.1", user_currency=user_currency)
-        print transaction.btc_address
 

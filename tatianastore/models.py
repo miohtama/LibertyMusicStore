@@ -7,6 +7,8 @@ import random
 import datetime
 import json
 
+import six
+
 from django.db import models
 from django.utils.encoding import smart_str
 from django.contrib.auth import hashers
@@ -450,7 +452,7 @@ class DownloadTransaction(models.Model):
 
     def get_notification_message(self):
         """ Return the notification payload used to async communication about this transcation. """
-        return dict(transaction_uuid=unicode(self.uuid), status=self.get_status())
+        return dict(transaction_uuid=str(self.uuid), status=self.get_status())
 
     def check_balance(self, value, transaction_hash):
         """ Check if this transaction can be confirmed as received.

@@ -120,7 +120,6 @@ def upload_album(store, name, zip_file, album_price, song_price):
 
         with ZipFile(zip_file, 'r') as zip:
             for info in zip.infolist():
-                print info.filename
 
                 fname = info.filename.lower()
 

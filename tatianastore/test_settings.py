@@ -1,4 +1,4 @@
-from settings import *
+from .settings import *
 
 # make tests faster
 SOUTH_TESTS_MIGRATE = False
@@ -46,8 +46,8 @@ COIN_NAME_SHORT = "ABY"
 
 PAYMENT_SOURCE = "cryptoassets"
 
-from cryptoassets.core.coin.bitcoin.models import BitcoinWallet
-PAYMENT_WALLET_CLASS = BitcoinWallet
+#from cryptoassets.core.coin.bitcoin.models import BitcoinWallet
+#PAYMENT_WALLET_CLASS = BitcoinWallet
 
 PAYMENT_CURRENCY = "btc"
 
