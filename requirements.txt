@@ -1,8 +1,7 @@
 -e git+https://miohtama@bitbucket.org/miohtama/stagger.git#egg=stagger
-Django==1.6.5
+Django==1.7.1
 mysqlclient==1.3.4
 Pillow==2.4.0
-South==0.8.2
 Werkzeug==0.9.4
 amqp==1.0.13
 anyjson==0.3.3
@@ -27,7 +26,7 @@ recaptcha-client==1.0.6
 django-nose==1.2
 django-redis
 uwsgi==2.0.3
-django-registration==1.0
+django-registration-redux==1.1
 flake8
 djrill==1.0.0
 huey==0.4.2

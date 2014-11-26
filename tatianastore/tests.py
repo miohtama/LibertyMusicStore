@@ -20,6 +20,7 @@ from . import tasks
 from . import zipupload
 from . import blockchain
 from . import signup
+from . import creditor
 
 # Don't accidentally allow to run against the production Redis
 assert settings.CACHES["default"]["LOCATION"] == "127.0.0.1:6379:10", "Don't run against production Redis"
@@ -155,7 +156,9 @@ class CreditTransactionTestCase(TestCase):
             mock_send.return_value = "txhash_xyz"
 
             # Now credit the download
-            credited = tasks.credit_stores()
+            credited = 0
+            for store in models.Store.objects.all():
+                credited += creditor.credit_store(store)
             self.assertEqual(1, credited)
 
         transaction = models.DownloadTransaction.objects.get(id=transaction.id)
@@ -177,7 +180,7 @@ class SignUpTestCase(TestCase):
         form.create_user()
 
         store = models.Store.objects.all()[0]
-        self.assertEqual("foo-bar", store.operators.all()[0].username)
+        self.assertEqual("foo@example.com", store.operators.all()[0].username)
 
 
 class WelcomeWizardTestCase(TestCase):

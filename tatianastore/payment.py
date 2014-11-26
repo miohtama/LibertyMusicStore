@@ -5,6 +5,7 @@
 """
 
 import logging
+import transaction
 from decimal import Decimal
 
 import requests
@@ -12,21 +13,26 @@ import requests
 from django.utils.timezone import now
 from django import http
 from django.conf import settings
+from django.dispatch import receiver
 
 from . import models
 
 from cryptoassets.core import configure
 from cryptoassets.core.models import DBSession
 from cryptoassets.core.models import DBSession
+from cryptoassets.core.coin import registry as coin_registry
+
+from cryptoassets.django.dbsession import open_non_closing_session
+from cryptoassets.django.signals import txupdate
 
 URL = "https://blockchain.info/"
 
 logger = logging.getLogger(__name__)
 
 
-def get_wallet():
+def get_wallet(session=DBSession):
     """Return the master shared wallet used to receive payments. """
-    wallet_class = settings.WALLET_CLASS
+    wallet_class = coin_registry.get_wallet_model(settings.PAYMENT_CURRENCY)
     wallet = wallet_class.get_or_create_by_name("default", DBSession)
     return wallet
 
@@ -37,26 +43,22 @@ def create_new_receiving_address(store_id, label):
     https://blockchain.info/merchant/$guid/new_address?password=$main_password&second_password=$second_password&label=$label
     """
 
-    wallet = get_wallet()
+    session = open_non_closing_session()
+    wallet = get_wallet(session=session)
     account = wallet.get_or_create_account_by_name("Store {}".format(store_id))
-    return wallet.create_new_receiving_address(account, label)
+    addr = wallet.create_receiving_address(account, label)
+    session.commit()
+
+    return addr.address
 
 
 def balance():
     """ Return BlockChain wallet balance in BTC.
     """
-
-    params = {
-        "password": settings.BLOCKCHAIN_WALLET_PASSWORD
-    }
-
-    url = URL + "merchant/%s/balance" % settings.BLOCKCHAIN_WALLET_ID
-
-    r = requests.get(url, params=params)
-    data = r.json()
-    satoshis = data["balance"]
-
-    return Decimal(satoshis) / Decimal(100000000)
+    session = open_non_closing_session()
+    wallet = get_wallet(session=session)
+    session.commit()
+    return wallet.balance
 
 
 def archive(addresses):
@@ -106,15 +108,23 @@ def send_to_address(address, btc_amount, note):
     return tx_hash
 
 
-def blockchain_received(request):
-    """ Received Bitcoins to blockchain wallet address.
+@receiver(txupdate)
+def txupdate_received(event_name, data):
+    """ Received transaction update from cryptoassets.core.
 
-    Hook triggered by blockchain.info API.
+    This handler is run cryptoassets helper service process.
 
-    wget -S "http://localhost:8000/blockchain_received/?transaction_hash=x&value_in_btc=1&address=2"
+    To test::
+
+        python manage.py cryptoassetshelper
+
+    Then spoof the signal::
+
+        echo bfb0ef36cdf4c7ec5f7a33ed2b90f0267f2d91a4c419bcf755cc02d6c0176ebf >> /tmp/tatianastore-cryptoassets-helper-walletnotify
+
     """
 
-    transaction_hash = request.GET['transaction_hash']
+    transaction_hash = data["txid"]
     value = Decimal(request.GET['value']) / Decimal(100000000)
     address = request.GET['address']
     confirmations = int(request.GET.get('confirmations', -1))

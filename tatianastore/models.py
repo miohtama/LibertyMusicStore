@@ -351,7 +351,7 @@ class DownloadTransaction(models.Model):
         """
         from . import payment
         label = self.description + u" Total: %s %s Order: %s" % (self.fiat_amount, self.currency, self.uuid)
-        self.btc_address = payment.create_new_receiving_address(accout=self.store.id, label=label)
+        self.btc_address = payment.create_new_receiving_address(self.store.id, label)
         return self.btc_address
 
     def prepare(self, items, description, session_id, ip, user_currency):
@@ -520,6 +520,7 @@ class UserPaidContentManager(object):
         self.session_id = session_id
         content = self.redis.hget(UserPaidContentManager.REDIS_HASH_KEY, session_id)
         if content:
+            content = content.decode("utf-8")
             content = json.loads(content)
         else:
             content = {}
@@ -544,7 +545,7 @@ class UserPaidContentManager(object):
         assert isinstance(item, StoreItem)
         self.content[str(item.uuid)] = str(transaction.uuid)
         # Save back to redis
-        self.redis.hset(UserPaidContentManager.REDIS_HASH_KEY, self.session_id, json.dumps(self.content))
+        self.redis.hset(UserPaidContentManager.REDIS_HASH_KEY, self.session_id, json.dumps(self.content).encode("utf-8"))
 
 
 class WelcomeWizard(object):
@@ -577,15 +578,18 @@ class WelcomeWizard(object):
         return content
 
     def _update_content(self, content):
-        self.redis.hset(WelcomeWizard.REDIS_HASH_KEY, self.user.username, json.dumps(content))
+        self.redis.hset(WelcomeWizard.REDIS_HASH_KEY, self.user.username, json.dumps(content).encode("utf-8"))
 
     def get_step_statuses(self):
         """
         """
         content = self.redis.hget(WelcomeWizard.REDIS_HASH_KEY, self.user.username)
+
         if not content:
             content = self._create_default_content()
         else:
+            if type(content) == bytes:
+                content = content.decode("utf-8")
             content = json.loads(content)
         return content
 

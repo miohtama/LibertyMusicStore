@@ -35,7 +35,7 @@ def upload_song(album, original_fname, data, order, song_price):
 
     title = None
 
-    if type(original_fname) == str:
+    if type(original_fname) == bytes:
         original_fname = original_fname.decode("utf-8")
 
     # Extract ID3 title for the song

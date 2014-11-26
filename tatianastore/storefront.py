@@ -31,9 +31,8 @@ from django.views.decorators.csrf import csrf_exempt
 import facepy
 
 from . import models
-from . import forms
 from . import blockchain
-from utils import get_session_id
+from .utils import get_session_id
 
 logger = logging.getLogger(__name__)
 

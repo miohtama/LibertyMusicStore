@@ -15,6 +15,7 @@ from django.db import transaction
 
 from . import blockchain
 from . import emailer
+from . import models
 
 #import bitcoinaddress
 from retools.lock import Lock
@@ -84,8 +85,10 @@ def credit_store(store):
         # Reload after tx commit
         uncredited_transactions = store.downloadtransaction_set.filter(id__in=uncredited_transaction_ids)
 
-        # Archive addresses as used
-        blockchain.archive(uncredited_transactions.values_list("btc_address", flat=True))
+        # Archive addresses as used when blockchain.info backend is enabled
+        if uncredited_transactions.count() > 0:
+            if uncredited_transactions[0].payment_source == models.DownloadTransaction.PAYMENT_SOURCE_BLOCKCHAIN:
+                blockchain.archive(uncredited_transactions.values_list("btc_address", flat=True))
 
         emailer.mail_store_owner(store, "Liberty Music Store payments", "email/credit_transactions.html", dict(store=store, transactions=uncredited_transactions))
 

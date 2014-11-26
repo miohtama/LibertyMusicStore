@@ -1,6 +1,6 @@
 from decimal import Decimal
 from PIL import Image
-from cStringIO import StringIO
+from six import StringIO
 
 import magic
 

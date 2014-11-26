@@ -121,8 +121,6 @@ def store_facebook_data(request):
     else:
         store = request.user.get_default_store()
 
-    print request.POST.items()
-
     # On FB Page Add ancel you get empty array from FB,
     # though it should be empty object.
     # Obviously FB employees many PHP coders

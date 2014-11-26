@@ -138,7 +138,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(os.path.basename(__file__), "..", "templates")
+    os.path.join(os.path.basename(__file__), "..", "templates"),
 )
 
 AUTH_USER_MODEL = 'tatianastore.User'
@@ -163,7 +163,6 @@ INSTALLED_APPS = (
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.humanize',
-    'south',
     'registration',
     'crispy_forms',
     'captcha',
@@ -172,7 +171,8 @@ INSTALLED_APPS = (
     "djrill",
     'huey.djhuey',
     'tatianastore',
-    'django_nose'
+    'django_nose',
+    "cryptoassets.django.app.CryptoassetsConfig"
 )
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
