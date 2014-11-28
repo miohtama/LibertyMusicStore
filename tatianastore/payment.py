@@ -110,7 +110,6 @@ def send_to_address(address, btc_amount, note):
 
     return tx_hash
 
-
 @receiver(txupdate)
 def txupdate_received(event_name, data, **kwargs):
     """ Received transaction update from cryptoassets.core.
@@ -121,39 +120,39 @@ def txupdate_received(event_name, data, **kwargs):
 
         python manage.py cryptoassetshelper
 
-    Create a test transaction::
+    Start the server::
 
-        python manage.py cryptoassetshelper
+        python manage.py runserver
 
-    Then spoof the signal::
+    Go to http://localhost:8000/store/test-store/embed-preview/
 
-        echo bfb0ef36cdf4c7ec5f7a33ed2b90f0267f2d91a4c419bcf755cc02d6c0176ebf >> /tmp/tatianastore-cryptoassets-helper-walletnotify
+    Start buying a song
 
+    Send in payment from block.io testnet
+
+    Wait 10 seconds.
     """
 
     transaction_hash = data["txid"]
-    value = Decimal(request.GET['value']) / Decimal(100000000)
-    address = request.GET['address']
-    confirmations = int(request.GET.get('confirmations', -1))
+    value = Decimal(data['amount']) / Decimal(100000000)
+    address = data['address']
+    confirmations = int(data.get('confirmations', -1))
 
     logger.info("Transaction received: %s BTC:%s address:%s confirmations:%d", transaction_hash, value, address, confirmations)
 
     try:
         t = models.DownloadTransaction.objects.get(btc_address=address)
     except models.DownloadTransaction.DoesNotExist:
-        logger.error("Got blockchain_received() for unknown address %s", address)
-        return http.HttpResponse("*fail")
+        logger.warn("Got txupdate for unknown DownloadTransaction, address %s", address)
+        return
 
     if t.btc_received_at:
         # Already complete
-        return http.HttpResponse("*ok*")
+        return
 
     success = t.check_balance(value, transaction_hash)
     if not success:
         logger.error("The transaction %s had not enough value", transaction_hash)
-
-    # Blockchain return values, don't know if meaningful
-    return http.HttpResponse("*ok*") if success else http.HttpResponse("*error*")
 
 
 def get_all_address_data():

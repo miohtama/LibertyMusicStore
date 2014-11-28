@@ -171,7 +171,7 @@ INSTALLED_APPS = (
     'pagination_bootstrap',
     "djrill",
     'huey.djhuey',
-    'tatianastore',
+    'tatianastore.app.TatianastoreConfig',
     'django_nose',
 )
 
@@ -303,3 +303,4 @@ BLOCKCHAIN_WEBHOOK_SECRET = ""
 ALLOWED_CREDIT_SITE_URLS = ["https://libertymusicstore.net"]
 
 from tatianastore.local_settings import *
+
