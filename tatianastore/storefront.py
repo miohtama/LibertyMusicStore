@@ -290,9 +290,9 @@ def transaction_poll(request, uuid):
             if message:
                 # print "Got message", message
                 if message["type"] != "subscribe":
-                    data = json.loads(message["data"])
+                    data = json.loads(message["data"].decode("utf-8"))
                     if data["transaction_uuid"] == uuid:
-                        return http.HttpResponse(json.dumps(data))
+                        return http.HttpResponse(json.dumps(data).encode("utf-8"))
         except Exception as e:
             pubsub.close()
             logger.error("Polling exception")

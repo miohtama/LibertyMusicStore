@@ -26,7 +26,6 @@ from sqlalchemy.orm.session import Session
 from cryptoassets.django import dbsession
 from cryptoassets.django.signals import txupdate
 
-URL = "https://blockchain.info/"
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +46,7 @@ def create_new_receiving_address(store_id, label):
     session = dbsession.open_session()
     wallet = get_wallet(session=session)
     account = wallet.get_or_create_account_by_name("Store {}".format(store_id))
+    session.flush()  # account gets id
     _addr = wallet.create_receiving_address(account, label)
     logging.info("Created receiving address %s for store %d", _addr.address, store_id)
     address = _addr.address
@@ -110,6 +110,7 @@ def send_to_address(address, btc_amount, note):
 
     return tx_hash
 
+
 @receiver(txupdate)
 def txupdate_received(event_name, data, **kwargs):
     """ Received transaction update from cryptoassets.core.
@@ -153,6 +154,8 @@ def txupdate_received(event_name, data, **kwargs):
     success = t.check_balance(value, transaction_hash)
     if not success:
         logger.error("The transaction %s had not enough value", transaction_hash)
+
+    logger.info("DownloadTransaction processed %d", t.id)
 
 
 def get_all_address_data():

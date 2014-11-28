@@ -1,264 +1,164 @@
 # -*- coding: utf-8 -*-
-import datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
 
-from uuid import UUID
-
-
-class Migration(SchemaMigration):
-
-    def forwards(self, orm):
-        # Adding model 'User'
-        db.create_table(u'tatianastore_user', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('password', self.gf('django.db.models.fields.CharField')(max_length=128)),
-            ('last_login', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-            ('is_superuser', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('username', self.gf('django.db.models.fields.CharField')(unique=True, max_length=30)),
-            ('first_name', self.gf('django.db.models.fields.CharField')(max_length=30, blank=True)),
-            ('last_name', self.gf('django.db.models.fields.CharField')(max_length=30, blank=True)),
-            ('email', self.gf('django.db.models.fields.EmailField')(max_length=75, blank=True)),
-            ('is_staff', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('is_active', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('date_joined', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-        ))
-        db.send_create_signal(u'tatianastore', ['User'])
-
-        # Adding M2M table for field groups on 'User'
-        m2m_table_name = db.shorten_name(u'tatianastore_user_groups')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('user', models.ForeignKey(orm[u'tatianastore.user'], null=False)),
-            ('group', models.ForeignKey(orm[u'auth.group'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['user_id', 'group_id'])
-
-        # Adding M2M table for field user_permissions on 'User'
-        m2m_table_name = db.shorten_name(u'tatianastore_user_user_permissions')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('user', models.ForeignKey(orm[u'tatianastore.user'], null=False)),
-            ('permission', models.ForeignKey(orm[u'auth.permission'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['user_id', 'permission_id'])
-
-        # Adding model 'Store'
-        db.create_table(u'tatianastore_store', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('slug', self.gf('autoslug.fields.AutoSlugField')(unique_with=(), max_length=50, populate_from='name')),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=80, null=True, blank=True)),
-            ('currency', self.gf('django.db.models.fields.CharField')(default='USD', max_length=5)),
-            ('store_url', self.gf('django.db.models.fields.URLField')(max_length=200)),
-        ))
-        db.send_create_signal(u'tatianastore', ['Store'])
-
-        # Adding M2M table for field operators on 'Store'
-        m2m_table_name = db.shorten_name(u'tatianastore_store_operators')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('store', models.ForeignKey(orm[u'tatianastore.store'], null=False)),
-            ('user', models.ForeignKey(orm[u'tatianastore.user'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['store_id', 'user_id'])
-
-        # Adding model 'Album'
-        db.create_table(u'tatianastore_album', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('store', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['tatianastore.Store'])),
-            ('uuid', self.gf('django.db.models.fields.CharField')(default=UUID('bbe7a447-9f96-4df4-9f71-a5c4ae17e5be'), max_length=64, blank=True)),
-            ('slug', self.gf('autoslug.fields.AutoSlugField')(unique_with=(), max_length=50, populate_from='name')),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=80, null=True, blank=True)),
-            ('fiat_price', self.gf('django.db.models.fields.DecimalField')(default='0', max_digits=16, decimal_places=8)),
-            ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('cover', self.gf('django.db.models.fields.files.ImageField')(max_length=100, null=True, blank=True)),
-            ('download_zip', self.gf('django.db.models.fields.files.FileField')(max_length=100, null=True, blank=True)),
-        ))
-        db.send_create_signal(u'tatianastore', ['Album'])
-
-        # Adding model 'Song'
-        db.create_table(u'tatianastore_song', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('store', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['tatianastore.Store'])),
-            ('uuid', self.gf('django.db.models.fields.CharField')(default=UUID('2d918b1d-4004-48a9-a267-20aa9bb48476'), max_length=64, blank=True)),
-            ('slug', self.gf('autoslug.fields.AutoSlugField')(unique_with=(), max_length=50, populate_from='name')),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=80, null=True, blank=True)),
-            ('fiat_price', self.gf('django.db.models.fields.DecimalField')(default='0', max_digits=16, decimal_places=8)),
-            ('album', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['tatianastore.Album'], null=True)),
-            ('download_mp3', self.gf('django.db.models.fields.files.FileField')(max_length=100, null=True, blank=True)),
-            ('prelisten_mp3', self.gf('django.db.models.fields.files.FileField')(max_length=100, null=True, blank=True)),
-            ('prelisten_vorbis', self.gf('django.db.models.fields.files.FileField')(max_length=100, null=True, blank=True)),
-            ('duration', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
-        ))
-        db.send_create_signal(u'tatianastore', ['Song'])
-
-        # Adding model 'DownloadTransaction'
-        db.create_table(u'tatianastore_downloadtransaction', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('customer_email', self.gf('django.db.models.fields.CharField')(max_length=64, null=True, blank=True)),
-            ('session_id', self.gf('django.db.models.fields.CharField')(max_length=64, null=True, blank=True)),
-            ('description', self.gf('django.db.models.fields.CharField')(default='', max_length=256, blank=True)),
-            ('uuid', self.gf('django.db.models.fields.CharField')(default=UUID('43a0fa31-0952-4f62-aa41-20d99fc62215'), max_length=64, blank=True)),
-            ('store', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['tatianastore.Store'], null=True)),
-            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('currency', self.gf('django.db.models.fields.CharField')(max_length=5, null=True, blank=True)),
-            ('user_currency', self.gf('django.db.models.fields.CharField')(max_length=5, null=True, blank=True)),
-            ('btc_address', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
-            ('btc_amount', self.gf('django.db.models.fields.DecimalField')(default='0', max_digits=16, decimal_places=8)),
-            ('fiat_amount', self.gf('django.db.models.fields.DecimalField')(default='0', max_digits=16, decimal_places=8)),
-            ('payment_source', self.gf('django.db.models.fields.CharField')(max_length=32)),
-            ('btc_received_at', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
-            ('manually_confirmed_received_at', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
-            ('received_transaction_hash', self.gf('django.db.models.fields.CharField')(max_length=256, null=True, blank=True)),
-            ('cancelled_at', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
-            ('expires_at', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
-            ('expired_at', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
-            ('ip', self.gf('django.db.models.fields.IPAddressField')(max_length=15, null=True, blank=True)),
-        ))
-        db.send_create_signal(u'tatianastore', ['DownloadTransaction'])
-
-        # Adding model 'DownloadTransactionItem'
-        db.create_table(u'tatianastore_downloadtransactionitem', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('transaction', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['tatianastore.DownloadTransaction'])),
-            ('content_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['contenttypes.ContentType'])),
-            ('object_id', self.gf('django.db.models.fields.PositiveIntegerField')()),
-        ))
-        db.send_create_signal(u'tatianastore', ['DownloadTransactionItem'])
+from django.db import models, migrations
+from decimal import Decimal
+import tatianastore.models
+import django.core.validators
+import uuid
+import easy_thumbnails.fields
+import django.utils.timezone
+from django.conf import settings
+import jsonfield.fields
+import autoslug.fields
 
 
-    def backwards(self, orm):
-        # Deleting model 'User'
-        db.delete_table(u'tatianastore_user')
+class Migration(migrations.Migration):
 
-        # Removing M2M table for field groups on 'User'
-        db.delete_table(db.shorten_name(u'tatianastore_user_groups'))
+    dependencies = [
+        ('contenttypes', '0001_initial'),
+        ('auth', '0001_initial'),
+    ]
 
-        # Removing M2M table for field user_permissions on 'User'
-        db.delete_table(db.shorten_name(u'tatianastore_user_user_permissions'))
-
-        # Deleting model 'Store'
-        db.delete_table(u'tatianastore_store')
-
-        # Removing M2M table for field operators on 'Store'
-        db.delete_table(db.shorten_name(u'tatianastore_store_operators'))
-
-        # Deleting model 'Album'
-        db.delete_table(u'tatianastore_album')
-
-        # Deleting model 'Song'
-        db.delete_table(u'tatianastore_song')
-
-        # Deleting model 'DownloadTransaction'
-        db.delete_table(u'tatianastore_downloadtransaction')
-
-        # Deleting model 'DownloadTransactionItem'
-        db.delete_table(u'tatianastore_downloadtransactionitem')
-
-
-    models = {
-        u'auth.group': {
-            'Meta': {'object_name': 'Group'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
-            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
-        },
-        u'auth.permission': {
-            'Meta': {'ordering': "(u'content_type__app_label', u'content_type__model', u'codename')", 'unique_together': "((u'content_type', u'codename'),)", 'object_name': 'Permission'},
-            'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        u'contenttypes.contenttype': {
-            'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
-            'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        u'tatianastore.album': {
-            'Meta': {'object_name': 'Album'},
-            'cover': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'download_zip': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'fiat_price': ('django.db.models.fields.DecimalField', [], {'default': "'0'", 'max_digits': '16', 'decimal_places': '8'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '80', 'null': 'True', 'blank': 'True'}),
-            'slug': ('autoslug.fields.AutoSlugField', [], {'unique_with': '()', 'max_length': '50', 'populate_from': "'name'"}),
-            'store': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['tatianastore.Store']"}),
-            'uuid': ('django.db.models.fields.CharField', [], {'default': "UUID('c74abac4-4a63-47f0-9d27-0382ae3e51d4')", 'max_length': '64', 'blank': 'True'})
-        },
-        u'tatianastore.downloadtransaction': {
-            'Meta': {'object_name': 'DownloadTransaction'},
-            'btc_address': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
-            'btc_amount': ('django.db.models.fields.DecimalField', [], {'default': "'0'", 'max_digits': '16', 'decimal_places': '8'}),
-            'btc_received_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'cancelled_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'currency': ('django.db.models.fields.CharField', [], {'max_length': '5', 'null': 'True', 'blank': 'True'}),
-            'customer_email': ('django.db.models.fields.CharField', [], {'max_length': '64', 'null': 'True', 'blank': 'True'}),
-            'description': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '256', 'blank': 'True'}),
-            'expired_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'expires_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'fiat_amount': ('django.db.models.fields.DecimalField', [], {'default': "'0'", 'max_digits': '16', 'decimal_places': '8'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'ip': ('django.db.models.fields.IPAddressField', [], {'max_length': '15', 'null': 'True', 'blank': 'True'}),
-            'manually_confirmed_received_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'payment_source': ('django.db.models.fields.CharField', [], {'max_length': '32'}),
-            'received_transaction_hash': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
-            'session_id': ('django.db.models.fields.CharField', [], {'max_length': '64', 'null': 'True', 'blank': 'True'}),
-            'store': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['tatianastore.Store']", 'null': 'True'}),
-            'user_currency': ('django.db.models.fields.CharField', [], {'max_length': '5', 'null': 'True', 'blank': 'True'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'default': "UUID('c145b555-3d43-450c-8ea3-e42180b0d715')", 'max_length': '64', 'blank': 'True'})
-        },
-        u'tatianastore.downloadtransactionitem': {
-            'Meta': {'object_name': 'DownloadTransactionItem'},
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'object_id': ('django.db.models.fields.PositiveIntegerField', [], {}),
-            'transaction': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['tatianastore.DownloadTransaction']"})
-        },
-        u'tatianastore.song': {
-            'Meta': {'object_name': 'Song'},
-            'album': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['tatianastore.Album']", 'null': 'True'}),
-            'download_mp3': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'duration': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
-            'fiat_price': ('django.db.models.fields.DecimalField', [], {'default': "'0'", 'max_digits': '16', 'decimal_places': '8'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '80', 'null': 'True', 'blank': 'True'}),
-            'prelisten_mp3': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'prelisten_vorbis': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'slug': ('autoslug.fields.AutoSlugField', [], {'unique_with': '()', 'max_length': '50', 'populate_from': "'name'"}),
-            'store': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['tatianastore.Store']"}),
-            'uuid': ('django.db.models.fields.CharField', [], {'default': "UUID('ef1277f4-da1d-4fb6-a6a7-3c851312e37b')", 'max_length': '64', 'blank': 'True'})
-        },
-        u'tatianastore.store': {
-            'Meta': {'object_name': 'Store'},
-            'currency': ('django.db.models.fields.CharField', [], {'default': "'USD'", 'max_length': '5'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '80', 'null': 'True', 'blank': 'True'}),
-            'operators': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'operated_artits'", 'symmetrical': 'False', 'to': u"orm['tatianastore.User']"}),
-            'slug': ('autoslug.fields.AutoSlugField', [], {'unique_with': '()', 'max_length': '50', 'populate_from': "'name'"}),
-            'store_url': ('django.db.models.fields.URLField', [], {'max_length': '200'})
-        },
-        u'tatianastore.user': {
-            'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
-        }
-    }
-
-    complete_apps = ['tatianastore']
+    operations = [
+        migrations.CreateModel(
+            name='User',
+            fields=[
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
+                ('password', models.CharField(max_length=128, verbose_name='password')),
+                ('last_login', models.DateTimeField(default=django.utils.timezone.now, verbose_name='last login')),
+                ('is_superuser', models.BooleanField(help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status', default=False)),
+                ('username', models.CharField(help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=30, validators=[django.core.validators.RegexValidator('^[\\w.@+-]+$', 'Enter a valid username.', 'invalid')], unique=True, verbose_name='username')),
+                ('first_name', models.CharField(blank=True, max_length=30, verbose_name='first name')),
+                ('last_name', models.CharField(blank=True, max_length=30, verbose_name='last name')),
+                ('email', models.EmailField(blank=True, max_length=75, verbose_name='email address')),
+                ('is_staff', models.BooleanField(help_text='Designates whether the user can log into this admin site.', verbose_name='staff status', default=False)),
+                ('is_active', models.BooleanField(help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active', default=True)),
+                ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
+                ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of his/her group.', related_name='user_set', related_query_name='user', to='auth.Group', verbose_name='groups')),
+                ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.Permission', verbose_name='user permissions')),
+            ],
+            options={
+                'verbose_name': 'user',
+                'verbose_name_plural': 'users',
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Album',
+            fields=[
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
+                ('uuid', models.CharField(blank=True, default=uuid.uuid4, max_length=64, editable=False)),
+                ('slug', autoslug.fields.AutoSlugField(editable=False)),
+                ('name', models.CharField(blank=True, max_length=80, null=True)),
+                ('fiat_price', models.DecimalField(help_text='Will be automatically converted to the Bitcoin on the moment of purchase', default=Decimal('0'), decimal_places=2, verbose_name='Price in your local currency', max_digits=16, validators=[django.core.validators.MinValueValidator(Decimal('0.01'))])),
+                ('visible', models.BooleanField(help_text='Uncheck this to make the item disappear from your store. The site still retains the copy of this item for a while before it is permanently deleted.', verbose_name='Visible / deleted', default=True)),
+                ('description', models.TextField(blank=True, null=True)),
+                ('cover', easy_thumbnails.fields.ThumbnailerImageField(blank=True, help_text='Cover art as JPEG file', null=True, upload_to=tatianastore.models.filename_gen('covers/'), verbose_name='Cover art')),
+                ('download_zip', models.FileField(blank=True, help_text='A ZIP file which the user can download after he/she has paid for the full album', null=True, upload_to=tatianastore.models.filename_gen('songs/'), verbose_name='Album download ZIP')),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='DownloadTransaction',
+            fields=[
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
+                ('customer_email', models.CharField(blank=True, max_length=64, null=True)),
+                ('session_id', models.CharField(blank=True, max_length=64, null=True)),
+                ('description', models.CharField(blank=True, default='', max_length=256, editable=False)),
+                ('uuid', models.CharField(blank=True, default=uuid.uuid4, max_length=64, editable=False)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('currency', models.CharField(blank=True, max_length=5, null=True)),
+                ('user_currency', models.CharField(blank=True, max_length=5, null=True)),
+                ('btc_address', models.CharField(blank=True, max_length=50, null=True)),
+                ('btc_amount', models.DecimalField(default=Decimal('0'), max_digits=16, decimal_places=8)),
+                ('fiat_amount', models.DecimalField(default=Decimal('0'), max_digits=16, decimal_places=2)),
+                ('payment_source', models.CharField(max_length=32)),
+                ('btc_received_at', models.DateTimeField(blank=True, null=True)),
+                ('manually_confirmed_received_at', models.DateTimeField(blank=True, null=True)),
+                ('received_transaction_hash', models.CharField(blank=True, max_length=256, null=True)),
+                ('cancelled_at', models.DateTimeField(blank=True, null=True)),
+                ('expires_at', models.DateTimeField(blank=True, null=True)),
+                ('expired_at', models.DateTimeField(blank=True, null=True)),
+                ('ip', models.IPAddressField(blank=True, null=True)),
+                ('credited_at', models.DateTimeField(blank=True, null=True)),
+                ('credit_transaction_hash', models.CharField(blank=True, max_length=256, null=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='DownloadTransactionItem',
+            fields=[
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
+                ('object_id', models.PositiveIntegerField()),
+                ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
+                ('transaction', models.ForeignKey(to='tatianastore.DownloadTransaction')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Song',
+            fields=[
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
+                ('uuid', models.CharField(blank=True, default=uuid.uuid4, max_length=64, editable=False)),
+                ('slug', autoslug.fields.AutoSlugField(editable=False)),
+                ('name', models.CharField(blank=True, max_length=80, null=True)),
+                ('fiat_price', models.DecimalField(help_text='Will be automatically converted to the Bitcoin on the moment of purchase', default=Decimal('0'), decimal_places=2, verbose_name='Price in your local currency', max_digits=16, validators=[django.core.validators.MinValueValidator(Decimal('0.01'))])),
+                ('visible', models.BooleanField(help_text='Uncheck this to make the item disappear from your store. The site still retains the copy of this item for a while before it is permanently deleted.', verbose_name='Visible / deleted', default=True)),
+                ('download_mp3', models.FileField(blank=True, help_text='The downloaded content how the user gets it after paying for it.', null=True, upload_to=tatianastore.models.filename_gen('songs/'), verbose_name='MP3 file')),
+                ('prelisten_mp3', models.FileField(blank=True, help_text='For Safari and IE browsers. Leave empty: This will be automatically generated from uploaded song.', null=True, upload_to=tatianastore.models.filename_gen('prelisten/'), verbose_name='Prelisten clip MP3 file')),
+                ('prelisten_vorbis', models.FileField(blank=True, help_text='For Chrome and Firefox browsers. Leave empty: This will be automatically generated from uploaded song.', null=True, upload_to=tatianastore.models.filename_gen('prelisten/'), verbose_name='Prelisten clip Ogg Vorbis file')),
+                ('duration', models.FloatField(blank=True, null=True)),
+                ('order', models.IntegerField(blank=True, null=True)),
+                ('album', models.ForeignKey(blank=True, help_text='On which album this song belongs to. Leave empty for an albumless song. (You can reorder the songs when you edit the album after uploading the songs.)', to='tatianastore.Album', null=True, verbose_name='Album')),
+            ],
+            options={
+                'ordering': ('order', '-id'),
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Store',
+            fields=[
+                ('id', models.AutoField(serialize=False, primary_key=True, auto_created=True, verbose_name='ID')),
+                ('slug', autoslug.fields.AutoSlugField(editable=False)),
+                ('name', models.CharField(blank=True, max_length=80, null=True)),
+                ('currency', models.CharField(help_text='Currency code for your local currency which you user to price your albums and songs', max_length=5, verbose_name='Currency', default='USD')),
+                ('store_url', models.URLField(help_text='Link to home page or Facebook page', verbose_name='Homepage')),
+                ('btc_address', models.CharField(blank=True, help_text='Receiving address where the purchases will be credited. If you do not have Bitcoin wallet yet you can leave this empty - the site will keep your coins until you get your own wallet.', max_length=50, default=None, null=True, verbose_name='Bitcoin address')),
+                ('extra_html', models.TextField(blank=True, help_text='Style your shop with extra HTML code placed for the site embed &ltiframe&gt. Please ask your webmaster for the details. This can include CSS &lt;style&gt; tag for the formatting purposes.', null=True, verbose_name='Store styles code', default='')),
+                ('extra_facebook_html', models.TextField(blank=True, help_text='Style your shop with extra HTML code placed on the shop when it is on a Facebook page.', null=True, verbose_name='Facebook styles code', default='')),
+                ('facebook_data', jsonfield.fields.JSONField(default={}, verbose_name='Facebook page info')),
+                ('operators', models.ManyToManyField(to=settings.AUTH_USER_MODEL, related_name='operated_stores')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='song',
+            name='store',
+            field=models.ForeignKey(to='tatianastore.Store'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='downloadtransaction',
+            name='store',
+            field=models.ForeignKey(to='tatianastore.Store', null=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='album',
+            name='store',
+            field=models.ForeignKey(to='tatianastore.Store'),
+            preserve_default=True,
+        ),
+    ]

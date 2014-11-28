@@ -23,6 +23,8 @@ blockchain.info API is used for the receiving transactions and Bitcoin wallet ma
 Development environment setup
 ------------------------------
 
+PostgreSQL is recommened. SQLite 3 won't work because it locks the full database on a write, causing conflict with page requests, AJAX requests and cryptoassets helper service accessing the database at the same moment.
+
 Checkout::
 
     git checkout
@@ -49,12 +51,25 @@ Example ``local_settings.py``::
 
 Setup empty database::
 
-    python manage.py syncdb --noinput && python manage.py migrate
-    echo "execfile('./tatianastore/populate.py')" | python manage.py shell
+    python manage.py syncdb
+    python manage.py migrate tatianstore
+
+    # This creates some initial users and stuff
+    # This scripts reads stuff from sample CD folder (copyrighted),
+    # so ask for a copy
+    echo "exec(open('./bin/populate.py').read())" | python manage.py shell
 
 Fix ``readline`` package on OSX::
 
     easy_install -U readline
+
+Start the server::
+
+    python manage.py runserver
+
+You should now able to access generated test store
+
+* http://localhost:8000/store/test-store/embed-preview/
 
 Production setup on Ubuntu
 ----------------------------

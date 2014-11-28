@@ -10,6 +10,7 @@ import json
 import six
 
 from django.db import models
+from django.utils.deconstruct import deconstructible
 from django.utils.encoding import smart_str
 from django.contrib.auth import hashers
 from django.core.urlresolvers import reverse
@@ -45,13 +46,25 @@ def get_rate_converter():
     return _rate_converter
 
 
-def filename_gen(basedir):
-    """ Generate safe filenames for storage backend """
-    def generator(instance, filename):
+#def filename_gen(basedir):
+#    """ Generate safe filenames for storage backend """
+#    def generator(instance, filename):
+#        salt = hashers.get_hasher().salt()
+#        salt = smart_str(salt)
+#        return basedir + salt + u"-" + filename
+#    return generator
+
+
+@deconstructible
+class filename_gen(object):
+    """Courtesy of http://stackoverflow.com/questions/25767787/django-cannot-create-migrations-for-imagefield-with-dynamic-upload-to-value"""
+    def __init__(self, sub_path):
+        self.path = sub_path
+
+    def __call__(self, instance, filename):
         salt = hashers.get_hasher().salt()
         salt = smart_str(salt)
-        return basedir + salt + u"-" + filename
-    return generator
+        return os.path.join(self.path, salt + u"-" + filename)
 
 
 def update_initial_groups():
@@ -469,7 +482,7 @@ class DownloadTransaction(models.Model):
         assert t.cancelled_at is None
 
         if value >= t.btc_amount - settings.TRANSACTION_BALANCE_CONFIRMATION_THRESHOLD_BTC:
-            logger.info("blockhain.info confirmation success, address: %s tx: %s needed: %s got: %s", t.btc_address, transaction_hash, t.btc_amount, value)
+            logger.info("TX payment success, address: %s tx: %s needed: %s got: %s", t.btc_address, transaction_hash, t.btc_amount, value)
             t.received_transaction_hash = transaction_hash
             self.mark_payment_received()
             return True
