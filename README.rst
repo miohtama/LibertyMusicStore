@@ -157,6 +157,13 @@ Deployment::
     ssh tatianastore
     git pull && supervisorctl restart tatianastore_uwsgi
 
+Taking SQL dump::
+
+    sudo -u postgres pg_dump tatianastore > backup.sql
+
+Restoring SQL dump::
+
+
 More
 
 * https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-django-with-postgres-nginx-and-gunicorn

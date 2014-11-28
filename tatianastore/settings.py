@@ -163,6 +163,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.humanize',
+    "cryptoassets.django.app.CryptoassetsConfig",
     'registration',
     'crispy_forms',
     'captcha',
@@ -172,7 +173,6 @@ INSTALLED_APPS = (
     'huey.djhuey',
     'tatianastore',
     'django_nose',
-    "cryptoassets.django.app.CryptoassetsConfig"
 )
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"

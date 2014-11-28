@@ -22,7 +22,8 @@ from cryptoassets.core.models import DBSession
 from cryptoassets.core.models import DBSession
 from cryptoassets.core.coin import registry as coin_registry
 
-from cryptoassets.django.dbsession import open_non_closing_session
+from sqlalchemy.orm.session import Session
+from cryptoassets.django import dbsession
 from cryptoassets.django.signals import txupdate
 
 URL = "https://blockchain.info/"
@@ -30,10 +31,10 @@ URL = "https://blockchain.info/"
 logger = logging.getLogger(__name__)
 
 
-def get_wallet(session=DBSession):
+def get_wallet(session):
     """Return the master shared wallet used to receive payments. """
     wallet_class = coin_registry.get_wallet_model(settings.PAYMENT_CURRENCY)
-    wallet = wallet_class.get_or_create_by_name("default", DBSession)
+    wallet = wallet_class.get_or_create_by_name("default", session)
     return wallet
 
 
@@ -43,13 +44,15 @@ def create_new_receiving_address(store_id, label):
     https://blockchain.info/merchant/$guid/new_address?password=$main_password&second_password=$second_password&label=$label
     """
 
-    session = open_non_closing_session()
+    session = dbsession.open_session()
     wallet = get_wallet(session=session)
     account = wallet.get_or_create_account_by_name("Store {}".format(store_id))
-    addr = wallet.create_receiving_address(account, label)
+    _addr = wallet.create_receiving_address(account, label)
+    logging.info("Created receiving address %s for store %d", _addr.address, store_id)
+    address = _addr.address
     session.commit()
 
-    return addr.address
+    return address
 
 
 def balance():
@@ -109,12 +112,16 @@ def send_to_address(address, btc_amount, note):
 
 
 @receiver(txupdate)
-def txupdate_received(event_name, data):
+def txupdate_received(event_name, data, **kwargs):
     """ Received transaction update from cryptoassets.core.
 
     This handler is run cryptoassets helper service process.
 
-    To test::
+    Start the transaction service::
+
+        python manage.py cryptoassetshelper
+
+    Create a test transaction::
 
         python manage.py cryptoassetshelper
 
@@ -181,9 +188,15 @@ def force_check_old_address(tx):
     :return True if the transaction has succeeded
     """
 
+    # TODO
+    return None
+
     if tx.btc_received_at:
         # Already paid
         return True
+
+    address_class = coin_registry.get_address_model(settings.PAYMENT_CURRENCY)
+    address = None
 
     # Find address status on blockchain.info
     # TODO: optimize
