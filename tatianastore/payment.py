@@ -17,22 +17,19 @@ from django.dispatch import receiver
 
 from . import models
 
-from cryptoassets.core import configure
-from cryptoassets.core.models import DBSession
-from cryptoassets.core.models import DBSession
 from cryptoassets.core.coin import registry as coin_registry
 
-from sqlalchemy.orm.session import Session
 from cryptoassets.django import dbsession
 from cryptoassets.django.signals import txupdate
-
+from cryptoassets.django.app import get_cryptoassets
 
 logger = logging.getLogger(__name__)
 
 
 def get_wallet(session):
     """Return the master shared wallet used to receive payments. """
-    wallet_class = coin_registry.get_wallet_model(settings.PAYMENT_CURRENCY)
+    cryptoassets = get_cryptoassets()
+    wallet_class = cryptoassets.coins.get(settings.PAYMENT_CURRENCY).wallet_model
     wallet = wallet_class.get_or_create_by_name("default", session)
     return wallet
 
