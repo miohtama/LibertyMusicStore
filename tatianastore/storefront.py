@@ -233,7 +233,7 @@ def embed(request, slug):
     store = get_object_or_404(models.Store, slug=slug)
     store_url = reverse("store", args=(store.slug,))
     public_url = settings.PUBLIC_URL
-
+    return render_to_response("storefront/embed.js", locals(), context_instance=RequestContext(request), content_type="text/javascript")
 
 
 def embed_code(request, slug):
