@@ -155,11 +155,11 @@ def pay(request, uuid):
 
     converter = models.get_rate_converter()
 
-    if transaction.user_currency and transaction.user_currency != "BTC":
+    if transaction.user_currency and transaction.user_currency != settings.PAYMENT_CURRENCY:
         # The user had chosen specific currency when
         # this transaction was initiated
         user_currency = transaction.user_currency
-        user_fiat_amount = converter.convert("BTC", user_currency, transaction.btc_amount)
+        user_fiat_amount = converter.convert(settings.PAYMENT_CURRENCY, user_currency, transaction.btc_amount)
     else:
         # Default to the store currency
         user_currency = transaction.currency
