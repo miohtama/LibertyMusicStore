@@ -132,7 +132,7 @@ def txupdate_received(event_name, data, **kwargs):
     """
 
     transaction_hash = data["txid"]
-    value = Decimal(data['amount']) / Decimal(100000000)
+    value = data['amount']
     address = data['address']
     confirmations = int(data.get('confirmations', -1))
 
