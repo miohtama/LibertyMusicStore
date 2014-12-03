@@ -109,6 +109,7 @@
 <script src="{% static "moment-countdown.min.js" %}"></script>
 {% endcomment %}
 {% block script %}
+<script src="{% url 'config_js' %}"></script>
 <script src="{% static 'bitcoinprices/bitcoinprices.js' %}"></script>
 <script src="{% static 'bitcoinaddress/dist/bitcoinaddress-bundle.debug.js' %}"></script>
 <script src="{% static "audiotools.js" %}"></script>

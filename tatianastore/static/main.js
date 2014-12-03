@@ -160,19 +160,14 @@
             marketRateVariable: "24h_avg",
 
             // Which currencies are in shown to the user
-            currencies: ["BTC", "USD", "EUR", "GBP"],
+            currencies: window.storeConfig.currencies,
 
             // Special currency symbol artwork
-            symbols: {
-                "BTC": "<i class='fa fa-btc'></i>",
-                "USD": "$",
-                "EUR": "€",
-                "GBP": "£"
-            },
+            symbols: window.storeConfig.symbols,
 
             // Which currency we show user by the default if
             // no currency is selected
-            defaultCurrency: "BTC",
+            defaultCurrency: window.storeConfig.defaultCurrency,
 
             // We don't have clickable price features
             // in the store

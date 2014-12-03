@@ -71,6 +71,7 @@ def store(request, slug):
     session_id = get_session_id(request)
     content_manager = models.UserPaidContentManager(session_id)
     public_url = settings.PUBLIC_URL
+    currency_symbol = settings.CURRENCY_SYMBOL
     return render_to_response("storefront/store.html", locals(), context_instance=RequestContext(request))
 
 
@@ -178,6 +179,8 @@ def pay(request, uuid):
 
     store = transaction.store
 
+    currency_symbol = settings.CURRENCY_SYMBOL
+
     return render_to_response("storefront/pay.html", locals(), context_instance=RequestContext(request))
 
 
@@ -230,7 +233,7 @@ def embed(request, slug):
     store = get_object_or_404(models.Store, slug=slug)
     store_url = reverse("store", args=(store.slug,))
     public_url = settings.PUBLIC_URL
-    return render_to_response("storefront/embed.js", locals(), context_instance=RequestContext(request), content_type="text/javascript")
+
 
 
 def embed_code(request, slug):
@@ -358,6 +361,10 @@ def transaction_check_old(request):
         return http.HttpResponseRedirect(reverse("transaction_past"))
 
 
+def config_js(request):
+    return render_to_response("storefront/config.js", locals(), context_instance=RequestContext(request), content_type="text/javascript")
+
+
 urlpatterns = patterns('',
     url(r'^facebook/$', facebook, name="facebook"),
     url(r'^(?P<slug>[-_\w]+)/embed/$', embed, name="embed"),
@@ -366,6 +373,7 @@ urlpatterns = patterns('',
     url(r'^(?P<slug>[-_\w]+)/$', store, name="store"),
     url(r'^order/(?P<item_type>[\w]+)/(?P<item_id>[\d]+)/$', order, name="order"),
     url(r'^pay/(?P<uuid>[^/]+)/$', pay, name="pay"),
+    url(r'^config.js$', pay, name="config_js"),
     url(r'^transaction_poll/(?P<uuid>[^/]+)/$', transaction_poll, name="transaction_poll"),
     url(r'^thanks/(?P<uuid>[^/]+)/$', thanks, name="thanks"),
     url(r'^download/(?P<transaction_uuid>[^/]+)/(?P<item_uuid>[^/]+)/(?P<filename>[^/]+)$', download, name="download"),
