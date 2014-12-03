@@ -28,11 +28,7 @@ from . import models
 from . import emailer
 
 
-CURRENCIES = [
-    ("USD", "USD"),
-    ("EUR", "EUR"),
-    ("GBP", "GBP"),
-]
+CURRENCIES = settings.CURRENCIES
 
 
 class SignupForm(forms.Form):

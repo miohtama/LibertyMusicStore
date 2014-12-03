@@ -1,3 +1,9 @@
 [submodule "theme"]
 	path = theme
 	url = git@github.com:miohtama/bootstrap-theme-libertymusicstore.git
+[submodule "tatianastore/static/bitcoinprices"]
+	path = tatianastore/static/bitcoinprices
+	url = git@github.com:miohtama/bitcoin-prices.git
+[submodule "tatianastore/static/bitcoinaddress"]
+	path = tatianastore/static/bitcoinaddress
+	url = git@github.com:miohtama/bitcoinaddress.js.git

@@ -200,7 +200,7 @@ class StoreItem(models.Model):
         """ """
         converter = get_rate_converter()
         try:
-            return converter.convert(self.store.currency, "BTC", self.fiat_price)
+            return converter.convert(self.store.currency, settings.PAYMENT_CURRENCY.upper(), self.fiat_price)
         except btcaverage.UnknownCurrencyException:
             return Decimal(-1)
 
@@ -407,7 +407,7 @@ class DownloadTransaction(models.Model):
 
         converter = get_rate_converter()
 
-        self.btc_amount = converter.convert(source_currency, "BTC", fiat_amount)
+        self.btc_amount = converter.convert(source_currency, settings.PAYMENT_CURRENCY.upper(), fiat_amount)
 
         self.description = description
         self.update_new_btc_address()

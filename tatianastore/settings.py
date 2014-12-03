@@ -302,5 +302,11 @@ BLOCKCHAIN_WEBHOOK_SECRET = ""
 # (to avoid sending payments out accidentally)
 ALLOWED_CREDIT_SITE_URLS = ["https://libertymusicstore.net"]
 
+CURRENCIES = [
+    ("USD", "USD"),
+    ("EUR", "EUR"),
+    ("GBP", "GBP"),
+]
+
 from tatianastore.local_settings import *
 
