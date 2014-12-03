@@ -41,7 +41,7 @@ logger = logging.getLogger("__name__")
 def get_rate_converter():
     global _rate_converter
     if not _rate_converter:
-        redis = get_cache("default").raw_client
+        redis = get_cache("default").client.get_client(write=True)
         _rate_converter = btcaverage.RedisConverter(redis)
     return _rate_converter
 
@@ -529,7 +529,7 @@ class UserPaidContentManager(object):
 
     def __init__(self, session_id):
         assert session_id, "User content manager needs valid session for the user"
-        self.redis = get_cache("default").raw_client
+        self.redis = get_cache("default").client.get_client(write=True)
         self.session_id = session_id
         content = self.redis.hget(UserPaidContentManager.REDIS_HASH_KEY, session_id)
         if content:
@@ -576,13 +576,13 @@ class WelcomeWizard(object):
              "embed_facebook_store"]
 
     def __init__(self, user):
-        self.redis = get_cache("default").raw_client
+        self.redis = get_cache("default").client.get_client(write=True)
         self.user = user
 
     @classmethod
     def clear(self):
         """ Reset the state of all welcome wizards. """
-        redis = get_cache("default").raw_client
+        redis = get_cache("default").client.get_client(write=True)
         redis.delete(WelcomeWizard.REDIS_HASH_KEY)
 
     def _create_default_content(self):

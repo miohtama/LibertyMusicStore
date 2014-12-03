@@ -269,7 +269,7 @@ def transaction_poll(request, uuid):
 
     transaction = models.DownloadTransaction.objects.get(uuid=uuid)
 
-    redis = cache.raw_client
+    redis = cache..client.get_client(write=True)
     pubsub = redis.pubsub()
     pubsub.subscribe("transaction_%s" % transaction.uuid)
 
