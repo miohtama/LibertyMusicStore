@@ -43,7 +43,7 @@ class DownloadTransactionTestCase(TestCase):
         models.DownloadTransaction.objects.all().delete()
 
         test_store = models.Store.objects.create(name="Test Store")
-        test_store.currency = "USD"
+        test_store.currency = settings.DEFAULT_PRICING_CURRENCY
         test_store.store_url = "http://localhost:8000/store/test-store/"
         test_store.save()
 
@@ -71,7 +71,7 @@ class DownloadTransactionTestCase(TestCase):
         session_id = "123"
 
         transaction = models.DownloadTransaction.objects.create()
-        user_currency = "USD"
+        user_currency = settings.DEFAULT_PRICING_CURRENCY
         items = [self.test_album, self.test_song]
         transaction.prepare(items, description="Test download", session_id=session_id, ip="1.1.1.1", user_currency=user_currency)
 
@@ -126,7 +126,7 @@ class CreditTransactionTestCase(TestCase):
         owner = models.User.objects.create(username="foobar", email="foobar@example.com")
 
         self.test_store = test_store = models.Store.objects.create(name=u"Test Store åäö")
-        test_store.currency = "USD"
+        test_store.currency = settings.DEFAULT_PRICING_CURRENCY
         test_store.store_url = "http://localhost:8000/store/test-store/"
         test_store.operators = [owner]
         test_store.btc_address = "19356KxTs9Bw5AAdxens5hoxDSp5bsUKse"
@@ -146,7 +146,7 @@ class CreditTransactionTestCase(TestCase):
         # Create a transaction
         session_id = "123"
         transaction = models.DownloadTransaction.objects.create()
-        user_currency = "USD"
+        user_currency = settings.DEFAULT_PRICING_CURRENCY
         items = [self.test_song]
         transaction.prepare(items, description="Test download", session_id=session_id, ip="1.1.1.1", user_currency=user_currency)
         transaction.mark_payment_received()
@@ -174,7 +174,7 @@ class SignUpTestCase(TestCase):
         models.update_initial_groups()
 
     def test_sign_up(self):
-        data = dict(email="foo@example.com", password1="x", password2="x", store_url="https://example.com", artist_name="Foo Bar", currency="USD")
+        data = dict(email="foo@example.com", password1="x", password2="x", store_url="https://example.com", artist_name="Foo Bar", currency=settings.DEFAULT_PRICING_CURRENCY)
         form = signup.SignupForm(data)
         assert form.is_valid(), form._errors
         form.create_user()
@@ -209,7 +209,7 @@ class CryptoassetsPaymentTestCase(TestCase):
         models.DownloadTransaction.objects.all().delete()
 
         test_store = models.Store.objects.create(name="Test Store")
-        test_store.currency = "USD"
+        test_store.currency = settings.DEFAULT_PRICING_CURRENCY
         test_store.store_url = "http://localhost:8000/store/test-store/"
         test_store.save()
 

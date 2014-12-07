@@ -50,6 +50,8 @@ PAYMENT_SOURCE = "cryptoassets"
 
 PAYMENT_CURRENCY = "aby"
 
+DEFAULT_PRICING_CURRENCY = "ABY"
+
 CRYPTOASSETS = {
 
     # You can use a separate database for cryptoassets,
@@ -87,3 +89,7 @@ CRYPTOASSETS = {
         }
     }
 }
+
+# https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-SILENCED_SYSTEM_CHECKS
+# https://docs.djangoproject.com/en/1.7/ref/checks/
+SILENCED_SYSTEM_CHECKS = ["1_6.W001"]

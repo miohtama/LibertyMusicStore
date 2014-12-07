@@ -69,3 +69,6 @@ PAYMENT_CONFIG = {
         }
     }
 }
+
+# https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-SILENCED_SYSTEM_CHECKS
+SILENCED_SYSTEM_CHECKS = True
