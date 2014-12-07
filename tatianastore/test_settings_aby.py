@@ -52,6 +52,9 @@ PAYMENT_CURRENCY = "aby"
 
 DEFAULT_PRICING_CURRENCY = "ABY"
 
+# How much we spend in unit tests for doing the actual payment
+TEST_CREDITING_PRICE = Decimal("0.01")
+
 CRYPTOASSETS = {
 
     # You can use a separate database for cryptoassets,
@@ -59,7 +62,7 @@ CRYPTOASSETS = {
     # will use a separate db connection.
     "database": {
         # "url": "sqlite:////tmp/payments.sqlite",
-        "url": "postgresql://localhost/applebyteassets",
+        "url": "sqlite:///:memory:?check_same_thread=false",
         "echo": False,
     },
 

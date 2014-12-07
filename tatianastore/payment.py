@@ -26,6 +26,11 @@ from cryptoassets.django.app import get_cryptoassets
 logger = logging.getLogger(__name__)
 
 
+def initialize():
+    cryptoassets = get_cryptoassets()
+    cryptoassets.create_tables()
+
+
 def get_wallet(session):
     """Return the master shared wallet used to receive payments. """
     cryptoassets = get_cryptoassets()
@@ -52,60 +57,43 @@ def create_new_receiving_address(store_id, label):
     return address
 
 
-def balance():
-    """ Return BlockChain wallet balance in BTC.
+def get_store_account_info(store):
+    """Return (account id, balance) tuple
     """
-    session = open_non_closing_session()
+    session = dbsession.open_session()
     wallet = get_wallet(session=session)
+    account = wallet.get_or_create_account_by_name("Store {}".format(store.id))
+    id, balance = account.id, account.balance
     session.commit()
-    return wallet.balance
+    return id, balance
 
 
 def archive(addresses):
     """ Archive the used address. """
 
-    for address in addresses:
-        params = {
-            "password": settings.BLOCKCHAIN_WALLET_PASSWORD,
-            "address": address,
-        }
-
-        logger.info("Archiving address %s", address)
-        url = URL + "merchant/%s/archive_address" % settings.BLOCKCHAIN_WALLET_ID
-        r = requests.get(url, params=params)
-        data = r.json()
-
-        assert "archived" in data, "Got blockchain reply %s" % data
+    # ATM doesn't do anything
+    return
 
 
-def send_to_address(address, btc_amount, note):
+def send_to_address(store, address, btc_amount, note):
     """ Send money from blockchain wallet to somewhere else. """
+
+    account_id, balance = get_store_account_info(store)
+    logger.info("Sending from account %s, has %s BTC, sending %s to %s", account_id, balance, btc_amount, address)
+
+    session = dbsession.open_session()
+    wallet = get_wallet(session=session)
+    account = wallet.get_or_create_account_by_name("Store {}".format(store.id))
 
     # This is completely unnecessary check,
     # but is now here for debugging BlockChain API problems
-    balance_ = balance()
-    assert Decimal(balance_) >= Decimal(btc_amount), "Not enough funds in BlockChain wallet, got %s need %s" % (balance_, btc_amount)
+    assert account.balance >= btc_amount, "Not enough funds in the wallet on account %s, got %s need %s" % (account.id, account.balance, btc_amount)
 
-    logger.info("Sending from BlockChain wallet %s, has %s BTC, sending %s to %s", settings.BLOCKCHAIN_WALLET_ID, balance_, btc_amount, address)
+    tx = wallet.send(account, address, btc_amount, note)
+    tx_id = tx.id
+    session.commit()
 
-    satoshi_amount = int(btc_amount * Decimal(100000000))
-
-    params = {
-        "password": settings.BLOCKCHAIN_WALLET_PASSWORD,
-        "amount": satoshi_amount,
-        "note": note,
-        "to": address,
-    }
-
-    url = URL + "/merchant/%s/payment" % settings.BLOCKCHAIN_WALLET_ID
-
-    r = requests.get(url, params=params)
-    data = r.json()
-
-    tx_hash = data.get("tx_hash")
-    assert tx_hash, "BlockChain did not return a transaction hash %s" % data
-
-    return tx_hash
+    return tx_id
 
 
 @receiver(txupdate)

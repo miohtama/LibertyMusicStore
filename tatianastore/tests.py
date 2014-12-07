@@ -7,6 +7,7 @@ from decimal import Decimal
 import datetime
 import random
 import os
+import time
 
 from mock import patch
 
@@ -21,9 +22,26 @@ from . import zipupload
 from . import blockchain
 from . import signup
 from . import creditor
+from . import payment
 
 # Don't accidentally allow to run against the production Redis
 assert settings.CACHES["default"]["LOCATION"] == "127.0.0.1:6379:10", "Don't run against production Redis"
+
+
+def spoof_store_received_balance(store):
+    """For cryptoassets backend, put some imaginary value on the account."""
+    account_id, balance = payment.get_store_account_info(store)
+    assert balance == 0
+
+    # Now simulate incoming transaction
+    session = payment.dbsession.open_session()
+    wallet = payment.get_wallet(session)
+    sending_account = wallet.create_account("Test account")
+    receiving_account = session.query(wallet.Account).get(account_id)
+    session.flush()
+    sending_account.balance = settings.TEST_CREDITING_PRICE
+    wallet.send_internal(sending_account, receiving_account, settings.TEST_CREDITING_PRICE, "Test account funding")
+    session.commit()
 
 
 def clear():
@@ -141,6 +159,10 @@ class CreditTransactionTestCase(TestCase):
 
         tasks.update_exchange_rates()
 
+        if settings.PAYMENT_SOURCE == "cryptoassets":
+            from tatianastore.payment import initialize
+            initialize()
+
     def test_credit(self):
 
         # Create a transaction
@@ -150,6 +172,9 @@ class CreditTransactionTestCase(TestCase):
         items = [self.test_song]
         transaction.prepare(items, description="Test download", session_id=session_id, ip="1.1.1.1", user_currency=user_currency)
         transaction.mark_payment_received()
+
+        if settings.PAYMENT_SOURCE == "cryptoassets":
+            spoof_store_received_balance(self.test_store)
 
         # Mock out outgoing Bitcoin payments
         with patch.object(blockchain, 'send_to_address') as mock_send:
@@ -163,7 +188,9 @@ class CreditTransactionTestCase(TestCase):
 
         transaction = models.DownloadTransaction.objects.get(id=transaction.id)
         self.assertIsNotNone(transaction.credited_at)
-        self.assertEquals("txhash_xyz", transaction.credit_transaction_hash)
+
+        if settings.PAYMENT_SOURCE == "blockchain":
+            self.assertEquals("txhash_xyz", transaction.credit_transaction_hash)
 
 
 class SignUpTestCase(TestCase):
@@ -208,9 +235,12 @@ class CryptoassetsPaymentTestCase(TestCase):
     def setUp(self):
         models.DownloadTransaction.objects.all().delete()
 
+        owner = models.User.objects.create(username="foobar", email="foobar@example.com")
+
         test_store = models.Store.objects.create(name="Test Store")
         test_store.currency = settings.DEFAULT_PRICING_CURRENCY
         test_store.store_url = "http://localhost:8000/store/test-store/"
+        test_store.operators = [owner]
         test_store.save()
 
         test_album = models.Album.objects.create(name="Test Album", store=test_store)
@@ -230,10 +260,67 @@ class CryptoassetsPaymentTestCase(TestCase):
         redis.clear()
         tasks.update_exchange_rates()
 
+        from tatianastore.payment import initialize
+        initialize()
+
     def test_create_receiving_address(self):
         session_id = "123"
         transaction = models.DownloadTransaction.objects.create()
-        user_currency = "USD"
+        user_currency = settings.DEFAULT_PRICING_CURRENCY
         items = [self.test_album, self.test_song]
         transaction.prepare(items, description="Test download", session_id=session_id, ip="1.1.1.1", user_currency=user_currency)
+
+    def test_credit_artist(self):
+        """Check that crediting artists work.
+
+        We do testing by creating "third party" account in our default wallet. When the crediting happens, cryptoassets detects the receiving address is internal and makes an internal transaction to this address.
+        """
+        from tatianastore import payment
+
+        store = self.test_store
+
+        # First create address where the payments go in
+        session = payment.dbsession.open_session()
+        wallet = payment.get_wallet(session)
+        external_account = wallet.create_account("external account")
+        session.flush()
+        address = wallet.create_receiving_address(external_account, "foobar")
+        address_str = address.address
+        session.commit()
+        store.btc_address = address_str
+        store.save()
+
+        # Amount of BTC we transfer around for this test
+        self.test_song.fiat_price = settings.TEST_CREDITING_PRICE
+        self.test_song.save()
+
+        # Create a transaction
+        session_id = "123"
+        transaction = models.DownloadTransaction.objects.create()
+        user_currency = settings.DEFAULT_PRICING_CURRENCY
+        items = [self.test_song]
+        transaction.prepare(items, description="Test download", session_id=session_id, ip="1.1.1.1", user_currency=user_currency)
+
+        transaction.mark_payment_received()
+
+        spoof_store_received_balance(store)
+
+        account_id, balance = payment.get_store_account_info(store)
+        self.assertEqual(balance, settings.TEST_CREDITING_PRICE)
+
+        credited_count = creditor.credit_store(store)
+        self.assertEqual(1, credited_count)
+
+        session = payment.dbsession.open_session()
+        wallet = payment.get_wallet(session)
+
+        external_account = wallet.get_or_create_account_by_name("external account")
+        self.assertEqual(settings.TEST_CREDITING_PRICE, external_account.balance)
+
+        # This is where the customer paid and it should be zero after crediting
+        receiving_account = session.query(wallet.Account).get(account_id)
+        self.assertEqual(receiving_account.balance, 0)
+
+        session.close()
+
 
