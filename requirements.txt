@@ -29,7 +29,8 @@ uwsgi==2.0.3
 django-registration-redux==1.1
 flake8
 djrill==1.0.0
-huey==0.4.2
+#huey==0.4.2
+-e git+git@github.com:miohtama/huey.git@django-1.7-compat#egg=huey
 mock==1.0.1
 python-slugify==0.0.7
 django-autoslug==1.7.2
