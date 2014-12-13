@@ -323,6 +323,8 @@ def transaction_check_old(request):
     This will catch all blockchain payments we did not get a notification.
     """
 
+    assert settings.PAYMENT_METHOD == "blockchain"
+
     if request.method != "POST":
         return http.HttpResponseRedirect(reverse("transaction_past"))
 

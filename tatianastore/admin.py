@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from django import forms
+from django.conf import settings
 from django.db import transaction
 from django.contrib.auth import forms as auth_forms
 from django.views.decorators.csrf import csrf_protect
@@ -76,7 +77,6 @@ class Store(admin.ModelAdmin):
     list_display = ("id", "name", "store_url")
     readonly_fields = ("facebook_data",)
     change_form_template = "admin/store_form.html"
-
     actions = []
 
     def has_delete_permission(self, request, obj=None):
@@ -89,6 +89,17 @@ class Store(admin.ModelAdmin):
         if not request.user.is_superuser:
             qs = request.user.operated_stores
         return qs
+
+    def get_fields(self, request, obj=None):
+        fields = super(Store, self).get_fields(request, obj)
+        if not request.user.is_superuser:
+            fields.remove("facebook_data")
+            fields.remove("operators")
+
+        if not settings.ASK_CURRENCY:
+            fields.remove("currency")
+
+        return fields
 
     def get_readonly_fields(self, request, obj=None):
         if not request.user.is_superuser:

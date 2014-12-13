@@ -49,7 +49,8 @@ class SignupForm(forms.Form):
     #                              help_text="The receiving Bitcoin address where you get the payments for the purchases. You can fill in this later if you don't have Bitcoin wallet right now.",
     #                              required=False)
 
-    currency = forms.ChoiceField(label="Currency", help_text="In which currency you will set the prices", choices=CURRENCIES)
+    if settings.ASK_CURRENCY:
+        currency = forms.ChoiceField(label="Currency", help_text="In which currency you will set the prices", choices=CURRENCIES)
 
     def clean_email(self):
         email = self.cleaned_data["email"]
@@ -74,7 +75,10 @@ class SignupForm(forms.Form):
         username = email
         store_url = data["store_url"]
         # btc_address = data["btc_address"]
-        currency = data["currency"]
+        if settings.ASK_CURRENCY:
+            currency = data["currency"]
+        else:
+            currency = settings.DEFAULT_PRICING_CURRENCY
 
         u = models.User.objects.create(email=email)
         u.username = username

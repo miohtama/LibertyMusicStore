@@ -30,13 +30,14 @@ class AlbumUploadForm(forms.Form):
     """ The store owner can upload the whole album as a zip file.
     """
 
-    album_name = forms.CharField(label="Album name", help_text="The price when the user purchases the full album.")
+    album_name = forms.CharField(label="Album name")
 
     album_price = forms.DecimalField(initial=Decimal("9.90"))
 
-    song_price = forms.DecimalField(initial=Decimal("0.90"), help_text="Individual song price")
+    song_price = forms.DecimalField(initial=Decimal("0.90"))
 
     zip_file = forms.FileField(label="Choose ZIP file from your local computer")
+
 
 
 @staff_member_required
@@ -77,6 +78,9 @@ def upload_album(request):
                 errors.append(unicode(e))
     else:
         form = AlbumUploadForm()
+
+    form.fields["song_price"].label = "Song price for individual buys ({})".format(store.currency)
+    form.fields["album_price"].label = "Album price ({})".format(store.currency)
 
     return render_to_response("storeadmin/upload_album.html", locals(), context_instance=RequestContext(request))
 

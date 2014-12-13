@@ -31,11 +31,7 @@ You can edit all files, information, prices and song order after the upload.
 <strong>Warning:</strong> The upload and processing song files may take up to 10-20 minutes. Just don't close the page when the files are being processed. Some web browsers (Chrome) show the progress of your upload, others not. So please take a cup of coffee and come back to the computer after a while.
 </p>
 
-
 <h2>Upload ZIP file</h2>
-<p>
-Set prices in <strong>{{store.currency}}</strong>
-</p>
 
 <form enctype="multipart/form-data" method="POST">
     {% csrf_token %}
@@ -76,6 +72,14 @@ $(document).ready(function() {
         },
         complete: function(xhr) {
             // Javascript redirect to album edit
+
+            // The server upload failed for a reason or another
+            if(xhr.status >= 400) {
+                // This won't make a perfect error page, but gives us something readable
+                $(document.body).html("<pre>" + xhr.responseText + "</pre>");
+                return;
+            }
+
             if(xhr.statusText == "OK") {
                 window.location = xhr.responseText;
             }
