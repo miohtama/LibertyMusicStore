@@ -121,6 +121,22 @@ class Song(admin.ModelAdmin):
     fields = ("visible", "store", "album", "name", "fiat_price", "download_mp3", "prelisten_mp3", "prelisten_vorbis")
     readonly_fields = ("order",)
 
+    def get_fields(self, request, obj=None):
+        fields = super(Song, self).get_fields(request, obj)
+        fields = list(fields)
+        if not request.user.is_superuser:
+            fields.remove("store")
+
+        return fields
+
+    def get_readonly_fields(self, request, obj=None):
+        fields = super(Song, self).get_readonly_fields(request, obj)
+        fields = list(fields)
+        if not request.user.is_superuser:
+            fields.append("album")
+
+        return fields
+
     def get_form(self, request, obj=None, **kwargs):
         # https://djangosnippets.org/snippets/1558/
         form = super(Song, self).get_form(request, obj, **kwargs)
@@ -128,11 +144,13 @@ class Song(admin.ModelAdmin):
         # so it's safe to modifys
         if not request.user.is_superuser:
             default_store = request.user.operated_stores.first()
-            form.base_fields['store'].queryset = request.user.operated_stores
-            form.base_fields['store'].initial = default_store
+            if "store" in form.base_fields:
+                form.base_fields['store'].queryset = request.user.operated_stores
+                form.base_fields['store'].initial = default_store
 
-            form.base_fields['album'].queryset = default_store.album_set.all()
-            form.base_fields['album'].initial = default_store.album_set.first()
+            if "album" in form.base_fields:
+                form.base_fields['album'].queryset = default_store.album_set.all()
+                form.base_fields['album'].initial = default_store.album_set.first()
 
         return form
 
@@ -176,6 +194,14 @@ class Album(admin.ModelAdmin):
         """ Disable 'add' button without zip upload. """
         return False
 
+    def get_fields(self, request, obj=None):
+        fields = super(Album, self).get_fields(request, obj)
+        fields = list(fields)
+        if not request.user.is_superuser:
+            fields.remove("store")
+
+        return fields
+
     def get_queryset(self, request):
         qs = super(Album, self).get_queryset(request)
 
@@ -190,8 +216,9 @@ class Album(admin.ModelAdmin):
         # form class is created per request by modelform_factory function
         # so it's safe to modifys
         if not request.user.is_superuser:
-            form.base_fields['store'].queryset = request.user.operated_stores
-            form.base_fields['store'].initial = request.user.operated_stores.first()
+            if "store" in form.base_fields:
+                form.base_fields['store'].queryset = request.user.operated_stores
+                form.base_fields['store'].initial = request.user.operated_stores.first()
         return form
 
     # https://djangosnippets.org/snippets/1053/

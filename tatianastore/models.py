@@ -102,7 +102,7 @@ class User(AbstractUser):
             # Assume others have specific stores
             return self.operated_stores.first()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.username
 
 
@@ -151,7 +151,7 @@ class Store(models.Model):
     #: Data needed for the Facebook integration
     facebook_data = JSONField(verbose_name="Facebook page info", default={})
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @property
@@ -187,8 +187,7 @@ class StoreItem(models.Model):
 
     #: Price in store currency
     fiat_price = models.DecimalField(max_digits=16, decimal_places=2, default=Decimal(0), validators=[validators.MinValueValidator(Decimal('0.01'))],
-                                     verbose_name="Price in your local currency",
-                                     help_text="Will be automatically converted to the Bitcoin on the moment of purchase")
+                                     verbose_name="Price")
 
     #: Hidden items are "soft-deleted" - they do not appear in the store,
     #: but still exist in db for accounting purposes and such
@@ -233,7 +232,7 @@ class Album(StoreItem):
     def get_visible_songs(self):
         return self.song_set.filter(visible=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s: %s" % (self.store.name, self.name)
 
 
@@ -271,7 +270,7 @@ class Song(StoreItem):
         download_name = self.name + ".mp3"
         return content_type, download_name, _file
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s: %s" % (self.store.name, self.name)
 
 

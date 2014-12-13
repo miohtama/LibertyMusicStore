@@ -14,7 +14,7 @@ from django.db import transaction
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
-
+from django.contrib import messages
 
 from django.shortcuts import render_to_response
 
@@ -37,7 +37,6 @@ class AlbumUploadForm(forms.Form):
     song_price = forms.DecimalField(initial=Decimal("0.90"))
 
     zip_file = forms.FileField(label="Choose ZIP file from your local computer")
-
 
 
 @staff_member_required
@@ -67,6 +66,8 @@ def upload_album(request):
 
                 wizard = models.WelcomeWizard(request.user)
                 wizard.set_step_status("upload_album", True)
+
+                messages.success(request, "The album is now uploaded. It might still take couple of minutes to process all songs and have them to appear.")
 
                 # JavaScript redirect to this URL
                 return http.HttpResponse(reverse('admin:tatianastore_album_change', args=(album.id,)))
