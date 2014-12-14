@@ -125,7 +125,6 @@ class Song(admin.ModelAdmin):
         fields = super(Song, self).get_fields(request, obj)
         fields = list(fields)
         if not request.user.is_superuser:
-            fields.remove("store")
             fields.remove("prelisten_mp3")
             fields.remove("prelisten_vorbis")
 
