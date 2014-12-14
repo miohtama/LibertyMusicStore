@@ -5,7 +5,7 @@
 <h2>Payments for {{store.name}}</h2>
 
 <p>
-    You have received the following payments to your Bitcoin address {{store.btc_address}}.
+    You have received the following payments to your cryptocurrency address {{store.btc_address}}.
 </p>
 
 <p>
@@ -16,8 +16,8 @@
     <thead>
         <tr>
             <th>Description</th>
-            <th>BTC paid at</th>
-            <th>BTC amount</th>
+            <th>Paid at</th>
+            <th>Amount</th>
         </tr>
     </thead>
     <tbody>
@@ -25,7 +25,7 @@
             <tr>
                 <td style="padding: 10px">{{ transaction.description }}</td>
                 <td style="padding: 10px">{{ transaction.btc_received_at }}</td>
-                <td style="padding: 10px">{{ transaction.btc_amount}} BTC</td>
+                <td style="padding: 10px">{{ transaction.btc_amount}}</td>
             </tr>
         {% endfor %}
     </tbody>
