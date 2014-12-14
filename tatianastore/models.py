@@ -129,20 +129,20 @@ class Store(models.Model):
 
     #: The address where completed downlaod payments are credited
     btc_address = models.CharField(verbose_name="{} address".format(settings.COIN_NAME),
-                                   help_text="Receiving address where the purchases will be credited. If you do not have Bitcoin wallet yet you can leave this empty - the site will keep your coins until you get your own wallet.",
+                                   help_text="Receiving address where the purchases will be credited. If you do not have cryptocurrency wallet yet you can leave this empty - the site will keep your coins until you get your own wallet.",
                                    max_length=50,
                                    blank=True,
                                    null=True,
                                    default=None)
 
-    extra_html = models.TextField(verbose_name="Store styles code",
-                                  help_text="Style your shop with extra HTML code placed for the site embed &ltiframe&gt. Please ask your webmaster for the details. This can include CSS &lt;style&gt; tag for the formatting purposes.",
+    extra_html = models.TextField(verbose_name="Store style codes",
+                                  help_text="Style the store page with CSS and HTML. Please ask your webmaster for the details.",
                                   default="",
                                   blank=True,
                                   null=True)
 
-    extra_facebook_html = models.TextField(verbose_name="Facebook styles code",
-                                  help_text="Style your shop with extra HTML code placed on the shop when it is on a Facebook page.",
+    extra_facebook_html = models.TextField(verbose_name="Facebook style codes",
+                                  help_text="Style the Facebook store page with CSS and HTML. Please ask your webmaster for the details.",
                                   default="",
                                   blank=True,
                                   null=True)
@@ -247,7 +247,7 @@ class Song(StoreItem):
 
     download_mp3 = models.FileField(upload_to=filename_gen("songs/"), blank=True, null=True,
                                     verbose_name="MP3 file",
-                                    help_text="The downloaded content how the user gets it after paying for it.")
+                                    help_text="")
 
     prelisten_mp3 = models.FileField(upload_to=filename_gen("prelisten/"), blank=True, null=True,
                                      verbose_name="Prelisten clip MP3 file",
@@ -342,6 +342,10 @@ class DownloadTransaction(models.Model):
 
     #: Bitcoin transaction id for the crediting payment
     credit_transaction_hash = models.CharField(max_length=256, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Purchase"
+        verbose_name_plural = "Purchases"
 
     def update_new_btc_address(self):
         if self.payment_source == DownloadTransaction.PAYMENT_SOURCE_BLOCKCHAIN:

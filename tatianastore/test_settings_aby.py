@@ -1,4 +1,4 @@
-# AppleByte altcoin test settings
+ # AppleByte altcoin test settings
 
 from .settings import *
 
@@ -51,6 +51,10 @@ PAYMENT_SOURCE = "cryptoassets"
 PAYMENT_CURRENCY = "aby"
 
 DEFAULT_PRICING_CURRENCY = "ABY"
+
+DEFAULT_ALBUM_PRICE = 100
+
+DEFAULT_SONG_PRICE = 10
 
 # How much we spend in unit tests for doing the actual payment
 TEST_CREDITING_PRICE = Decimal("0.01")

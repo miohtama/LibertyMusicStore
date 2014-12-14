@@ -32,9 +32,9 @@ class AlbumUploadForm(forms.Form):
 
     album_name = forms.CharField(label="Album name")
 
-    album_price = forms.DecimalField(initial=Decimal("9.90"))
+    album_price = forms.DecimalField(initial=Decimal(settings.DEFAULT_ALBUM_PRICE))
 
-    song_price = forms.DecimalField(initial=Decimal("0.90"))
+    song_price = forms.DecimalField(initial=Decimal(settings.DEFAULT_SONG_PRICE))
 
     zip_file = forms.FileField(label="Choose ZIP file from your local computer")
 
