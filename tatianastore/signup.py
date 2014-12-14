@@ -96,7 +96,7 @@ class SignupForm(forms.Form):
         store.save()
 
         site_url = settings.SITE_URL
-        emailer.mail_store_owner(store, "Liberty Music Store sign up confirmation", "email/sign_up.html", dict(store=store, user=u, site_url=site_url))
+        emailer.mail_store_owner(store, "{} sign up confirmation".format(settings.SITE_NAME), "email/sign_up.html", dict(store=store, user=u, site_url=site_url, site_name=settings.SITE_NAME))
 
         user = authenticate(username=username, password=password)
         return user
