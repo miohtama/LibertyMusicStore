@@ -95,7 +95,9 @@
                 height: 128,
                 colorDark : "#000000",
                 colorLight : "#ffffff"
-            }
+            },
+
+            qrRawAddress: window.storeConfig.qrRawAddress
         });
     }
 

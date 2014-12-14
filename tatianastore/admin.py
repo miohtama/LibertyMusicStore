@@ -75,7 +75,7 @@ class DownloadTransaction(admin.ModelAdmin):
 class Store(admin.ModelAdmin):
 
     list_display = ("id", "name", "store_url")
-    readonly_fields = ("facebook_data",)
+    readonly_fields = ("slug", "facebook_data",)
     change_form_template = "admin/store_form.html"
     actions = []
 

@@ -113,6 +113,11 @@ def signup(request):
             if user is not None:
                 messages.success(request, "You are now logged in. A verification email has been sent to your email %s" % user.email)
                 login(request, user)
+
+            # The store info wizard step is completed now
+            wizard = models.WelcomeWizard(request.user)
+            wizard.set_step_status("check_store_details", True)
+
             return shortcuts.redirect("admin:index")
 
     else:

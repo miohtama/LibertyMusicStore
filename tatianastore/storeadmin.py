@@ -64,9 +64,6 @@ def upload_album(request):
                                                form.cleaned_data["song_price"],
                                                )
 
-                wizard = models.WelcomeWizard(request.user)
-                wizard.set_step_status("upload_album", True)
-
                 messages.success(request, "The album is now uploaded. It might still take couple of minutes to process all songs and have them to appear.")
 
                 # JavaScript redirect to this URL

@@ -3,26 +3,26 @@
     <h2>{% trans 'Setting up your store' %}</h2>
 
     <p>
-        <strong>Please follow instructions here to get started</strong>.
+        <strong>Follow instructions here to get started</strong>.
     </p>
-    <ol>
-        {% if store %}
-            <li class="{{ step_class.check_store_details }}"><a href="{% url 'admin:tatianastore_store_change' store.id %}">Edit your store info</a></li>
-        {% endif %}
-        <li class="{{ step_class.upload_album }}">
-            <a href="{% url 'upload_album' %}">Upload an album</a>
-        </li>
 
-        <li class="{{ step_class.preview_store }}">
-            <a href="{% url 'embed_preview' store.slug %}">Preview your store</a>
-        </li>
+    {% if store %}
+        <p class="{{ step_class.check_store_details }}"><a href="{% url 'admin:tatianastore_store_change' store.id %}">Set up your store info</a></p>
+    {% endif %}
+    <p class="{{ step_class.upload_album }}">
+        <a href="{% url 'upload_album' %}">Upload an album</a>
+    </p>
 
-        <li class="{{ step_class.embed_website_store }}">
-            <a href="{% url 'embed_code' store.slug %}">Add store on your website</a>
-        </li>
+    <p class="{{ step_class.preview_store }}">
+        <a href="{% url 'embed_preview' store.slug %}">Preview your store</a>
+    </p>
 
-        <li class="{{ step_class.embed_facebook_store }}">
-            <a href="{% url 'add_to_facebook' %}">Add store on your Facebook page</a>
-        </li>
-    </ol>
+    <p class="{{ step_class.embed_website_store }}">
+        <a href="{% url 'embed_code' store.slug %}">Add store on your website</a>
+    </p>
+
+    <p class="{{ step_class.embed_facebook_store }}">
+        <a href="{% url 'add_to_facebook' %}">Add store on your Facebook page</a>
+    </p>
+
 </div>

@@ -2,8 +2,15 @@
 
 {% block extrastyle %}
 <style>
-.step-done {
-    text-decoration: line-through;
+
+.step-require:before {
+    content: "☐";
+    font-size: 150%;
+}
+
+.step-done:before {
+    content: "☑";
+    font-size: 150%;
 }
 </style>
 {% endblock %}
