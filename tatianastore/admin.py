@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
@@ -152,6 +154,8 @@ class Song(admin.ModelAdmin):
             if "album" in form.base_fields:
                 form.base_fields['album'].queryset = default_store.album_set.all()
                 form.base_fields['album'].initial = default_store.album_set.first()
+
+        form.base_fields["fiat_price"].initial = Decimal(settings.DEFAULT_SONG_PRICE)
 
         return form
 

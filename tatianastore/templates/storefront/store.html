@@ -9,48 +9,7 @@
 
 {% block content %}
 
-    <form class="tatianastore-select-songs" method="POST">
-
-        {% csrf_token %}
-
-        <div class="row store-header">
-            <div class="col-md-6">
-                <h1>{{ artist.name }}</h1>
-            </div>
-
-            <div class="col-md-6">
-                <div class="currency-controls pull-right">
-
-                    <button id="change-currency" type="button" class="btn btn-default currency-wrapper">
-                         Currency: <strong class="current-currency-symbol"><i class="fa fa-btc"></i></strong>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-
-        {% for album in albums %}
-
-            <div class="row row-album">
-                <div class="album-summary col-md-6">
-                    {% album_controls content_manager album %}
-                </div>
-
-                <div class="songs col-md-6">
-                    {% include "storefront/song_purchase_list.html" with songs=album.get_visible_songs %}
-                </div>
-            </div>
-        {% endfor %}
-
-        {% if songs_without_album.count %}
-            <div class="row row-album">
-                <div class="album-summary col-md-6"></div>
-                <div class="songs col-md-6">
-                    {% include "storefront/song_purchase_list.html" with songs=songs_without_album %}
-                </div>
-            </div>
-        {% endif %}
-    </form>
+    {% include "storefront/store_body.html" %}
 
 {% endblock content %}
 
