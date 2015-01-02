@@ -134,6 +134,7 @@ def txupdate_received(event_name, data, **kwargs):
 
     if t.btc_received_at:
         # Already complete
+        logger.info("Already completed")
         return
 
     success = t.check_balance(value, transaction_hash)
