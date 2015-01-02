@@ -1,6 +1,6 @@
 {% load i18n %}
 
-{% if not request.user.is_superuser %}
+{% if not request.user.is_superuser and store.slug %}
     <div class="module" id="checklist-module">
         <h2>{% trans 'Setting up your store' %}</h2>
 
