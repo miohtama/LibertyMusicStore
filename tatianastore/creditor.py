@@ -97,7 +97,7 @@ def credit_store(store):
             if uncredited_transactions[0].payment_source == models.DownloadTransaction.PAYMENT_SOURCE_BLOCKCHAIN:
                 blockchain.archive(uncredited_transactions.values_list("btc_address", flat=True))
 
-        emailer.mail_store_owner(store, "Liberty Music Store payments", "email/credit_transactions.html", dict(store=store, transactions=uncredited_transactions))
+        emailer.mail_store_owner(store, "{} payments".format(settings.SITE_NAME), "email/credit_transactions.html", dict(store=store, site_name=settings.SITE_NAME, transactions=uncredited_transactions))
 
         credited += uncredited_transactions.count()
 
