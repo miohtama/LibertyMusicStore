@@ -483,7 +483,10 @@ class DownloadTransaction(models.Model):
         t = self
 
         assert t.btc_received_at is None, "Already credited"
-        assert t.cancelled_at is not None, "Cannot credit cancelled transactions"
+
+        if t.cancelled_at is None:
+            # User fuck up
+            logger.error("Crediting cancelled transaction %d", t.id)
 
         if value >= t.btc_amount - settings.TRANSACTION_BALANCE_CONFIRMATION_THRESHOLD_BTC:
             logger.info("TX payment success, address: %s tx: %s needed: %s got: %s", t.btc_address, transaction_hash, t.btc_amount, value)
