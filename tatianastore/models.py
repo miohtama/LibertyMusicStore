@@ -556,7 +556,10 @@ class UserPaidContentManager(object):
         if not transaction_uuid:
             return None
         else:
-            return DownloadTransaction.objects.get(uuid=transaction_uuid)
+            try:
+                return DownloadTransaction.objects.get(uuid=transaction_uuid)
+            except DownloadTransaction.DoesNotExist:
+                return None
 
     def has_item(self, item):
         return self.get_download_transaction(item.uuid) is not None
