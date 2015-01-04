@@ -195,6 +195,8 @@ class Album(admin.ModelAdmin):
 
     fields = ("visible", "store", "name", "fiat_price", "cover", "download_zip")
 
+    add_url = "/foobar/"
+
     def has_add_permission(self, request):
         """ Disable 'add' button without zip upload. """
         return False

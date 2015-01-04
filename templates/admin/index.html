@@ -34,9 +34,12 @@
 
             {% if model.add_url %}
                 <td><a href="{{ model.add_url }}" class="addlink">{% trans 'Add' %}</a></td>
+            {% elif model.object_name == "Album" %}
+                <td><a href="{% url 'upload_album' %}" class="addlink">{% trans 'Upload new album' %}</a></td>
             {% else %}
                 <td>&nbsp;</td>
             {% endif %}
+
 
             {% if model.admin_url %}
                 <td><a href="{{ model.admin_url }}" class="changelink">{% trans 'Change' %}</a></td>

@@ -1,0 +1,49 @@
+{% extends "site/base.html" %}
+
+{% load i18n %}
+{% load static %}
+
+{% block title %}{{store.name}} - {{site_name}}{% endblock title %}
+{% block description %}
+<meta name="description" content="Buy songs and albums from {{store.name}} with {{coin_name}}">
+{% endblock description %}
+
+{% block extra_head %}
+
+<style>
+section h2, h3 {
+    margin-top: 40px;
+}
+h2:first-of-type {
+    margin-top: 0;
+}
+</style>
+
+{% endblock extra_head %}
+
+{% block content %}
+<section id="bitcoin">
+    <div class="container">
+
+        <h1>{{ store.name }}</h1>
+
+        <p>
+            <a href="{{ store.store_url }}">See artist homepage</a>
+        </p>
+
+        <a id="store-embed" href="#"></a>
+        <script>
+        (function() {
+            window.libertyMusicStore =  {
+                storeURL: "{{ store.store_url }}"
+            };
+            var t = document.createElement('script'); t.type = 'text/javascript'; t.async = true;
+            t.src = "{{ embed_src }}";
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(t, s);
+        })();
+        </script>
+
+    </div>
+</section>
+
+{% endblock content %}

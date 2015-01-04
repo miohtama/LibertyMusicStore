@@ -56,6 +56,7 @@ def store(request, slug):
 
     # MArk that the user has succesfully loaded the store from his/her site
     if request.user.is_authenticated():
+        # XXX: What I have been thinking here? Prune...
         for unlikely_user_website_host in ("http://localhost:8000", "https://libertymusicstore"):
             if request.META.get("HTTP_REFERER", "").startswith(unlikely_user_website_host):
                 break
@@ -72,6 +73,7 @@ def store(request, slug):
     content_manager = models.UserPaidContentManager(session_id)
     public_url = settings.PUBLIC_URL
     currency_symbol = settings.CURRENCY_SYMBOL
+    on_site = request.GET.get("on_site") == "true"
     return render_to_response("storefront/store.html", locals(), context_instance=RequestContext(request))
 
 
@@ -107,6 +109,14 @@ def facebook(request):
     public_url = settings.PUBLIC_URL
 
     return render_to_response("storefront/store.html", locals(), context_instance=RequestContext(request))
+
+
+def on_site(request, slug):
+    """Render the store on-site embed"""
+    store = get_object_or_404(models.Store, slug=slug)
+    public_url = settings.PUBLIC_URL
+    embed_src = request.build_absolute_uri(reverse("embed", args=(store.slug,))) + "?on_site=true"
+    return render_to_response("site/store_on_site.html", locals(), context_instance=RequestContext(request))
 
 
 def order(request, item_type, item_id):
@@ -233,6 +243,7 @@ def embed(request, slug):
     store = get_object_or_404(models.Store, slug=slug)
     store_url = reverse("store", args=(store.slug,))
     public_url = settings.PUBLIC_URL
+    on_site = request.GET.get("on_site") == "true"
     return render_to_response("storefront/embed.js", locals(), context_instance=RequestContext(request), content_type="text/javascript")
 
 
@@ -369,6 +380,7 @@ def config_js(request):
 
 urlpatterns = patterns('',
     url(r'^facebook/$', facebook, name="facebook"),
+    url(r'^(?P<slug>[-_\w]+)/store/$', on_site, name="on_site"),
     url(r'^(?P<slug>[-_\w]+)/embed/$', embed, name="embed"),
     url(r'^(?P<slug>[-_\w]+)/embed-code/$', embed_code, name="embed_code"),
     url(r'^(?P<slug>[-_\w]+)/embed-preview/$', embed_preview, name="embed_preview"),
