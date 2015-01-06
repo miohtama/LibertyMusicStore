@@ -144,6 +144,12 @@ def order(request, item_type, item_id):
     else:
         raise RuntimeError("Bad item type")
 
+    session_id = get_session_id(request)
+
+    # Bots trying to crawl download links
+    if not session_id:
+        return redirect("store", items[0].store.slug)
+
     # Don't allow purchase hidden items
     for item in items:
         if not item.visible:
@@ -152,8 +158,6 @@ def order(request, item_type, item_id):
     transaction = models.DownloadTransaction.objects.create()
 
     user_currency = request.COOKIES.get("user_currency")
-
-    session_id = get_session_id(request)
 
     transaction.prepare(items, description=name, session_id=session_id, ip=request.META["REMOTE_ADDR"], user_currency=user_currency)
 
