@@ -114,6 +114,11 @@ def facebook(request):
 def on_site(request, slug):
     """Render the store on-site embed"""
     store = get_object_or_404(models.Store, slug=slug)
+
+    if request.user.is_authenticated():
+        wizard = models.WelcomeWizard(request.user)
+        wizard.set_step_status("preview_store", True)
+
     public_url = settings.PUBLIC_URL
     embed_src = request.build_absolute_uri(reverse("embed", args=(store.slug,))) + "?on_site=true"
     return render_to_response("site/store_on_site.html", locals(), context_instance=RequestContext(request))
