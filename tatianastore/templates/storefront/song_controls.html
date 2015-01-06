@@ -8,7 +8,7 @@
         <div class="song-controls">
             <div class="btn-group">
 
-                <a class="btn btn-default btn-prelisten" href="#" class="prelisten" title="Listen a sample">
+                <a rel="nofollow" class="btn btn-default btn-prelisten" href="#" class="prelisten" title="Listen a sample">
                     <i class="fa fa-volume-up"></i>
                 </a>
 
@@ -17,14 +17,14 @@
                         Already bought
                     {% endcomment %}
 
-                    <a href="{% url 'download' tx.uuid song.uuid song.get_download_info.1 %}" class="btn-select btn btn-default" title="Download purchased song">
+                    <a rel="nofollow" href="{% url 'download' tx.uuid song.uuid song.get_download_info.1 %}" class="btn-select btn btn-default" title="Download purchased song">
                         <i class="fa fa-download"></i>
                     </a>
                 {% else %}
                     {% comment %}
                         Shop for content
                     {% endcomment %}
-                    <a href="{% url 'order' 'song' song.id %}" class="btn-select btn btn-default" title="Purchase this song">
+                    <a rel="nofollow" href="{% url 'order' 'song' song.id %}" class="btn-select btn btn-default" title="Purchase this song">
                         <i class="fa fa-shopping-cart"></i>
                         <span class="price" data-btc-price="{{ song.get_btc_price }}">
                             {{ album.get_btc_price }} BTC
