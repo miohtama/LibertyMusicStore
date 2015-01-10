@@ -1,3 +1,4 @@
+--extra-index-url https://pypi.fury.io/uzQ6egqLUi1bcfHJehXv/miohtama/
 -e git+https://miohtama@bitbucket.org/miohtama/stagger.git#egg=stagger
 Django==1.7.1
 psycopg2==2.5.4
@@ -43,3 +44,4 @@ django-jsonfield==0.9.13
 django-sslserver==0.12
 facepy==1.0.3
 
+django-requestlogging==1.0.2

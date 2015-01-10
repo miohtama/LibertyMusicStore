@@ -67,12 +67,12 @@ def create_prelisten_from_upload(song, start=10, duration=30):
 
     f = "prelisten-%d.mp3" % song.id
     outf = os.path.join(settings.MEDIA_ROOT, "prelisten", f)
-    create_prelisten_mp3(mp3, outf, start, duration)
+    assert create_prelisten_mp3(mp3, outf, start, duration) == 0, "Could not create prelisten MP3"
     song.prelisten_mp3.name = "prelisten/" + f
 
     f = "prelisten-%d.ogg" % song.id
     outf = os.path.join(settings.MEDIA_ROOT, "prelisten", f)
-    create_prelisten_ogg(mp3, outf, start, duration)
+    assert create_prelisten_ogg(mp3, outf, start, duration) == 0, "Could not create prelisten OGG"
     song.prelisten_vorbis.name = "prelisten/" + f
 
     song.save()

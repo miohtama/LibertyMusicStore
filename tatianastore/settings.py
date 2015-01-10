@@ -125,6 +125,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'pagination_bootstrap.middleware.PaginationMiddleware',
+    'django_requestlogging.middleware.LogSetupMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -173,6 +174,8 @@ INSTALLED_APPS = (
     'huey.djhuey',
     'tatianastore.app.TatianastoreConfig',
     'django_nose',
+    # https://bitbucket.org/trustcentric/django-requestlogging/
+    'django_requestlogging'
 )
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
@@ -192,6 +195,12 @@ LOGGING = {
         },
         'simple': {
             'format': '%(levelname)s %(message)s'
+        },
+
+        'request_format': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(remote_addr)s %(username)s %(request_method)s '
+            '%(path_info)s %(server_protocol)s" %(http_user_agent)s '
+            '%(message)s',
         },
     },
 
@@ -224,7 +233,7 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': 'logs/django.log',
- 	        'formatter': 'verbose',
+            'formatter': 'request_format',
         },
     },
     'loggers': {
