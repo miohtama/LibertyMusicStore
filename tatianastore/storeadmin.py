@@ -73,7 +73,7 @@ def upload_album(request):
                 logger.error("Bad album content")
                 logger.exception(e)
                 errors = form._errors.setdefault("zip_upload", ErrorList())
-                errors.append(unicode(e))
+                errors.append(str(e))
     else:
         form = AlbumUploadForm()
 
