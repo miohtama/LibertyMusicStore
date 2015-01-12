@@ -8,6 +8,7 @@ import datetime
 import random
 import os
 import time
+import logging
 
 from mock import patch
 
@@ -15,6 +16,10 @@ from django.utils import timezone
 from django.test import TestCase
 from django.conf import settings
 from django.core.cache import get_cache
+
+from cryptoassets.django import assetdb
+from cryptoassets.django.app import get_cryptoassets
+
 
 from . import models
 from . import tasks
@@ -28,20 +33,42 @@ from . import payment
 assert settings.CACHES["default"]["LOCATION"] == "127.0.0.1:6379:10", "Don't run against production Redis"
 
 
+logger = logging.getLogger(__name__)
+
+
 def spoof_store_received_balance(store):
     """For cryptoassets backend, put some imaginary value on the account."""
-    account_id, balance = payment.get_store_account_info(store)
-    assert balance == 0
 
-    # Now simulate incoming transaction
-    session = payment.dbsession.open_session()
-    wallet = payment.get_wallet(session)
-    sending_account = wallet.create_account("Test account")
-    receiving_account = session.query(wallet.Account).get(account_id)
-    session.flush()
-    sending_account.balance = settings.TEST_CREDITING_PRICE
-    wallet.send_internal(sending_account, receiving_account, settings.TEST_CREDITING_PRICE, "Test account funding")
-    session.commit()
+    assets_app = get_cryptoassets()
+
+    # Get hold of Bitcoin SQLAlchemy model descriptions
+    btc = assets_app.coins.get("btc")
+
+    # Get handle of BitcoinAccount class
+    Account = btc.coin_description.Account
+
+    @assetdb.managed_transaction
+    def tx(session):
+        account_id, balance = payment.get_store_account_info(store)
+        assert balance == 0
+
+        # Now simulate incoming transaction
+        wallet = payment.get_wallet(session)
+        sending_account = wallet.create_account("Test account")
+        receiving_account = session.query(Account).get(account_id)
+        session.flush()
+
+        # Fake balance on the account making the payment
+        sending_account.balance = settings.TEST_CREDITING_PRICE
+        logger.info("Making test payments from:%d to account %d", sending_account.id, receiving_account.id)
+
+        tx_obj = wallet.send_internal(sending_account, receiving_account, settings.TEST_CREDITING_PRICE, "Test account funding")
+        session.flush()
+        logger.info("Credit transaction is: %s", tx_obj)
+
+        import ipdb; ipdb.set_trace()
+
+    tx()
 
 
 def clear():
@@ -49,6 +76,9 @@ def clear():
     models.Album.objects.all().delete()
     models.Song.objects.all().delete()
     models.User.objects.all().delete()
+
+    assets_app = get_cryptoassets()
+    assets_app.clear_tables()
 
     redis = get_cache("default")
     redis.clear()
@@ -160,8 +190,8 @@ class CreditTransactionTestCase(TestCase):
         tasks.update_exchange_rates()
 
         if settings.PAYMENT_SOURCE == "cryptoassets":
-            from tatianastore.payment import initialize
-            initialize()
+            assets_app = get_cryptoassets()
+            assets_app.create_tables()
 
     def test_credit(self):
 
@@ -233,7 +263,7 @@ class CryptoassetsPaymentTestCase(TestCase):
     """See that we can receive payments using cryptoassets framework. """
 
     def setUp(self):
-        models.DownloadTransaction.objects.all().delete()
+        clear()
 
         owner = models.User.objects.create(username="foobar", email="foobar@example.com")
 
@@ -256,12 +286,10 @@ class CryptoassetsPaymentTestCase(TestCase):
         self.test_album = test_album
         self.test_song = test_song1
 
-        redis = get_cache("default")
-        redis.clear()
         tasks.update_exchange_rates()
 
-        from tatianastore.payment import initialize
-        initialize()
+        assets_app = get_cryptoassets()
+        assets_app.create_tables()
 
     def test_create_receiving_address(self):
         session_id = "123"
@@ -277,16 +305,28 @@ class CryptoassetsPaymentTestCase(TestCase):
         """
         from tatianastore import payment
 
+        assets_app = get_cryptoassets()
+
+        # Get hold of Bitcoin SQLAlchemy model descriptions
+        btc = assets_app.coins.get("btc")
+
+        # Get handle of BitcoinAccount class
+        Account = btc.coin_description.Account
+
         store = self.test_store
 
         # First create address where the payments go in
-        session = payment.dbsession.open_session()
-        wallet = payment.get_wallet(session)
-        external_account = wallet.create_account("external account")
-        session.flush()
-        address = wallet.create_receiving_address(external_account, "foobar")
-        address_str = address.address
-        session.commit()
+        @assetdb.managed_transaction
+        def tx(session):
+            wallet = payment.get_wallet(session)
+            external_account = wallet.create_account("external account")
+            session.flush()
+            address = wallet.create_receiving_address(external_account, "foobar")
+            return address.address
+
+        address_str = tx()
+        logger.info("The crediting target address is %s", address_str)
+
         store.btc_address = address_str
         store.save()
 
@@ -311,16 +351,18 @@ class CryptoassetsPaymentTestCase(TestCase):
         credited_count = creditor.credit_store(store)
         self.assertEqual(1, credited_count)
 
-        session = payment.dbsession.open_session()
-        wallet = payment.get_wallet(session)
+        @assetdb.managed_transaction
+        def tx2(session):
 
-        external_account = wallet.get_or_create_account_by_name("external account")
-        self.assertEqual(settings.TEST_CREDITING_PRICE, external_account.balance)
+            wallet = payment.get_wallet(session)
 
-        # This is where the customer paid and it should be zero after crediting
-        receiving_account = session.query(wallet.Account).get(account_id)
-        self.assertEqual(receiving_account.balance, 0)
+            # Check the "external" store owner account got the payment
+            external_account = wallet.get_or_create_account_by_name("external account")
+            self.assertEqual(settings.  , external_account.balance)
 
-        session.close()
+            # This is account where the customer paid and it should be zero after crediting, as the btc has been credited away
+            receiving_account = session.query(Account).get(account_id)
+            logger.info("Checking account %s", receiving_account)
+            self.assertEqual(receiving_account.balance, 0)
 
-
+        tx2()

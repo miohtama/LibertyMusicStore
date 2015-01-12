@@ -252,14 +252,11 @@ LOGGING = {
             'filters': ['request'],
             'filename': 'logs/django.log',
             'formatter': 'request_format',
-<<<<<<< HEAD
         },
 
         'sentry': {
             'level': 'DEBUG',
             'class': PRODUCTION and 'raven.contrib.django.raven_compat.handlers.SentryHandler' or 'logging.StreamHandler',
-=======
->>>>>>> 55044effbe055cbec1ce688aa7f21d660543a201
         },
     },
     'loggers': {
@@ -379,6 +376,10 @@ DEFAULT_PRICING_CURRENCY = "USD"
 DEFAULT_ALBUM_PRICE = Decimal("10.0")
 
 DEFAULT_SONG_PRICE = Decimal("0.90")
+
+# How much we spend in unit tests for doing the actual payment (testnet bitcoins)
+TEST_CREDITING_PRICE = Decimal("0.01")
+
 
 from tatianastore.local_settings import *
 

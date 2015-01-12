@@ -19,16 +19,11 @@ from . import models
 
 from cryptoassets.core.coin import registry as coin_registry
 
-from cryptoassets.django import dbsession
+from cryptoassets.django import assetdb
 from cryptoassets.django.signals import txupdate
 from cryptoassets.django.app import get_cryptoassets
 
 logger = logging.getLogger(__name__)
-
-
-def initialize():
-    cryptoassets = get_cryptoassets()
-    cryptoassets.create_tables()
 
 
 def get_wallet(session):
@@ -45,27 +40,31 @@ def create_new_receiving_address(store_id, label):
     https://blockchain.info/merchant/$guid/new_address?password=$main_password&second_password=$second_password&label=$label
     """
 
-    session = dbsession.open_session()
-    wallet = get_wallet(session=session)
-    account = wallet.get_or_create_account_by_name("Store {}".format(store_id))
-    session.flush()  # account gets id
-    _addr = wallet.create_receiving_address(account, label)
-    logging.info("Created receiving address %s for store %d", _addr.address, store_id)
-    address = _addr.address
-    session.commit()
+    @assetdb.managed_transaction
+    def tx(session):
+        wallet = get_wallet(session=session)
+        account = wallet.get_or_create_account_by_name("Store {}".format(store_id))
+        session.flush()  # account gets id
+        _addr = wallet.create_receiving_address(account, label)
+        logging.info("Created receiving address %s for store %d", _addr.address, store_id)
+        address = _addr.address
+        return address
 
-    return address
+    return tx()
 
 
 def get_store_account_info(store):
     """Return (account id, balance) tuple
     """
-    session = dbsession.open_session()
-    wallet = get_wallet(session=session)
-    account = wallet.get_or_create_account_by_name("Store {}".format(store.id))
-    id, balance = account.id, account.balance
-    session.commit()
-    return id, balance
+    @assetdb.managed_transaction
+    def tx(session):
+        wallet = get_wallet(session=session)
+        account = wallet.get_or_create_account_by_name("Store {}".format(store.id))
+        id, balance = account.id, account.balance
+        session.commit()
+        return id, balance
+
+    return tx()
 
 
 def archive(addresses):
@@ -81,19 +80,20 @@ def send_to_address(store, address, btc_amount, note):
     account_id, balance = get_store_account_info(store)
     logger.info("Sending from account %s, has %s BTC, sending %s to %s", account_id, balance, btc_amount, address)
 
-    session = dbsession.open_session()
-    wallet = get_wallet(session=session)
-    account = wallet.get_or_create_account_by_name("Store {}".format(store.id))
+    @assetdb.managed_transaction
+    def tx(session):
+        wallet = get_wallet(session=session)
+        account = wallet.get_or_create_account_by_name("Store {}".format(store.id))
 
-    # This is completely unnecessary check,
-    # but is now here for debugging BlockChain API problems
-    assert account.balance >= btc_amount, "Not enough funds in the wallet on account %s, got %s need %s" % (account.id, account.balance, btc_amount)
+        # This is completely unnecessary check,
+        # but is now here for debugging BlockChain API problems
+        assert account.balance >= btc_amount, "Not enough funds in the wallet on account %s, got %s need %s" % (account.id, account.balance, btc_amount)
 
-    tx = wallet.send(account, address, btc_amount, note)
-    tx_id = tx.id
-    session.commit()
+        tx = wallet.send(account, address, btc_amount, note)
+        tx_id = tx.id
+        return tx_id
 
-    return tx_id
+    return tx
 
 
 @receiver(txupdate)
@@ -168,45 +168,3 @@ def get_all_address_data():
     else:
         for address in data["addresses"]:
             yield address
-
-
-def force_check_old_address(tx):
-    """ Check if the transaction has come through.
-
-    :return True if the transaction has succeeded
-    """
-
-    # TODO
-    return None
-
-    if tx.btc_received_at:
-        # Already paid
-        return True
-
-    address_class = coin_registry.get_address_model(settings.PAYMENT_CURRENCY)
-    address = None
-
-    # Find address status on blockchain.info
-    # TODO: optimize
-    addresses = get_all_address_data()
-    for address in addresses:
-        if address["address"] == tx.btc_address:
-            break
-    else:
-        return False
-
-    try:
-
-        if tx.get_status() != "pending":
-            # Cancelled, confirmed, etc.
-            return False
-
-        value = address["total_received"] / Decimal(100000000)
-
-        if tx.check_balance(value, transaction_hash=""):
-            return True
-
-    except BlockChainAPIError as e:
-        logger.error("BlockChain wallet service error: %s" % e.message)
-
-    return False

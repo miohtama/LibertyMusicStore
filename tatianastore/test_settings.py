@@ -40,35 +40,45 @@ HUEY = {
 
 
 #: Human readable labels
-COIN_NAME = "AppleByte"
+COIN_NAME = "Bitcoin"
 
-COIN_NAME_SHORT = "ABY"
+COIN_NAME_SHORT = "BTC"
 
 PAYMENT_SOURCE = "cryptoassets"
 
-#from cryptoassets.core.coin.bitcoin.models import BitcoinWallet
-#PAYMENT_WALLET_CLASS = BitcoinWallet
+CRYPTOASSETS = {
 
-PAYMENT_CURRENCY = "btc"
-
-PAYMENT_CONFIG = {
+    # You can use a separate database for cryptoassets,
+    # or share the Django database. In any case, cryptoassets
+    # will use a separate db connection.
     "database": {
-        "url": "sqlite:////tmp/payments.sqlite"
+        "url": "sqlite:////tmp/tatianastore.cryptoassets.sqlite",
+        #"url": "postgresql://localhost/cryptoassets_test",
+        "echo": False,
     },
 
-    # What cryptocurrencies we are configuring to the database
-    "models": {
-        "btc": "cryptoassets.core.coin.bitcoin.models"
-    },
-
-    # Locally running bitcoind in testnet
-    "backends": {
+    "coins": {
+        # Locally running bitcoind in testnet
         "btc": {
-            "class": "cryptoassets.core.backend.bitcoind.Bitcoind",
-            "url": "http://foo:bar@127.0.0.1:8332/"
+            "backend": {
+                "class": "cryptoassets.core.backend.bitcoind.Bitcoind",
+                "url": "http://foo:bar@127.0.0.1:8332/",
+                # Cryptoassets helper process will use this UNIX named pipe to communicate
+                # with bitcoind
+                "walletnotify": {
+                    "class": "cryptoassets.core.backend.httpwalletnotify.HTTPWalletNotifyHandler",
+                    "ip": "127.0.0.1",
+                    "port": 28882
+                },
+            }
+        },
+    },
+
+    # Bind cryptoassets.core event handler to Django dispacth wrapper
+    "events": {
+        "django": {
+            "class": "cryptoassets.core.notify.python.InProcessNotifier",
+            "callback": "cryptoassets.django.incoming.handle_tx_update"
         }
     }
 }
-
-# https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-SILENCED_SYSTEM_CHECKS
-SILENCED_SYSTEM_CHECKS = True
