@@ -6,6 +6,16 @@ from decimal import Decimal
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+
+if "/srv/django" in os.getcwd():
+    # Production server
+    DEBUG = False
+    PRODUCTION = True
+else:
+    # Development server
+    DEBUG = True
+    PRODUCTION = False
+
 SITE_URL = "http://localhost:8000"
 SITE_NAME = "Liberty Music Store"
 
@@ -173,6 +183,8 @@ INSTALLED_APPS = (
     'huey.djhuey',
     'tatianastore.app.TatianastoreConfig',
     'django_nose',
+    'raven.contrib.django.raven_compat',
+    'django_requestlogging'
 )
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
@@ -182,6 +194,7 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 # the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -193,13 +206,25 @@ LOGGING = {
         'simple': {
             'format': '%(levelname)s %(message)s'
         },
+
+        'request_format': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(remote_addr)s %(username)s %(request_method)s '
+            '%(path_info)s %(server_protocol)s" %(http_user_agent)s '
+            '%(message)s',
+        },
     },
 
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
-        }
+        },
+
+       # Add an unbound RequestFilter.
+       'request': {
+           '()': 'django_requestlogging.logging_filters.RequestFilter',
+       },
     },
+
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
@@ -223,8 +248,14 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
+            'filters': ['request'],
             'filename': 'logs/django.log',
- 	        'formatter': 'verbose',
+            'formatter': 'request_format',
+        },
+
+        'sentry': {
+            'level': 'DEBUG',
+            'class': PRODUCTION and 'raven.contrib.django.raven_compat.handlers.SentryHandler' or 'logging.StreamHandler',
         },
     },
     'loggers': {
@@ -240,11 +271,21 @@ LOGGING = {
             'propagate': True,
         },
 
-        '': {
-            'level': 'DEBUG',
-            'handlers': ['rainbow'],
-            'propagate': True,
+        'sqlalchemy': {
+            'level': 'ERROR',
+            'propagate': False,
         },
+
+        'py.warnings': {
+            'level': 'ERROR',
+            'propagate': False,
+        },
+
+        '': {
+            'level': PRODUCTION and 'INFO' or 'DEBUG',
+            'handlers': [PRODUCTION and 'sentry' or 'rainbow', 'file'],
+        },
+
     }
 }
 
@@ -301,6 +342,29 @@ BLOCKCHAIN_WEBHOOK_SECRET = ""
 # Only run actual Bitcoin payments to the artist if the site URLs matches these
 # (to avoid sending payments out accidentally)
 ALLOWED_CREDIT_SITE_URLS = ["https://libertymusicstore.net"]
+
+# How we present available payment options
+CURRENCIES = [
+    ("USD", "USD"),
+    ("EUR", "EUR"),
+    ("GBP", "GBP"),
+]
+
+ASK_CURRENCY = True
+
+PAYMENT_CURRENCY = "btc"
+
+PAYMENT_SOURCE = "cryptoassets"
+
+CURRENCY_SYMBOL = "BTC"
+
+DEFAULT_PAYMENT_CURRENCY_NAME = "USD"
+
+DEFAULT_PRICING_CURRENCY = "USD"
+
+DEFAULT_ALBUM_PRICE = Decimal("10.0")
+
+DEFAULT_SONG_PRICE = Decimal("0.90")
 
 from tatianastore.local_settings import *
 

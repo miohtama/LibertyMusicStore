@@ -1,3 +1,4 @@
+--extra-index-url https://pypi.fury.io/uzQ6egqLUi1bcfHJehXv/miohtama/
 -e git+https://miohtama@bitbucket.org/miohtama/stagger.git#egg=stagger
 Django==1.7.1
 psycopg2==2.5.4
@@ -20,7 +21,8 @@ readline==6.2.4.1
 six==1.4.1
 #wsgiref==0.1.2
 django-pagination-bootstrap==1.0.5
--e git+git@github.com:laysakura/rainbow_logging_handler.git@2425d00f7dc562e23881b7bab2abe9d0128bf46d#egg=rainbow_logging_handler
+#-e git+git@github.com:laysakura/rainbow_logging_handler.git@2425d00f7dc562e23881b7bab2abe9d0128bf46d#egg=rainbow_logging_handler
+rainbow_logging_handler==2.2.2
 requests==2.3.0
 redis==2.10.1
 recaptcha-client==1.0.6
@@ -42,4 +44,8 @@ django-jsonfield==0.9.13
 # Facebook development
 django-sslserver==0.12
 facepy==1.0.3
+
+# Production / Sentry logging
+raven==5.1.1
+django-requestlogging==1.0.2
 

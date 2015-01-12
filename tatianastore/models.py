@@ -41,7 +41,7 @@ logger = logging.getLogger("__name__")
 def get_rate_converter():
     global _rate_converter
     if not _rate_converter:
-        redis = get_cache("default").raw_client
+        redis = get_cache("default").client.get_client(write=True)
         _rate_converter = btcaverage.RedisConverter(redis)
     return _rate_converter
 

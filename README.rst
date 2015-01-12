@@ -76,11 +76,8 @@ Production setup on Ubuntu
 
 Install::
 
-    apt-get install libncurses5-dev redis-server python-virtualenv openssl
-    apt-get install build-essential git-core libfreetype6-dev libmemcached-dev libxml2-dev libxslt1-dev libjpeg-dev libpng12-dev gettext python-virtualenv virtualenvwrapper git libmysqlclient-dev python-dev
-    virtualenv venv
-    pip install distribute
-    pip install -r requirements.txt
+    apt-get install postgresql libncurses5-dev redis-server python-virtualenv openssl
+    apt-get install build-essential git-core libfreetype6-dev libmemcached-dev libxml2-dev libxslt1-dev libjpeg-dev libpng12-dev gettext git
 
 Ex::
 
