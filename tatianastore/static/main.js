@@ -95,7 +95,9 @@
                 height: 128,
                 colorDark : "#000000",
                 colorLight : "#ffffff"
-            }
+            },
+
+            qrRawAddress: window.storeConfig.qrRawAddress
         });
     }
 
@@ -150,6 +152,15 @@
     }
 
     function initPrices() {
+
+        if(window.storeConfig.marketData) {
+            bitcoinprices.loadData = function() {
+                bitcoinprices.data = window.storeConfig.marketData;
+                $(document).trigger("marketdataavailable");
+            }
+        }
+
+
         bitcoinprices.init({
 
             // Where we get bitcoinaverage data
@@ -189,6 +200,7 @@
             // but for most normal usage you don't need this
             jQuery: jQuery
         });
+
     }
 
     /**

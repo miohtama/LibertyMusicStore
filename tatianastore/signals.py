@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 @receiver(post_save, sender=models.DownloadTransaction)
 def transaction_post_save(sender, instance, signal, *args, **kwargs):
     """ Poke listeners about the new state in Redis when transactions change. """
-    redis = cache.raw_client
+    redis = cache.client.get_client(write=True)
     transaction = instance
     # transaction.uuid can be UUID() or string q
     message = transaction.get_notification_message()

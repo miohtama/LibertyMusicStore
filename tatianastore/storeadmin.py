@@ -14,7 +14,7 @@ from django.db import transaction
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
-
+from django.contrib import messages
 
 from django.shortcuts import render_to_response
 
@@ -30,11 +30,11 @@ class AlbumUploadForm(forms.Form):
     """ The store owner can upload the whole album as a zip file.
     """
 
-    album_name = forms.CharField(label="Album name", help_text="The price when the user purchases the full album.")
+    album_name = forms.CharField(label="Album name")
 
-    album_price = forms.DecimalField(initial=Decimal("9.90"))
+    album_price = forms.DecimalField(initial=Decimal(settings.DEFAULT_ALBUM_PRICE))
 
-    song_price = forms.DecimalField(initial=Decimal("0.90"), help_text="Individual song price")
+    song_price = forms.DecimalField(initial=Decimal(settings.DEFAULT_SONG_PRICE))
 
     zip_file = forms.FileField(label="Choose ZIP file from your local computer")
 
@@ -64,8 +64,7 @@ def upload_album(request):
                                                form.cleaned_data["song_price"],
                                                )
 
-                wizard = models.WelcomeWizard(request.user)
-                wizard.set_step_status("upload_album", True)
+                messages.success(request, "The album is now uploaded. It might still take couple of minutes to process all songs and have them to appear.")
 
                 # JavaScript redirect to this URL
                 return http.HttpResponse(reverse('admin:tatianastore_album_change', args=(album.id,)))
@@ -74,9 +73,12 @@ def upload_album(request):
                 logger.error("Bad album content")
                 logger.exception(e)
                 errors = form._errors.setdefault("zip_upload", ErrorList())
-                errors.append(unicode(e))
+                errors.append(str(e))
     else:
         form = AlbumUploadForm()
+
+    form.fields["song_price"].label = "Song price for individual buys ({})".format(store.currency)
+    form.fields["album_price"].label = "Album price ({})".format(store.currency)
 
     return render_to_response("storeadmin/upload_album.html", locals(), context_instance=RequestContext(request))
 

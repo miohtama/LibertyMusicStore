@@ -42,12 +42,16 @@ def upload_song(album, original_fname, data, order, song_price):
     # eye3d can only operate on files, not streams
     with tempfile.NamedTemporaryFile(suffix=".mp3") as file_:
         file_.write(data)
-        info = stagger.read_tag(file_.name)
-        if not info:
-            raise BadAlbumContenException(u"Could not extract MP3 info from %s orignal filename %s" % (file_.name, original_fname))
 
-        if info.title:
+        try:
+            info = stagger.read_tag(file_.name)
+        except stagger.errors.NoTagError:
+            info = None
+
+        if info and info.title:
             title = info.title
+        else:
+            title = None
 
     if not title:
         # No title on this file, use filename

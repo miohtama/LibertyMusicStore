@@ -1,6 +1,5 @@
 {% extends "admin/base_site.html" %}
 {% load i18n admin_static %}
-{% load checklist %}
 
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}" />{% endblock %}
 
@@ -35,9 +34,12 @@
 
             {% if model.add_url %}
                 <td><a href="{{ model.add_url }}" class="addlink">{% trans 'Add' %}</a></td>
+            {% elif model.object_name == "Album" %}
+                <td><a href="{% url 'upload_album' %}" class="addlink">{% trans 'Upload new album' %}</a></td>
             {% else %}
                 <td>&nbsp;</td>
             {% endif %}
+
 
             {% if model.admin_url %}
                 <td><a href="{{ model.admin_url }}" class="changelink">{% trans 'Change' %}</a></td>
@@ -56,35 +58,5 @@
 {% endblock %}
 
 {% block sidebar %}
-<div id="content-related">
-    {% checklist %}
-
-    <div class="module" id="checklist-module">
-        <h2>{% trans 'Need help?' %}</h2>
-
-        <p>
-            This service is still very beta and has rough edges.
-            Ping me and I'll clear them out for you.
-        </p>
-
-        <p>
-            Email:
-        </p>
-
-        <p>
-            <strong>mikko@libertymusicstore.net</strong>
-        </p>
-
-        <p>
-            Skype:
-        </p>
-
-        <p>
-            <strong>mikko.ohtamaa</strong>
-        </p>
-    </div>
-</div>
-
-
-
+{% include "storeadmin/sidebar.html" %}
 {% endblock %}

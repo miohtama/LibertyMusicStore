@@ -22,7 +22,16 @@
         <link rel="stylesheet" href="{% static 'facebook.css' %}"/>
     {% endif %}
 
-    <title>{% block title %}Liberty Music Store - Sell songs, receive Bitcoin{% endblock %}</title>
+    <title>
+    {% block title %}
+    {% if store.name %}
+        {{store.name}} - {{site_name}}
+    {% else %}
+        {{site_name}}
+    {% endif %}
+    {% endblock %}
+    </title>
+
 
     {% block description %}
     {% endblock %}

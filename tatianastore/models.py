@@ -6,6 +6,7 @@ from uuid import uuid4
 import random
 import datetime
 import json
+import os
 
 import six
 
@@ -101,7 +102,7 @@ class User(AbstractUser):
             # Assume others have specific stores
             return self.operated_stores.first()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.username
 
 
@@ -128,20 +129,20 @@ class Store(models.Model):
 
     #: The address where completed downlaod payments are credited
     btc_address = models.CharField(verbose_name="{} address".format(settings.COIN_NAME),
-                                   help_text="Receiving address where the purchases will be credited. If you do not have Bitcoin wallet yet you can leave this empty - the site will keep your coins until you get your own wallet.",
+                                   help_text="Receiving address where the purchases will be credited. If you do not have cryptocurrency wallet yet you can leave this empty - the site will keep your coins until you get your own wallet.",
                                    max_length=50,
                                    blank=True,
                                    null=True,
                                    default=None)
 
-    extra_html = models.TextField(verbose_name="Store styles code",
-                                  help_text="Style your shop with extra HTML code placed for the site embed &ltiframe&gt. Please ask your webmaster for the details. This can include CSS &lt;style&gt; tag for the formatting purposes.",
+    extra_html = models.TextField(verbose_name="Store style codes",
+                                  help_text="Style the store page with CSS and HTML. Please ask your webmaster for the details.",
                                   default="",
                                   blank=True,
                                   null=True)
 
-    extra_facebook_html = models.TextField(verbose_name="Facebook styles code",
-                                  help_text="Style your shop with extra HTML code placed on the shop when it is on a Facebook page.",
+    extra_facebook_html = models.TextField(verbose_name="Facebook style codes",
+                                  help_text="Style the Facebook store page with CSS and HTML. Please ask your webmaster for the details.",
                                   default="",
                                   blank=True,
                                   null=True)
@@ -150,7 +151,7 @@ class Store(models.Model):
     #: Data needed for the Facebook integration
     facebook_data = JSONField(verbose_name="Facebook page info", default={})
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @property
@@ -186,8 +187,7 @@ class StoreItem(models.Model):
 
     #: Price in store currency
     fiat_price = models.DecimalField(max_digits=16, decimal_places=2, default=Decimal(0), validators=[validators.MinValueValidator(Decimal('0.01'))],
-                                     verbose_name="Price in your local currency",
-                                     help_text="Will be automatically converted to the Bitcoin on the moment of purchase")
+                                     verbose_name="Price")
 
     #: Hidden items are "soft-deleted" - they do not appear in the store,
     #: but still exist in db for accounting purposes and such
@@ -200,7 +200,7 @@ class StoreItem(models.Model):
         """ """
         converter = get_rate_converter()
         try:
-            return converter.convert(self.store.currency, "BTC", self.fiat_price)
+            return converter.convert(self.store.currency, settings.PAYMENT_CURRENCY.upper(), self.fiat_price)
         except btcaverage.UnknownCurrencyException:
             return Decimal(-1)
 
@@ -232,7 +232,7 @@ class Album(StoreItem):
     def get_visible_songs(self):
         return self.song_set.filter(visible=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s: %s" % (self.store.name, self.name)
 
 
@@ -247,7 +247,7 @@ class Song(StoreItem):
 
     download_mp3 = models.FileField(upload_to=filename_gen("songs/"), blank=True, null=True,
                                     verbose_name="MP3 file",
-                                    help_text="The downloaded content how the user gets it after paying for it.")
+                                    help_text="")
 
     prelisten_mp3 = models.FileField(upload_to=filename_gen("prelisten/"), blank=True, null=True,
                                      verbose_name="Prelisten clip MP3 file",
@@ -270,7 +270,7 @@ class Song(StoreItem):
         download_name = self.name + ".mp3"
         return content_type, download_name, _file
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s: %s" % (self.store.name, self.name)
 
 
@@ -343,6 +343,10 @@ class DownloadTransaction(models.Model):
     #: Bitcoin transaction id for the crediting payment
     credit_transaction_hash = models.CharField(max_length=256, blank=True, null=True)
 
+    class Meta:
+        verbose_name = "Purchase"
+        verbose_name_plural = "Purchases"
+
     def update_new_btc_address(self):
         if self.payment_source == DownloadTransaction.PAYMENT_SOURCE_BLOCKCHAIN:
             self.update_new_btc_address_blockchain()
@@ -407,7 +411,7 @@ class DownloadTransaction(models.Model):
 
         converter = get_rate_converter()
 
-        self.btc_amount = converter.convert(source_currency, "BTC", fiat_amount)
+        self.btc_amount = converter.convert(source_currency, settings.PAYMENT_CURRENCY.upper(), fiat_amount)
 
         self.description = description
         self.update_new_btc_address()
@@ -478,8 +482,11 @@ class DownloadTransaction(models.Model):
         """
         t = self
 
-        assert t.btc_received_at is None
-        assert t.cancelled_at is None
+        assert t.btc_received_at is None, "Already credited"
+
+        if t.cancelled_at is None:
+            # User fuck up
+            logger.error("Crediting cancelled transaction %d", t.id)
 
         if value >= t.btc_amount - settings.TRANSACTION_BALANCE_CONFIRMATION_THRESHOLD_BTC:
             logger.info("TX payment success, address: %s tx: %s needed: %s got: %s", t.btc_address, transaction_hash, t.btc_amount, value)
@@ -529,7 +536,7 @@ class UserPaidContentManager(object):
 
     def __init__(self, session_id):
         assert session_id, "User content manager needs valid session for the user"
-        self.redis = get_cache("default").raw_client
+        self.redis = get_cache("default").client.get_client(write=True)
         self.session_id = session_id
         content = self.redis.hget(UserPaidContentManager.REDIS_HASH_KEY, session_id)
         if content:
@@ -549,7 +556,10 @@ class UserPaidContentManager(object):
         if not transaction_uuid:
             return None
         else:
-            return DownloadTransaction.objects.get(uuid=transaction_uuid)
+            try:
+                return DownloadTransaction.objects.get(uuid=transaction_uuid)
+            except DownloadTransaction.DoesNotExist:
+                return None
 
     def has_item(self, item):
         return self.get_download_transaction(item.uuid) is not None
@@ -576,13 +586,13 @@ class WelcomeWizard(object):
              "embed_facebook_store"]
 
     def __init__(self, user):
-        self.redis = get_cache("default").raw_client
+        self.redis = get_cache("default").client.get_client(write=True)
         self.user = user
 
     @classmethod
     def clear(self):
         """ Reset the state of all welcome wizards. """
-        redis = get_cache("default").raw_client
+        redis = get_cache("default").client.get_client(write=True)
         redis.delete(WelcomeWizard.REDIS_HASH_KEY)
 
     def _create_default_content(self):

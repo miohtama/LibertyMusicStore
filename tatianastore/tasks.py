@@ -1,4 +1,5 @@
 import logging
+import time
 
 from django.utils import timezone
 from django.conf import settings
@@ -26,6 +27,11 @@ def update_exchange_rates():
 @task()
 def generate_prelisten(song_id):
     """ Generate prelisten clips for the song on background. """
+
+    # Stupid workaround to let the tranasaction of web process have time to commit
+    # when adding song from Django admin
+    time.sleep(5)
+
     try:
         song = models.Song.objects.get(id=song_id)
     except models.Song.DoesNotExist:

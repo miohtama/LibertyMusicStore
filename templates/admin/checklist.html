@@ -1,24 +1,31 @@
 {% load i18n %}
-<div class="module" id="checklist-module">
-    <h2>{% trans 'Setting up your store' %}</h2>
-    <ol>
+
+{% if not request.user.is_superuser and store.slug %}
+    <div class="module" id="checklist-module">
+        <h2>{% trans 'Setting up your store' %}</h2>
+
+        <p>
+            <strong>Follow instructions here to get started</strong>.
+        </p>
+
         {% if store %}
-            <li class="{{ step_class.check_store_details }}"><a href="{% url 'admin:tatianastore_store_change' store.id %}">Check your store details</a></li>
+            <p class="{{ step_class.check_store_details }}"><a href="{% url 'admin:tatianastore_store_change' store.id %}">Set up your store info</a></p>
         {% endif %}
-        <li class="{{ step_class.upload_album }}">
+        <p class="{{ step_class.upload_album }}">
             <a href="{% url 'upload_album' %}">Upload an album</a>
-        </li>
+        </p>
 
-        <li class="{{ step_class.preview_store }}">
+        <p class="{{ step_class.preview_store }}">
             <a href="{% url 'embed_preview' store.slug %}">Preview your store</a>
-        </li>
+        </p>
 
-        <li class="{{ step_class.embed_website_store }}">
+        <p class="{{ step_class.embed_website_store }}">
             <a href="{% url 'embed_code' store.slug %}">Add store on your website</a>
-        </li>
+        </p>
 
-        <li class="{{ step_class.embed_facebook_store }}">
+        <p class="{{ step_class.embed_facebook_store }} checklist-facebook">
             <a href="{% url 'add_to_facebook' %}">Add store on your Facebook page</a>
-        </li>
-    </ol>
-</div>
+        </p>
+
+    </div>
+{% endif %}

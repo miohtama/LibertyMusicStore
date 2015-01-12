@@ -135,6 +135,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'pagination_bootstrap.middleware.PaginationMiddleware',
+    'django_requestlogging.middleware.LogSetupMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -251,11 +252,14 @@ LOGGING = {
             'filters': ['request'],
             'filename': 'logs/django.log',
             'formatter': 'request_format',
+<<<<<<< HEAD
         },
 
         'sentry': {
             'level': 'DEBUG',
             'class': PRODUCTION and 'raven.contrib.django.raven_compat.handlers.SentryHandler' or 'logging.StreamHandler',
+=======
+>>>>>>> 55044effbe055cbec1ce688aa7f21d660543a201
         },
     },
     'loggers': {
@@ -336,6 +340,17 @@ HUEY = {
 
 LOGIN_REDIRECT_URL = "/admin/"
 
+
+TEMPLATE_CONTEXT_PROCESSORS = ("django.contrib.auth.context_processors.auth",
+"django.core.context_processors.debug",
+"django.core.context_processors.i18n",
+"django.core.context_processors.media",
+"django.core.context_processors.static",
+"django.core.context_processors.tz",
+"django.contrib.messages.context_processors.messages",
+"tatianastore.contextprocessors.extra_vars"
+)
+
 #: Override this value to make unguessable wallet hook URLs
 BLOCKCHAIN_WEBHOOK_SECRET = ""
 
@@ -343,7 +358,6 @@ BLOCKCHAIN_WEBHOOK_SECRET = ""
 # (to avoid sending payments out accidentally)
 ALLOWED_CREDIT_SITE_URLS = ["https://libertymusicstore.net"]
 
-# How we present available payment options
 CURRENCIES = [
     ("USD", "USD"),
     ("EUR", "EUR"),

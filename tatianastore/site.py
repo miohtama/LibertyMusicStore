@@ -12,11 +12,18 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf.urls import patterns
 from django.conf.urls import url
 
+from .models import Album
+
 logger = logging.getLogger(__name__)
 
 
 def index(request):
     """ """
+
+    # Get splash albums
+    splash_albums = Album.objects.filter(cover__isnull=False, visible=True, fiat_price__gt=0)
+    splash_albums = [a for a in splash_albums if a.song_set.count() > 0]
+
     return render_to_response("site/index.html", locals(), context_instance=RequestContext(request))
 
 
