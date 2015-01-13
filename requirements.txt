@@ -1,5 +1,7 @@
 --extra-index-url https://pypi.fury.io/uzQ6egqLUi1bcfHJehXv/miohtama/
 -e git+https://miohtama@bitbucket.org/miohtama/stagger.git#egg=stagger
+-e git+https://miohtama@bitbucket.org/miohtama/cryptoassets.git#egg=cryptoassets.core
+-e git+https://miohtama@bitbucket.org/miohtama/cryptoassets.django.git#egg=cryptoassets.django
 Django==1.7.1
 psycopg2==2.5.4
 Pillow==2.4.0
@@ -18,9 +20,7 @@ python-dateutil==1.5
 python-magic==0.4.3
 readline==6.2.4.1
 six==1.4.1
-#wsgiref==0.1.2
 django-pagination-bootstrap==1.0.5
-#-e git+git@github.com:laysakura/rainbow_logging_handler.git@2425d00f7dc562e23881b7bab2abe9d0128bf46d#egg=rainbow_logging_handler
 rainbow_logging_handler==2.2.2
 requests==2.3.0
 redis==2.10.1
@@ -36,15 +36,12 @@ djrill==1.0.0
 mock==1.0.1
 python-slugify==0.0.7
 django-autoslug==1.7.2
-#eyeD3==0.7.5
 retools==0.4.1
-#python-bitcoinaddress==0.2.1
 django-jsonfield==0.9.13
 
 # Facebook development
 django-sslserver==0.12
 facepy==1.0.3
-
 
 # Production / Sentry logging
 raven==5.1.1
