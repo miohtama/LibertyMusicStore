@@ -361,6 +361,8 @@ CURRENCIES = [
     ("GBP", "GBP"),
 ]
 
+COIN_NAME ="Bitcoin"
+
 ASK_CURRENCY = True
 
 PAYMENT_CURRENCY = "btc"
@@ -382,4 +384,48 @@ TEST_CREDITING_PRICE = Decimal("0.50")  # in USG
 
 
 from tatianastore.local_settings import *
+
+# TESTNET settings
+CRYPTOASSETS = {
+
+    # You can use a separate database for cryptoassets,
+    # or share the Django database. In any case, cryptoassets
+    # will use a separate db connection.
+    "database": {
+        "url": "postgresql://localhost/cryptoassets_testnet",
+        "echo": False,
+    },
+
+    "coins": {
+        # Locally running bitcoind in testnet
+        "btc": {
+            "backend": {
+                "class": "cryptoassets.core.backend.blockio.BlockIo",
+                "api_key": "923f-e3e9-a580-dfb2",
+                "network": "btctest",
+                "pin": "foobar123",
+                # Cryptoassets helper process will use this UNIX named pipe to communicate
+                # with bitcoind
+                "walletnotify": {
+                    "class": "cryptoassets.core.backend.sochainwalletnotify.SochainWalletNotifyHandler",
+                    "pusher_app_key": "e9f5cc20074501ca7395"
+                },
+            }
+        },
+    },
+
+    # Bind cryptoassets.core event handler to Django dispacth wrapper
+    #"events": {
+    #    "django": {
+    #        "class": "cryptoassets.core.event.python.InProcessEventHandler",
+    #        "callback": "cryptoassets.django.incoming.handle_tx_update"
+    #    }
+    #},
+
+    "status_server": {
+        "ip": "127.0.0.1",
+        "port": 9001
+    }
+}
+
 

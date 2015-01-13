@@ -201,7 +201,9 @@ class StoreItem(models.Model):
         converter = get_rate_converter()
         try:
             return converter.convert(self.store.currency, settings.PAYMENT_CURRENCY.upper(), self.fiat_price)
-        except btcaverage.UnknownCurrencyException:
+        except btcaverage.UnknownCurrencyException as e:
+            logger.exception("Could not convert from %s to %s", self.store.currency, settings.PAYMENT_CURRENCY)
+            logger.exception(e)
             return Decimal(-1)
 
 

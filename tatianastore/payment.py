@@ -170,3 +170,47 @@ def get_all_address_data():
     else:
         for address in data["addresses"]:
             yield address
+
+
+def force_check_old_address(tx):
+    """Handle incoming transaction set even if the event handling process is dead.
+
+    (which will not happen, but was required for blockchain.info)
+
+    :return True if the transaction has succeeded
+    """
+
+    if tx.btc_received_at:
+        # Already paid
+        return True
+
+    btc = get_cryptoassets().coins.get(settings.PAYMENT_CURRENCY)
+    Address = btc.coin_description.Address
+
+    @assetdb.managed_transaction
+    def get_value(session):
+        address = session.query(Address).filter(Address.address == tx.btc_address).first()  # noqa
+
+        if not address:
+            logger.warn("Could not find address %s", tx.btc_address)
+            return 0, None
+
+        balance = address.get_balance_by_confirmations(confirmations=0)
+
+        logger.debug("Address %s, unconfirmed balance %s", address.address, balance)
+
+        if address.transactions:
+            txid = address.transactions[0].txid
+        else:
+            txid = None
+        return balance, txid
+
+    value, txid = get_value()
+
+    if not value:
+        return False
+
+    if tx.check_balance(value, transaction_hash=txid):
+        return True
+
+    return False

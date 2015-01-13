@@ -5,6 +5,8 @@ import logging
 from django.apps import AppConfig
 from django.conf import settings
 
+from cryptoassets.django.app import get_cryptoassets
+
 
 logger = logging.getLogger(__name__)
 
@@ -17,3 +19,8 @@ class TatianastoreConfig(AppConfig):
 
         # Register signal handlers
         from tatianastore import payment
+
+        # Set 1 confirmations required for finalized payments
+        if settings.PAYMENT_CURRENCY == "btc":
+            btc = get_cryptoassets().coins.get("btc")
+            btc.coin_description.Transaction.confirmation_count = 1
