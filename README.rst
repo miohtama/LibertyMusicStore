@@ -79,13 +79,11 @@ Install::
     apt-get install postgresql libncurses5-dev redis-server python-virtualenv openssl
     apt-get install build-essential git-core libfreetype6-dev libmemcached-dev libxml2-dev libxslt1-dev libjpeg-dev libpng12-dev gettext git
 
-Ex::
+Create databases::
 
-    GRANT ALL ON tatianastore.* TO 'tatianastore'@'localhost' identified by 'tatianastore';
-
-    python manage.py reset tatianastore
-    python manage.py syncdb
-    python manage.py migrate tatianastore zero
+    sudo -i -u postgresq
+    createdb cryptoassets_production
+    createdb tatianastore_production
 
 Reset::
 
@@ -175,6 +173,7 @@ Taking SQL dump::
 
 Restoring SQL dump::
 
+    sudo -u postgres psql -d tatianastore_production -f backup.sql
 
 More
 

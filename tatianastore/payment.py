@@ -5,7 +5,6 @@
 """
 
 import logging
-import transaction
 from decimal import Decimal
 
 import requests
