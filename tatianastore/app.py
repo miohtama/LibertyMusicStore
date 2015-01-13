@@ -15,6 +15,5 @@ class TatianastoreConfig(AppConfig):
 
     def ready(self):
 
-        logger.error("Rock and roll")
         # Register signal handlers
         from tatianastore import payment

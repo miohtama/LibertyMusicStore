@@ -57,18 +57,39 @@ CRYPTOASSETS = {
         "echo": False,
     },
 
+    #  What it would be test against local bitcoind
+    #
+    # "coins": {
+    #     # Locally running bitcoind in testnet
+    #     "btc": {
+    #         "backend": {
+    #             "class": "cryptoassets.core.backend.bitcoind.Bitcoind",
+    #             "url": "http://foo:bar@127.0.0.1:8332/",
+    #             # Cryptoassets helper process will use this UNIX named pipe to communicate
+    #             # with bitcoind
+    #             "walletnotify": {
+    #                 "class": "cryptoassets.core.backend.httpwalletnotify.HTTPWalletNotifyHandler",
+    #                 "ip": "127.0.0.1",
+    #                 "port": 28882
+    #             },
+    #         }
+    #     },
+    # },
+
+
     "coins": {
         # Locally running bitcoind in testnet
         "btc": {
             "backend": {
-                "class": "cryptoassets.core.backend.bitcoind.Bitcoind",
-                "url": "http://foo:bar@127.0.0.1:8332/",
+                "class": "cryptoassets.core.backend.blockio.BlockIo",
+                "api_key": "923f-e3e9-a580-dfb2",
+                "network": "btctest",
+                "pin": "foobar123",
                 # Cryptoassets helper process will use this UNIX named pipe to communicate
                 # with bitcoind
                 "walletnotify": {
-                    "class": "cryptoassets.core.backend.httpwalletnotify.HTTPWalletNotifyHandler",
-                    "ip": "127.0.0.1",
-                    "port": 28882
+                    "class": "cryptoassets.core.backend.sochainwalletnotify.SochainWalletNotifyHandler",
+                    "pusher_app_key": "e9f5cc20074501ca7395"
                 },
             }
         },

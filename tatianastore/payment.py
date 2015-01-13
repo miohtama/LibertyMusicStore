@@ -90,10 +90,12 @@ def send_to_address(store, address, btc_amount, note):
         assert account.balance >= btc_amount, "Not enough funds in the wallet on account %s, got %s need %s" % (account.id, account.balance, btc_amount)
 
         tx = wallet.send(account, address, btc_amount, note)
-        tx_id = tx.id
-        return tx_id
 
-    return tx
+        logger.debug("Balance left after send: %s", account)
+
+        return tx.id
+
+    return tx()
 
 
 @receiver(txupdate)

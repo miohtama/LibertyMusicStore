@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
 
-
-"""
 from decimal import Decimal
 import datetime
 import random
@@ -36,7 +33,7 @@ assert settings.CACHES["default"]["LOCATION"] == "127.0.0.1:6379:10", "Don't run
 logger = logging.getLogger(__name__)
 
 
-def spoof_store_received_balance(store):
+def spoof_store_received_balance(store, amount):
     """For cryptoassets backend, put some imaginary value on the account."""
 
     assets_app = get_cryptoassets()
@@ -59,14 +56,12 @@ def spoof_store_received_balance(store):
         session.flush()
 
         # Fake balance on the account making the payment
-        sending_account.balance = settings.TEST_CREDITING_PRICE
+        sending_account.balance = amount
         logger.info("Making test payments from:%d to account %d", sending_account.id, receiving_account.id)
 
-        tx_obj = wallet.send_internal(sending_account, receiving_account, settings.TEST_CREDITING_PRICE, "Test account funding")
+        tx_obj = wallet.send_internal(sending_account, receiving_account, amount, "Test account funding")
         session.flush()
         logger.info("Credit transaction is: %s", tx_obj)
-
-        import ipdb; ipdb.set_trace()
 
     tx()
 
@@ -173,6 +168,16 @@ class CreditTransactionTestCase(TestCase):
 
         owner = models.User.objects.create(username="foobar", email="foobar@example.com")
 
+        tasks.update_exchange_rates()
+
+        converter = models.get_rate_converter()
+
+        self.fiat_price = Decimal(settings.TEST_CREDITING_PRICE)
+
+        self.btc_price = converter.convert(settings.DEFAULT_PRICING_CURRENCY, settings.PAYMENT_CURRENCY, self.fiat_price)
+
+        logger.debug("Test album price is %s USD, %s BTC", self.fiat_price, self.btc_price)
+
         self.test_store = test_store = models.Store.objects.create(name=u"Test Store åäö")
         test_store.currency = settings.DEFAULT_PRICING_CURRENCY
         test_store.store_url = "http://localhost:8000/store/test-store/"
@@ -181,13 +186,11 @@ class CreditTransactionTestCase(TestCase):
         test_store.save()
 
         test_song1 = models.Song.objects.create(name="Song A", store=test_store)
-        test_song1.fiat_price = Decimal("0.01")
+        test_song1.fiat_price = self.fiat_price
         test_song1.save()
 
         self.test_store = test_store
         self.test_song = test_song1
-
-        tasks.update_exchange_rates()
 
         if settings.PAYMENT_SOURCE == "cryptoassets":
             assets_app = get_cryptoassets()
@@ -204,7 +207,7 @@ class CreditTransactionTestCase(TestCase):
         transaction.mark_payment_received()
 
         if settings.PAYMENT_SOURCE == "cryptoassets":
-            spoof_store_received_balance(self.test_store)
+            spoof_store_received_balance(self.test_store, self.btc_price)
 
         # Mock out outgoing Bitcoin payments
         with patch.object(blockchain, 'send_to_address') as mock_send:
@@ -265,6 +268,16 @@ class CryptoassetsPaymentTestCase(TestCase):
     def setUp(self):
         clear()
 
+        tasks.update_exchange_rates()
+
+        converter = models.get_rate_converter()
+
+        self.fiat_price = Decimal(settings.TEST_CREDITING_PRICE)
+
+        self.btc_price = pricing = converter.convert(settings.DEFAULT_PRICING_CURRENCY, settings.PAYMENT_CURRENCY, self.fiat_price)
+
+        logger.debug("Test album price is %s USD, %s BTC", self.fiat_price, self.btc_price)
+
         owner = models.User.objects.create(username="foobar", email="foobar@example.com")
 
         test_store = models.Store.objects.create(name="Test Store")
@@ -274,19 +287,17 @@ class CryptoassetsPaymentTestCase(TestCase):
         test_store.save()
 
         test_album = models.Album.objects.create(name="Test Album", store=test_store)
-        test_album.fiat_price = Decimal("8.90")
+        test_album.fiat_price = self.fiat_price
         test_album.description = u"My very first album åäö"
         test_album.save()
 
         test_song1 = models.Song.objects.create(name="Song A", album=test_album, store=test_store)
-        test_song1.fiat_price = Decimal("0.95")
+        test_song1.fiat_price = self.fiat_price
         test_song1.save()
 
         self.test_store = test_store
         self.test_album = test_album
         self.test_song = test_song1
-
-        tasks.update_exchange_rates()
 
         assets_app = get_cryptoassets()
         assets_app.create_tables()
@@ -319,9 +330,9 @@ class CryptoassetsPaymentTestCase(TestCase):
         @assetdb.managed_transaction
         def tx(session):
             wallet = payment.get_wallet(session)
-            external_account = wallet.create_account("external account")
+            external_account = wallet.create_account("external account {}".format(time.time()))
             session.flush()
-            address = wallet.create_receiving_address(external_account, "foobar")
+            address = wallet.create_receiving_address(external_account, "tatianastore credit test {}".format(time.time()))
             return address.address
 
         address_str = tx()
@@ -329,10 +340,6 @@ class CryptoassetsPaymentTestCase(TestCase):
 
         store.btc_address = address_str
         store.save()
-
-        # Amount of BTC we transfer around for this test
-        self.test_song.fiat_price = settings.TEST_CREDITING_PRICE
-        self.test_song.save()
 
         # Create a transaction
         session_id = "123"
@@ -343,10 +350,10 @@ class CryptoassetsPaymentTestCase(TestCase):
 
         transaction.mark_payment_received()
 
-        spoof_store_received_balance(store)
+        spoof_store_received_balance(store, self.btc_price)
 
         account_id, balance = payment.get_store_account_info(store)
-        self.assertEqual(balance, settings.TEST_CREDITING_PRICE)
+        self.assertEqual(balance, self.btc_price)
 
         credited_count = creditor.credit_store(store)
         self.assertEqual(1, credited_count)
@@ -358,11 +365,13 @@ class CryptoassetsPaymentTestCase(TestCase):
 
             # Check the "external" store owner account got the payment
             external_account = wallet.get_or_create_account_by_name("external account")
-            self.assertEqual(settings.  , external_account.balance)
+
+            # We lose a bit in currency conversions forth and back
+            self.assertAlmostEqual(self.btc_price, external_account.balance, 2)
 
             # This is account where the customer paid and it should be zero after crediting, as the btc has been credited away
             receiving_account = session.query(Account).get(account_id)
             logger.info("Checking account %s", receiving_account)
-            self.assertEqual(receiving_account.balance, 0)
+            self.assertAlmostEqual(receiving_account.balance, 0, 2)
 
         tx2()
