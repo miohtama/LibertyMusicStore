@@ -415,12 +415,12 @@ CRYPTOASSETS = {
     },
 
     # Bind cryptoassets.core event handler to Django dispacth wrapper
-    #"events": {
-    #    "django": {
-    #        "class": "cryptoassets.core.event.python.InProcessEventHandler",
-    #        "callback": "cryptoassets.django.incoming.handle_tx_update"
-    #    }
-    #},
+    "events": {
+        "django": {
+            "class": "cryptoassets.core.event.python.InProcessEventHandler",
+            "callback": "cryptoassets.django.incoming.handle_tx_update"
+        }
+    },
 
     "status_server": {
         "ip": "127.0.0.1",

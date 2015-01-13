@@ -66,6 +66,11 @@ def upload_album(request):
 
                 messages.success(request, "The album is now uploaded. It might still take couple of minutes to process all songs and have them to appear.")
 
+                # Succesfully loaded embed from the user website
+                # TODO: Make sure we are the store owner
+                wizard = models.WelcomeWizard(request.user)
+                wizard.set_step_status("upload_album", True)
+
                 # JavaScript redirect to this URL
                 return http.HttpResponse(reverse('admin:tatianastore_album_change', args=(album.id,)))
             except zipupload.BadAlbumContenException as e:

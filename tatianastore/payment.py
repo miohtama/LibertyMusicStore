@@ -102,23 +102,6 @@ def send_to_address(store, address, btc_amount, note):
 def txupdate_received(event_name, data, **kwargs):
     """ Received transaction update from cryptoassets.core.
 
-    This handler is run cryptoassets helper service process.
-
-    Start the transaction service::
-
-        python manage.py cryptoassetshelper
-
-    Start the server::
-
-        python manage.py runserver
-
-    Go to http://localhost:8000/store/test-store/embed-preview/
-
-    Start buying a song
-
-    Send in payment from block.io testnet
-
-    Wait 10 seconds.
     """
 
     transaction_hash = data["txid"]
