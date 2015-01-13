@@ -41,3 +41,4 @@ manage.py
 *.sublime-workspace
 *.rdb
 *.yaml
+*.htpasswd

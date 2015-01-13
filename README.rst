@@ -85,6 +85,11 @@ Create databases::
     createdb cryptoassets_production
     createdb tatianastore_production
 
+Create venv::
+
+    python3.4 -m venv --copies venv
+
+
 Reset::
 
     python manage.py reset_db --router=default --noinput && python manage.py syncdb --noinput && python manage.py migrate
