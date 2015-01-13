@@ -16,7 +16,7 @@ class PdbNode(Node):
 
     def render(self, context):
         for d in context.dicts:
-            print d.keys()
+            print(d.keys())
         pdb_module.set_trace()
         return ''
 

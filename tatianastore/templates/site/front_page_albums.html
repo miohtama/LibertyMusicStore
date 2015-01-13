@@ -1,0 +1,43 @@
+{% load i18n %}
+{% load static %}
+{% load thumbnail %}
+
+<section id="out-now">
+
+  <div class="container">
+         <div class="row">
+            <div class="col-lg-12">
+                <h2 class="text-center">
+                    <span>Out now</span>
+                </h2>
+            </div>
+
+            <p class="lead lead-highlight text-center">
+                See the stores below
+            </p>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-12" id="example-stores">
+
+                {% for album in splash_albums %}
+                    <a class="media tile-link" href="{% url 'on_site' album.store.slug %}">
+
+                        {% if album.cover %}
+                            <img class="media-object pull-left" src="{% thumbnail album.cover 128x128 %}" alt="">
+                        {% endif %}
+
+                        <div class="media-body">
+                            <h4 class="media-heading">{{ album.name }}</h4>
+                            <p>
+                            </p>
+                        </div>
+                    </a>
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </div>
+</section>

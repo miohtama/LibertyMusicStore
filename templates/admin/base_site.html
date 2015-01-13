@@ -2,12 +2,19 @@
 
 {% block extrastyle %}
 <style>
-.step-done {
-    text-decoration: line-through;
+
+.step-require:before {
+    content: "☐";
+    font-size: 150%;
+}
+
+.step-done:before {
+    content: "☑";
+    font-size: 150%;
 }
 </style>
 {% endblock %}
 
 {% block branding %}
-<h1 id="site-name">Liberty Music Store</h1>
+<h1 id="site-name">{{ site_name }}</h1>
 {% endblock %}

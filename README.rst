@@ -23,6 +23,8 @@ blockchain.info API is used for the receiving transactions and Bitcoin wallet ma
 Development environment setup
 ------------------------------
 
+PostgreSQL is recommened. SQLite 3 won't work because it locks the full database on a write, causing conflict with page requests, AJAX requests and cryptoassets helper service accessing the database at the same moment.
+
 Checkout::
 
     git checkout
@@ -33,46 +35,54 @@ Setup virtualenv::
     export PATH=/usr/local/mysql/bin:$PATH
     virtualenv-2.7 venv
     source venv/bin/activate
-    pip install -r requirements.txt
+    # https://bitbucket.org/nicfit/eyed3/issue/80/pypi-hosted-release
+    pip install --allow-all-external -r requirements.txt
 
 Example ``local_settings.py``::
 
-    BLOCKCHAIN_WALLET_ID = "xxx-yyy"
-    BLOCKCHAIN_WALLET_PASSWORD = "password"
-
-    ALLOWED_HOSTS = ["localhost:8000", "localhost:8090"]
-
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-    PUBLIC_URL = "http://localhost:8000"
+    # xxx
+    # empty file should be enough
 
 Setup empty database::
 
-    python manage.py syncdb --noinput && python manage.py migrate
-    echo "execfile('./tatianastore/populate.py')" | python manage.py shell
+    python manage.py syncdb
+    python manage.py migrate tatianstore
+
+    # This creates some initial users and stuff
+    # This scripts reads stuff from sample CD folder (copyrighted),
+    # so ask for a copy
+    echo "exec(open('./bin/populate.py').read())" | python manage.py shell
 
 Fix ``readline`` package on OSX::
 
     easy_install -U readline
+
+Start the server::
+
+    python manage.py runserver
+
+You should now able to access generated test store
+
+* http://localhost:8000/store/test-store/embed-preview/
 
 Production setup on Ubuntu
 ----------------------------
 
 Install::
 
-    apt-get install libncurses5-dev redis-server python-virtualenv openssl
-    apt-get install build-essential git-core libfreetype6-dev libmemcached-dev libxml2-dev libxslt1-dev libjpeg-dev libpng12-dev gettext python-virtualenv virtualenvwrapper git libmysqlclient-dev python-dev
-    virtualenv venv
-    pip install distribute
-    pip install -r requirements.txt
+    apt-get install postgresql libncurses5-dev redis-server python-virtualenv openssl
+    apt-get install build-essential git-core libfreetype6-dev libmemcached-dev libxml2-dev libxslt1-dev libjpeg-dev libpng12-dev gettext git
 
-Ex::
+Create databases::
 
-    GRANT ALL ON tatianastore.* TO 'tatianastore'@'localhost' identified by 'tatianastore';
+    sudo -i -u postgresq
+    createdb cryptoassets_production
+    createdb tatianastore_production
 
-    python manage.py reset tatianastore
-    python manage.py syncdb
-    python manage.py migrate tatianastore zero
+Create venv::
+
+    python3.4 -m venv --copies venv
+
 
 Reset::
 
@@ -155,6 +165,19 @@ Deployment::
 
     ssh tatianastore
     git pull && supervisorctl restart tatianastore_uwsgi
+
+Taking SQL dump::
+
+    sudo -u postgres pg_dump tatianastore > backup.sql
+
+Restoring SQL dump::
+
+    sudo -u postgres psql -d tatianastore_production -f backup.sql
+
+Creatin htpasswd file for the status server::
+
+    apt-get install apache2-utils
+    htpasswd -c status.htpasswd  status
 
 More
 

@@ -4,6 +4,7 @@ dist/
 *.egg
 *.egg-info
 venv/
+venv3/
 *.orig
 cached-static/*
 .DS_Store
@@ -39,3 +40,5 @@ sample-cd
 manage.py
 *.sublime-workspace
 *.rdb
+*.yaml
+*.htpasswd

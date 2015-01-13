@@ -31,9 +31,9 @@ from django.views.decorators.csrf import csrf_exempt
 import facepy
 
 from . import models
-from . import forms
 from . import blockchain
-from utils import get_session_id
+from . import payment
+from .utils import get_session_id
 
 logger = logging.getLogger(__name__)
 
@@ -56,6 +56,7 @@ def store(request, slug):
 
     # MArk that the user has succesfully loaded the store from his/her site
     if request.user.is_authenticated():
+        # XXX: What I have been thinking here? Prune...
         for unlikely_user_website_host in ("http://localhost:8000", "https://libertymusicstore"):
             if request.META.get("HTTP_REFERER", "").startswith(unlikely_user_website_host):
                 break
@@ -71,6 +72,8 @@ def store(request, slug):
     session_id = get_session_id(request)
     content_manager = models.UserPaidContentManager(session_id)
     public_url = settings.PUBLIC_URL
+    currency_symbol = settings.CURRENCY_SYMBOL
+    on_site = request.GET.get("on_site") == "true"
     return render_to_response("storefront/store.html", locals(), context_instance=RequestContext(request))
 
 
@@ -108,6 +111,19 @@ def facebook(request):
     return render_to_response("storefront/store.html", locals(), context_instance=RequestContext(request))
 
 
+def on_site(request, slug):
+    """Render the store on-site embed"""
+    store = get_object_or_404(models.Store, slug=slug)
+
+    if request.user.is_authenticated():
+        wizard = models.WelcomeWizard(request.user)
+        wizard.set_step_status("preview_store", True)
+
+    public_url = settings.PUBLIC_URL
+    embed_src = request.build_absolute_uri(reverse("embed", args=(store.slug,))) + "?on_site=true"
+    return render_to_response("site/store_on_site.html", locals(), context_instance=RequestContext(request))
+
+
 def order(request, item_type, item_id):
     """ Create an order for the item.
 
@@ -128,6 +144,12 @@ def order(request, item_type, item_id):
     else:
         raise RuntimeError("Bad item type")
 
+    session_id = get_session_id(request)
+
+    # Bots trying to crawl download links
+    if not session_id:
+        return redirect("store", items[0].store.slug)
+
     # Don't allow purchase hidden items
     for item in items:
         if not item.visible:
@@ -136,8 +158,6 @@ def order(request, item_type, item_id):
     transaction = models.DownloadTransaction.objects.create()
 
     user_currency = request.COOKIES.get("user_currency")
-
-    session_id = get_session_id(request)
 
     transaction.prepare(items, description=name, session_id=session_id, ip=request.META["REMOTE_ADDR"], user_currency=user_currency)
 
@@ -154,11 +174,11 @@ def pay(request, uuid):
 
     converter = models.get_rate_converter()
 
-    if transaction.user_currency and transaction.user_currency != "BTC":
+    if transaction.user_currency and transaction.user_currency != settings.PAYMENT_CURRENCY:
         # The user had chosen specific currency when
         # this transaction was initiated
         user_currency = transaction.user_currency
-        user_fiat_amount = converter.convert("BTC", user_currency, transaction.btc_amount)
+        user_fiat_amount = converter.convert(settings.PAYMENT_CURRENCY, user_currency, transaction.btc_amount)
     else:
         # Default to the store currency
         user_currency = transaction.currency
@@ -177,6 +197,8 @@ def pay(request, uuid):
         logger.error("Received pay() page handling %s %s", request.method, request.POST)
 
     store = transaction.store
+
+    currency_symbol = settings.CURRENCY_SYMBOL
 
     return render_to_response("storefront/pay.html", locals(), context_instance=RequestContext(request))
 
@@ -230,6 +252,7 @@ def embed(request, slug):
     store = get_object_or_404(models.Store, slug=slug)
     store_url = reverse("store", args=(store.slug,))
     public_url = settings.PUBLIC_URL
+    on_site = request.GET.get("on_site") == "true"
     return render_to_response("storefront/embed.js", locals(), context_instance=RequestContext(request), content_type="text/javascript")
 
 
@@ -266,7 +289,7 @@ def transaction_poll(request, uuid):
 
     transaction = models.DownloadTransaction.objects.get(uuid=uuid)
 
-    redis = cache.raw_client
+    redis = cache.client.get_client(write=True)
     pubsub = redis.pubsub()
     pubsub.subscribe("transaction_%s" % transaction.uuid)
 
@@ -275,8 +298,12 @@ def transaction_poll(request, uuid):
     # At the beginning of the poll do force one manual refresh of the address.
     # This way we mitigate problems with unreliable BlochChain notifications
     # and unreliable Redis pubsub
-    if blockchain.force_check_old_address(transaction):
-        return http.HttpResponse(json.dumps(transaction.get_notification_message()))
+    if transaction.payment_source == models.DownloadTransaction.PAYMENT_SOURCE_BLOCKCHAIN:
+        if blockchain.force_check_old_address(transaction):
+            return http.HttpResponse(json.dumps(transaction.get_notification_message()))
+    else:
+        if payment.force_check_old_address(transaction):
+            return http.HttpResponse(json.dumps(transaction.get_notification_message()))
 
     while time.time() < timeout:
         # print "Transaction polling started %s", now()
@@ -286,9 +313,9 @@ def transaction_poll(request, uuid):
             if message:
                 # print "Got message", message
                 if message["type"] != "subscribe":
-                    data = json.loads(message["data"])
+                    data = json.loads(message["data"].decode("utf-8"))
                     if data["transaction_uuid"] == uuid:
-                        return http.HttpResponse(json.dumps(data))
+                        return http.HttpResponse(json.dumps(data).encode("utf-8"))
         except Exception as e:
             pubsub.close()
             logger.error("Polling exception")
@@ -315,6 +342,8 @@ def transaction_check_old(request):
 
     This will catch all blockchain payments we did not get a notification.
     """
+
+    assert settings.PAYMENT_METHOD == "blockchain"
 
     if request.method != "POST":
         return http.HttpResponseRedirect(reverse("transaction_past"))
@@ -354,14 +383,20 @@ def transaction_check_old(request):
         return http.HttpResponseRedirect(reverse("transaction_past"))
 
 
+def config_js(request):
+    return render_to_response("storefront/config.js", locals(), context_instance=RequestContext(request), content_type="text/javascript")
+
+
 urlpatterns = patterns('',
     url(r'^facebook/$', facebook, name="facebook"),
+    url(r'^(?P<slug>[-_\w]+)/store/$', on_site, name="on_site"),
     url(r'^(?P<slug>[-_\w]+)/embed/$', embed, name="embed"),
     url(r'^(?P<slug>[-_\w]+)/embed-code/$', embed_code, name="embed_code"),
     url(r'^(?P<slug>[-_\w]+)/embed-preview/$', embed_preview, name="embed_preview"),
     url(r'^(?P<slug>[-_\w]+)/$', store, name="store"),
     url(r'^order/(?P<item_type>[\w]+)/(?P<item_id>[\d]+)/$', order, name="order"),
     url(r'^pay/(?P<uuid>[^/]+)/$', pay, name="pay"),
+    url(r'^config.js$', config_js, name="config_js"),
     url(r'^transaction_poll/(?P<uuid>[^/]+)/$', transaction_poll, name="transaction_poll"),
     url(r'^thanks/(?P<uuid>[^/]+)/$', thanks, name="thanks"),
     url(r'^download/(?P<transaction_uuid>[^/]+)/(?P<item_uuid>[^/]+)/(?P<filename>[^/]+)$', download, name="download"),

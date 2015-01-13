@@ -3,3 +3,38 @@
 {% else %}
     {{ store.extra_html|safe }}
 {% endif %}
+
+{% if request.session.inside_facebook %}
+    {{ store.extra_facebook_html|safe }}
+{% else %}
+    {{ store.extra_html|safe }}
+{% endif %}
+
+<style>
+body {
+    color: #9c9897;
+}
+
+h2 {
+    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,serif;
+    color: #fafafa;
+}
+
+h3 {
+   font-family: Lato,"Helvetica Neue",Helvetica,Arial,sans-serif;
+   color: #fafafa;
+}
+
+.btn-default {
+    background: #ff0086;
+    color: white;
+    border: 1px solid #700;
+}
+
+/* QR code must be on the white background or BlockChain mobile wallet does not pick it up */
+.bitcoin-address-qr-container {
+    padding: 40px 0;
+    background: white;
+}
+</style>
+

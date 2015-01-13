@@ -14,8 +14,6 @@ from . import site
 from . import signup
 
 
-admin.autodiscover()
-
 
 urlpatterns = patterns('',
     url(r'^$', 'tatianastore.site.index', name='index'),

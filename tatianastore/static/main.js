@@ -95,7 +95,9 @@
                 height: 128,
                 colorDark : "#000000",
                 colorLight : "#ffffff"
-            }
+            },
+
+            qrRawAddress: window.storeConfig.qrRawAddress
         });
     }
 
@@ -150,6 +152,15 @@
     }
 
     function initPrices() {
+
+        if(window.storeConfig.marketData) {
+            bitcoinprices.loadData = function() {
+                bitcoinprices.data = window.storeConfig.marketData;
+                $(document).trigger("marketdataavailable");
+            }
+        }
+
+
         bitcoinprices.init({
 
             // Where we get bitcoinaverage data
@@ -160,19 +171,14 @@
             marketRateVariable: "24h_avg",
 
             // Which currencies are in shown to the user
-            currencies: ["BTC", "USD", "EUR", "GBP"],
+            currencies: window.storeConfig.currencies,
 
             // Special currency symbol artwork
-            symbols: {
-                "BTC": "<i class='fa fa-btc'></i>",
-                "USD": "$",
-                "EUR": "€",
-                "GBP": "£"
-            },
+            symbols: window.storeConfig.symbols,
 
             // Which currency we show user by the default if
             // no currency is selected
-            defaultCurrency: "BTC",
+            defaultCurrency: window.storeConfig.defaultCurrency,
 
             // We don't have clickable price features
             // in the store
@@ -194,6 +200,7 @@
             // but for most normal usage you don't need this
             jQuery: jQuery
         });
+
     }
 
     /**

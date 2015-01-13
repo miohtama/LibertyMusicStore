@@ -28,11 +28,7 @@ from . import models
 from . import emailer
 
 
-CURRENCIES = [
-    ("USD", "USD"),
-    ("EUR", "EUR"),
-    ("GBP", "GBP"),
-]
+CURRENCIES = settings.CURRENCIES
 
 
 class SignupForm(forms.Form):
@@ -53,7 +49,8 @@ class SignupForm(forms.Form):
     #                              help_text="The receiving Bitcoin address where you get the payments for the purchases. You can fill in this later if you don't have Bitcoin wallet right now.",
     #                              required=False)
 
-    currency = forms.ChoiceField(label="Currency", help_text="In which currency you will set the prices", choices=CURRENCIES)
+    if settings.ASK_CURRENCY:
+        currency = forms.ChoiceField(label="Currency", help_text="In which currency you will set the prices", choices=CURRENCIES)
 
     def clean_email(self):
         email = self.cleaned_data["email"]
@@ -78,7 +75,10 @@ class SignupForm(forms.Form):
         username = email
         store_url = data["store_url"]
         # btc_address = data["btc_address"]
-        currency = data["currency"]
+        if settings.ASK_CURRENCY:
+            currency = data["currency"]
+        else:
+            currency = settings.DEFAULT_PRICING_CURRENCY
 
         u = models.User.objects.create(email=email)
         u.username = username
@@ -96,7 +96,7 @@ class SignupForm(forms.Form):
         store.save()
 
         site_url = settings.SITE_URL
-        emailer.mail_store_owner(store, "Liberty Music Store sign up confirmation", "email/sign_up.html", dict(store=store, user=u, site_url=site_url))
+        emailer.mail_store_owner(store, "{} sign up confirmation".format(settings.SITE_NAME), "email/sign_up.html", dict(store=store, user=u, site_url=site_url, site_name=settings.SITE_NAME))
 
         user = authenticate(username=username, password=password)
         return user
@@ -113,6 +113,11 @@ def signup(request):
             if user is not None:
                 messages.success(request, "You are now logged in. A verification email has been sent to your email %s" % user.email)
                 login(request, user)
+
+            # The store info wizard step is completed now
+            wizard = models.WelcomeWizard(request.user)
+            wizard.set_step_status("check_store_details", True)
+
             return shortcuts.redirect("admin:index")
 
     else:

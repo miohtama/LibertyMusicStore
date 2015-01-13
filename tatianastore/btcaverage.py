@@ -32,7 +32,7 @@ import os
 import shelve
 import requests
 import logging
-import cPickle as pickle
+import pickle
 
 # How often we attempt to refresh
 REFRESH_DELAY = datetime.timedelta(hours=1)
@@ -89,7 +89,7 @@ class Converter(object):
             # No conversion needed
             return amount
 
-        assert "BTC" in (source, target), "We can only convert to BTC forth and back"
+        assert "BTC" in (source, target), "We can only convert to BTC forth and back, got {} and {}".format(source, target)
 
         # Swap around if we are doing backwards conversion
         original_target = target

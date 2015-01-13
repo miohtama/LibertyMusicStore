@@ -11,19 +11,19 @@ import os
 import shutil
 from decimal import Decimal
 
-import eyed3
-import audioread
+import stagger
 
 from tatianastore import models
 from tatianastore.tasks import update_exchange_rates
 from tatianastore import prelisten
 
 
-print ""
-print "--------------------------"
-print "Generating sample content"
-print "--------------------------"
-print ""
+
+print("")
+print("--------------------------")
+print("Generating sample content")
+print("--------------------------")
+print("")
 
 models.update_initial_groups()
 
@@ -68,7 +68,7 @@ test_song3.save()
 #
 sample_cd_path = os.path.join(os.getcwd(), "sample-cd")
 if os.path.exists(sample_cd_path):
-    print "Uploading sample CD content"
+    print("Uploading sample CD content")
     test_album = models.Album.objects.create(name="Test Album 2", store=test_artist)
 
     shutil.copyfile(sample_cd_path + "/cover.jpg", os.path.join(os.getcwd(), "media/covers/cover.jpg"))
@@ -83,16 +83,18 @@ if os.path.exists(sample_cd_path):
             continue
 
         f2 = os.path.join(sample_cd_path, f)
-        audiofile = eyed3.load(f2)
 
-        song = models.Song.objects.create(name=audiofile.tag.title, album=test_album, store=test_artist)
+        info = stagger.read_tag(f2)
+
+        song = models.Song.objects.create(name=info.title, album=test_album, store=test_artist)
 
         # http://stackoverflow.com/a/10906037/315168
         shutil.copyfile(f2, os.path.join(os.getcwd(), "media/songs", f))
         song.fiat_price = Decimal("0.90")
         song.download_mp3.name = 'songs/' + f
-        with audioread.audio_open(f2) as ar:
-            song.duration = ar.duration / 1000.0
+
+        # Fake durations
+        song.duration = 61.5
 
         song.save()
 

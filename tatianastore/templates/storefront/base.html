@@ -22,7 +22,16 @@
         <link rel="stylesheet" href="{% static 'facebook.css' %}"/>
     {% endif %}
 
-    <title>{% block title %}Liberty Music Store - Sell songs, receive Bitcoin{% endblock %}</title>
+    <title>
+    {% block title %}
+    {% if store.name %}
+        {{store.name}} - {{site_name}}
+    {% else %}
+        {{site_name}}
+    {% endif %}
+    {% endblock %}
+    </title>
+
 
     {% block description %}
     {% endblock %}
@@ -109,6 +118,7 @@
 <script src="{% static "moment-countdown.min.js" %}"></script>
 {% endcomment %}
 {% block script %}
+<script src="{% url 'config_js' %}"></script>
 <script src="{% static 'bitcoinprices/bitcoinprices.js' %}"></script>
 <script src="{% static 'bitcoinaddress/dist/bitcoinaddress-bundle.debug.js' %}"></script>
 <script src="{% static "audiotools.js" %}"></script>

@@ -1,3 +1,5 @@
+ # AppleByte altcoin test settings
+
 from .settings import *
 
 # make tests faster
@@ -40,11 +42,22 @@ HUEY = {
 
 
 #: Human readable labels
-COIN_NAME = "Bitcoin"
+COIN_NAME = "AppleByte"
 
-COIN_NAME_SHORT = "BTC"
+COIN_NAME_SHORT = "ABY"
 
 PAYMENT_SOURCE = "cryptoassets"
+
+PAYMENT_CURRENCY = "aby"
+
+DEFAULT_PRICING_CURRENCY = "ABY"
+
+DEFAULT_ALBUM_PRICE = 100
+
+DEFAULT_SONG_PRICE = 10
+
+# How much we spend in unit tests for doing the actual payment
+TEST_CREDITING_PRICE = Decimal("0.01")
 
 CRYPTOASSETS = {
 
@@ -52,54 +65,38 @@ CRYPTOASSETS = {
     # or share the Django database. In any case, cryptoassets
     # will use a separate db connection.
     "database": {
-        "url": "sqlite:////tmp/tatianastore.cryptoassets.sqlite",
-        #"url": "postgresql://localhost/cryptoassets_test",
+        # "url": "sqlite:////tmp/payments.sqlite",
+        "url": "sqlite:///:memory:?check_same_thread=false",
         "echo": False,
     },
 
-    #  What it would be test against local bitcoind
-    #
-    # "coins": {
-    #     # Locally running bitcoind in testnet
-    #     "btc": {
-    #         "backend": {
-    #             "class": "cryptoassets.core.backend.bitcoind.Bitcoind",
-    #             "url": "http://foo:bar@127.0.0.1:8332/",
-    #             # Cryptoassets helper process will use this UNIX named pipe to communicate
-    #             # with bitcoind
-    #             "walletnotify": {
-    #                 "class": "cryptoassets.core.backend.httpwalletnotify.HTTPWalletNotifyHandler",
-    #                 "ip": "127.0.0.1",
-    #                 "port": 28882
-    #             },
-    #         }
-    #     },
-    # },
-
-
+    # Locally running bitcoind in testnet
     "coins": {
-        # Locally running bitcoind in testnet
-        "btc": {
+        "aby": {
             "backend": {
-                "class": "cryptoassets.core.backend.blockio.BlockIo",
-                "api_key": "923f-e3e9-a580-dfb2",
-                "network": "btctest",
-                "pin": "foobar123",
+                "class": "cryptoassets.core.backend.bitcoind.Bitcoind",
+                "url": "http://applebyterpc:7gqYmSECoaqwDbB7esnNqv1xsDfZhwQuddP8djBZEHPC@127.0.0.1:8607/",
                 # Cryptoassets helper process will use this UNIX named pipe to communicate
                 # with bitcoind
                 "walletnotify": {
-                    "class": "cryptoassets.core.backend.sochainwalletnotify.SochainWalletNotifyHandler",
-                    "pusher_app_key": "e9f5cc20074501ca7395"
+                    "class": "cryptoassets.core.backend.httpwalletnotify.HTTPWalletNotifyHandler",
+                    "ip": "127.0.0.1",
+                    "port": 28882
                 },
-            }
+            },
         },
     },
 
-    # Bind cryptoassets.core event handler to Django dispacth wrapper
-    "events": {
+    # List of cryptoassets notification handlers.
+    # Use this special handler to convert cryptoassets notifications to Django signals.
+    "notify": {
         "django": {
             "class": "cryptoassets.core.notify.python.InProcessNotifier",
             "callback": "cryptoassets.django.incoming.handle_tx_update"
         }
     }
 }
+
+# https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-SILENCED_SYSTEM_CHECKS
+# https://docs.djangoproject.com/en/1.7/ref/checks/
+SILENCED_SYSTEM_CHECKS = ["1_6.W001"]

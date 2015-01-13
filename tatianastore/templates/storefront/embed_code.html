@@ -19,17 +19,17 @@ body {
     <div class="row">
         <div class="col-md-12 text-center" id="payment-details">
 
-            <h1>{{name}}</h1>
+            <h1>Store installation code</h1>
             <p class="lead">{% blocktrans with name=store.name %}
-                Store embedding HTML code example
+                This is the HTML code you can embed on your website and blog to make the store appear there.
             {% endblocktrans %}</p>
 
             <p>
-                {% trans "Put the following HTML code on your web page and the store will appear where you put the code." %}
+                {% trans "Insert the following HTML code on your web page and the store will on the page." %}
             </p>
 
 <pre style="text-align: left; font-size: 77%">
-&lt;a id="store-embed" href="{{ public_url }}"&gt;Liberty Music Store for Bitcoin&lt;/a&gt;
+&lt;a id="store-embed" href="{{ public_url }}"&gt;{{site_name}}&lt;/a&gt;
 &lt;script&gt;
 (function() {
     window.libertyMusicStore =  { storeURL: "{{ store.store_url }}" };
@@ -42,7 +42,7 @@ body {
 
             <p>
                 If you are unsure how to insert HTML code on your website please
-                ask your webmaster or email a question to <strong>mikko@libertymusicstore.net</strong>.
+                ask your webmaster or email us a question and we'll help you through it.
             </p>
         </div>
     </div>

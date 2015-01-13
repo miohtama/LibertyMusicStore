@@ -3,6 +3,7 @@
 {% load crispy_forms_tags %}
 {% block registration_content %}
 
+<div class="form-wrapper">
 <form method="post" action=".">
   {% csrf_token %}
   {{ form|crispy }}
@@ -13,6 +14,8 @@
     </p>
 </form>
 
+
 <p>{% trans "Forgot password" %}? <a href="{% url 'auth_password_reset' %}">{% trans "Reset your password." %}</a></p>
 <p>{% trans "Not member" %}? <a href="{% url 'signup' %}">{% trans "Register" %}</a></p>
+</div>
 {% endblock %}

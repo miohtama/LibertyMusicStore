@@ -12,7 +12,12 @@
         var script = document.createElement('script');
         script.src = src;
         script.onload = function () {
-            var pymParent = new pym.Parent('store-embed-iframe-wrapper', '{{ public_url }}{{ store_url }}', {});
+            {% if on_site %}
+                var requestExtra = "?on_site=true";
+            {% else %}
+                var requestExtra = "";
+            {% endif %}
+            var pymParent = new pym.Parent('store-embed-iframe-wrapper', '{{ public_url }}{{ store_url }}' + requestExtra, {});
         };
         document.head.appendChild(script);
     }

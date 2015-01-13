@@ -1,6 +1,6 @@
 from decimal import Decimal
 from PIL import Image
-from cStringIO import StringIO
+from six import StringIO
 
 import magic
 
@@ -43,7 +43,6 @@ def ensure_safe_user_image(image):
         if not settings.DEBUG:
             raise
 
-
     doc_type = mime.split("/")[-1].upper()
 
     # Read data from cStringIO instance
@@ -58,7 +57,7 @@ def ensure_safe_user_image(image):
     image.file = buf
 
     # Make sure the image has valid extension (can't upload .htm image)
-    extension = unicode(doc_type.lower())
+    extension = str(doc_type.lower())
     if not image.name.endswith(u".%s" % extension):
         image.name = image.name + u"." + extension
 

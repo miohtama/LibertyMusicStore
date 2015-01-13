@@ -1,7 +1,10 @@
+from decimal import Decimal
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from django import forms
+from django.conf import settings
 from django.db import transaction
 from django.contrib.auth import forms as auth_forms
 from django.views.decorators.csrf import csrf_protect
@@ -74,9 +77,8 @@ class DownloadTransaction(admin.ModelAdmin):
 class Store(admin.ModelAdmin):
 
     list_display = ("id", "name", "store_url")
-    readonly_fields = ("facebook_data",)
+    readonly_fields = ("slug", "facebook_data",)
     change_form_template = "admin/store_form.html"
-
     actions = []
 
     def has_delete_permission(self, request, obj=None):
@@ -89,6 +91,17 @@ class Store(admin.ModelAdmin):
         if not request.user.is_superuser:
             qs = request.user.operated_stores
         return qs
+
+    def get_fields(self, request, obj=None):
+        fields = super(Store, self).get_fields(request, obj)
+        if not request.user.is_superuser:
+            fields.remove("facebook_data")
+            fields.remove("operators")
+
+        if not settings.ASK_CURRENCY:
+            fields.remove("currency")
+
+        return fields
 
     def get_readonly_fields(self, request, obj=None):
         if not request.user.is_superuser:
@@ -110,6 +123,23 @@ class Song(admin.ModelAdmin):
     fields = ("visible", "store", "album", "name", "fiat_price", "download_mp3", "prelisten_mp3", "prelisten_vorbis")
     readonly_fields = ("order",)
 
+    def get_fields(self, request, obj=None):
+        fields = super(Song, self).get_fields(request, obj)
+        fields = list(fields)
+        if not request.user.is_superuser:
+            fields.remove("prelisten_mp3")
+            fields.remove("prelisten_vorbis")
+
+        return fields
+
+    def get_readonly_fields(self, request, obj=None):
+        fields = super(Song, self).get_readonly_fields(request, obj)
+        fields = list(fields)
+        if not request.user.is_superuser:
+            fields.append("album")
+
+        return fields
+
     def get_form(self, request, obj=None, **kwargs):
         # https://djangosnippets.org/snippets/1558/
         form = super(Song, self).get_form(request, obj, **kwargs)
@@ -117,11 +147,15 @@ class Song(admin.ModelAdmin):
         # so it's safe to modifys
         if not request.user.is_superuser:
             default_store = request.user.operated_stores.first()
-            form.base_fields['store'].queryset = request.user.operated_stores
-            form.base_fields['store'].initial = default_store
+            if "store" in form.base_fields:
+                form.base_fields['store'].queryset = request.user.operated_stores
+                form.base_fields['store'].initial = default_store
 
-            form.base_fields['album'].queryset = default_store.album_set.all()
-            form.base_fields['album'].initial = default_store.album_set.first()
+            if "album" in form.base_fields:
+                form.base_fields['album'].queryset = default_store.album_set.all()
+                form.base_fields['album'].initial = default_store.album_set.first()
+
+        form.base_fields["fiat_price"].initial = Decimal(settings.DEFAULT_SONG_PRICE)
 
         return form
 
@@ -159,11 +193,25 @@ class SongInline(admin.TabularInline):
 class Album(admin.ModelAdmin):
     inlines = [SongInline]
 
+    list_display = ("visible", "name", "store",)
+
+    list_display_links = ("store", "name",)
+
     fields = ("visible", "store", "name", "fiat_price", "cover", "download_zip")
+
+    add_url = "/foobar/"
 
     def has_add_permission(self, request):
         """ Disable 'add' button without zip upload. """
         return False
+
+    def get_fields(self, request, obj=None):
+        fields = super(Album, self).get_fields(request, obj)
+        fields = list(fields)
+        if not request.user.is_superuser:
+            fields.remove("store")
+
+        return fields
 
     def get_queryset(self, request):
         qs = super(Album, self).get_queryset(request)
@@ -179,8 +227,9 @@ class Album(admin.ModelAdmin):
         # form class is created per request by modelform_factory function
         # so it's safe to modifys
         if not request.user.is_superuser:
-            form.base_fields['store'].queryset = request.user.operated_stores
-            form.base_fields['store'].initial = request.user.operated_stores.first()
+            if "store" in form.base_fields:
+                form.base_fields['store'].queryset = request.user.operated_stores
+                form.base_fields['store'].initial = request.user.operated_stores.first()
         return form
 
     # https://djangosnippets.org/snippets/1053/
