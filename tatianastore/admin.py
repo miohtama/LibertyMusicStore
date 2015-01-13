@@ -193,7 +193,9 @@ class SongInline(admin.TabularInline):
 class Album(admin.ModelAdmin):
     inlines = [SongInline]
 
-    list_display = ("visible", "store", "name")
+    list_display = ("visible", "name", "store",)
+
+    list_display_links = ("store", "name",)
 
     fields = ("visible", "store", "name", "fiat_price", "cover", "download_zip")
 
