@@ -568,6 +568,7 @@ class UserPaidContentManager(object):
 
     def mark_paid_by_user(self, item, transaction):
         assert isinstance(item, StoreItem)
+        logger.info("Marking item paid %d %s", item.id, transaction.uuid)
         self.content[str(item.uuid)] = str(transaction.uuid)
         # Save back to redis
         self.redis.hset(UserPaidContentManager.REDIS_HASH_KEY, self.session_id, json.dumps(self.content).encode("utf-8"))

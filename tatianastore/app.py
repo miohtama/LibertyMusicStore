@@ -19,6 +19,7 @@ class TatianastoreConfig(AppConfig):
 
         # Register signal handlers
         from tatianastore import payment
+        from tatianastore import signals
 
         # Set 1 confirmations required for finalized payments
         if settings.PAYMENT_CURRENCY == "btc":
