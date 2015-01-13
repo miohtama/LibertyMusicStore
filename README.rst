@@ -40,14 +40,8 @@ Setup virtualenv::
 
 Example ``local_settings.py``::
 
-    BLOCKCHAIN_WALLET_ID = "xxx-yyy"
-    BLOCKCHAIN_WALLET_PASSWORD = "password"
-
-    ALLOWED_HOSTS = ["localhost:8000", "localhost:8090"]
-
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-    PUBLIC_URL = "http://localhost:8000"
+    # xxx
+    # empty file should be enough
 
 Setup empty database::
 
@@ -179,6 +173,11 @@ Taking SQL dump::
 Restoring SQL dump::
 
     sudo -u postgres psql -d tatianastore_production -f backup.sql
+
+Creatin htpasswd file for the status server::
+
+    apt-get install apache2-utils
+    htpasswd -c status.htpasswd  status
 
 More
 
