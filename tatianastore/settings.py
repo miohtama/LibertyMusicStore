@@ -382,9 +382,6 @@ DEFAULT_SONG_PRICE = Decimal("0.90")
 # How much we spend in unit tests for doing the actual payment (testnet bitcoins)
 TEST_CREDITING_PRICE = Decimal("0.50")  # in USG
 
-
-from tatianastore.local_settings import *
-
 # TESTNET settings
 CRYPTOASSETS = {
 
@@ -428,4 +425,6 @@ CRYPTOASSETS = {
     }
 }
 
+
+from tatianastore.local_settings import *
 
