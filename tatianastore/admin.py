@@ -193,6 +193,8 @@ class SongInline(admin.TabularInline):
 class Album(admin.ModelAdmin):
     inlines = [SongInline]
 
+    list_display = ("visible", "store", "name")
+
     fields = ("visible", "store", "name", "fiat_price", "cover", "download_zip")
 
     add_url = "/foobar/"
