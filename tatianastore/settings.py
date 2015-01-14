@@ -283,7 +283,7 @@ LOGGING = {
         },
 
         '': {
-            'level': PRODUCTION and 'INFO' or 'DEBUG',
+            'level': PRODUCTION and 'WARN' or 'DEBUG',
             'handlers': [PRODUCTION and 'sentry' or 'rainbow', 'file'],
         },
 
