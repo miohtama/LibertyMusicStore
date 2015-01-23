@@ -290,6 +290,9 @@ LOGGING = {
     }
 }
 
+if "cryptoassets_helper_service" in sys.argv:
+    LOGGING["loggers"][""]["level"] = "INFO"
+
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 #: Don't make the users log in unnecessarily
