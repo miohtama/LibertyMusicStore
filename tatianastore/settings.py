@@ -255,7 +255,7 @@ LOGGING = {
         },
 
         'sentry': {
-            'level': 'DEBUG',
+            'level': 'WARN',
             'class': PRODUCTION and 'raven.contrib.django.raven_compat.handlers.SentryHandler' or 'logging.StreamHandler',
         },
     },
