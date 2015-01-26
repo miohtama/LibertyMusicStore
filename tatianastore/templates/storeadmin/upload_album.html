@@ -31,7 +31,12 @@ You can edit all files, information, prices and song order after the upload.
 <strong>Warning:</strong> The upload and processing song files may take up to 10-20 minutes. Just don't close the page when the files are being processed. Some web browsers (Chrome) show the progress of your upload, others not. So please take a cup of coffee and come back to the computer after a while.
 </p>
 
-<h2>Upload ZIP file</h2>
+<p>
+<strong>Warning:</strong> Maximum upload size at the moment is <strong>100 MB</strong>. If you need larger uploads, please contact the support and provide album download link in the email. We can fix it for you.
+</p>
+
+
+<h2>Upload an album as a ZIP file</h2>
 
 <form enctype="multipart/form-data" method="POST">
     {% csrf_token %}
@@ -53,23 +58,63 @@ $(document).ready(function() {
     var percent = $('.percent');
     var status = $('#status');
 
+    String.prototype.endsWith = function(suffix) {
+        return this.indexOf(suffix, this.length - suffix.length) !== -1;
+    };
+
     $('form').ajaxForm({
+
+        // http://malsup.com/jquery/form/#options-object
+        beforeSubmit: function(arr, $form, options) {
+            var files = $("#id_zip_file").get(0).files;
+
+            // Quick smoke test for upload errors
+            // for the convenience for slow uploads
+
+            if(!$("#id_album_name").val()) {
+                window.alert("Please give the album name");
+                return false;
+            }
+
+
+            if(files.length == 0) {
+                window.alert("Please choose a ZIP file.");
+                return false;
+            }
+
+            var f = files[0];
+
+            var name = f.name.toLowerCase();
+            if(!name.endsWith(".zip")) {
+                window.alert("Please upload a zip file");
+                return false;
+            }
+
+            if(f.size > 100*1024*1024) {
+                window.alert("With this form you can upload files up to 100 MB only. Please contact support if larger album upload is needed.");
+                return false;
+            }
+        },
+
         beforeSend: function() {
             status.empty();
             var percentVal = '0%';
             bar.width(percentVal)
             percent.html(percentVal);
         },
+
         uploadProgress: function(event, position, total, percentComplete) {
             var percentVal = percentComplete + '%';
             bar.width(percentVal)
             percent.html(percentVal);
         },
+
         success: function() {
             var percentVal = '100%';
             bar.width(percentVal)
             percent.html(percentVal);
         },
+
         complete: function(xhr) {
             // Javascript redirect to album edit
 

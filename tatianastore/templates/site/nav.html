@@ -22,6 +22,12 @@
                 <li class="hidden">
                     <a href="#page-top"></a>
                 </li>
+
+                <li>
+                    <a class="page-scroll" href="{% url 'index' %}#stores">Browse music</a>
+                </li>
+
+
                 <li>
                     <a class="page-scroll" href="{% url 'about' %}">About</a>
                 </li>
@@ -34,10 +40,10 @@
 
                 {% if not request.user.is_authenticated %}
                     <li>
-                        <a class="plain" href="{% url 'auth_login' %}">{% trans "Log in" %}</a>
+                        <a class="plain" href="{% url 'auth_login' %}">{% trans "Artist log in" %}</a>
                     </li>
                     <li class="plain">
-                        <a class="plain" href="{% url 'signup' %}">{% trans "Sign up" %}</a>
+                        <a class="plain" href="{% url 'signup' %}">{% trans "Artist sign up" %}</a>
                     </li>
                 {% else %}
 

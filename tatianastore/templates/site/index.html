@@ -15,7 +15,7 @@ class="front-page"
             <div class="jumbotron">
                 <img alt="Liberty Music Store" src="{% static "img/logo-1000.png" %}">
                 <p class="lead text-center">
-                    <span class="lead-inner">The Bitcoin music store for artists</span>
+                    <a href="#stores" class="lead-inner">The Bitcoin music store</a>
                 </p>
             </div>
         </div>
@@ -25,7 +25,7 @@ class="front-page"
         <div class="container marketing">
              <div class="row">
                 <div class="col-lg-12 text-center">
-                    <p class="lead lead-highlight">Sell songs on your page, receive Bitcoin</p>
+                    <p class="lead lead-highlight">Buy and sell music with Bitcoin</p>
                 </div>
             </div>
             <div class="row text-center">
@@ -60,8 +60,8 @@ class="front-page"
                             <i class="fa fa-circle fa-stack-2x text-primary"></i>
                             <i class="fa fa-heart fa-stack-1x fa-inverse"></i>
                         </span>
-                        <h4>Patent-free two-click downloads</h4>
-                        <p>Make your song buyable <strong>with just two clicks</strong> - no sign ups or credit card numbers.</p>
+                        <h4>Easy downloads</h4>
+                        <p>Make your song buyable without any hassle - no sign ups or credit card numbers needed.</p>
                     </div>
 
                     <div class="entry">
@@ -108,14 +108,16 @@ class="front-page"
             </div>
 
             <p class="lead lead-highlight  text-center">
-                Sign up now and open your own record store in 5 minutes.
+                Sign up now and open your own music store up in 5 minutes.
             </p>
 
             <p class="text-center">
-                <a class="btn btn-primary btn-mega pulse" href="{% url 'signup' %}"><i class="fa fa-arrow-right"></i> Sign up free</a>
+                <a class="btn btn-primary btn-mega pulse" href="{% url 'signup' %}"><i class="fa fa-arrow-right"></i> Artist sign up free</a>
             </p>
         </div>
     </section>
+
+    <a id="stores"></a>
 
     {% include "site/front_page_albums.html" %}
 
