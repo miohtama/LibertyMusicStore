@@ -30,7 +30,13 @@ class AlbumUploadForm(forms.Form):
     """ The store owner can upload the whole album as a zip file.
     """
 
+    store = forms.ModelChoiceField(queryset=None, required=True)
+
     album_name = forms.CharField(label="Album name")
+
+    genre = forms.ChoiceField(choices=models.GENRES)
+
+    description = forms.CharField(label="Tagline", required=False)
 
     album_price = forms.DecimalField(initial=Decimal(settings.DEFAULT_ALBUM_PRICE))
 
@@ -38,22 +44,36 @@ class AlbumUploadForm(forms.Form):
 
     zip_file = forms.FileField(label="Choose ZIP file from your local computer")
 
+    def __init__(self, *args, **kwargs):
+        request = kwargs.pop("request")
+        super(AlbumUploadForm, self).__init__(*args, **kwargs)
+        self.fields['store'].queryset = request.user.get_stores()
+        self.fields['store'].initial = request.user.get_default_store()
+
+
+class NewStoreForm(forms.Form):
+    """The store owner can create stores for multiple artists.
+    """
+
+    artist_name = forms.CharField(label="Artist / band name", help_text="The name used on the store")
+
+    store_url = forms.URLField(label="Homepage", help_text="Link to your homepage, Facebook page or blog", required=True)
+
 
 @staff_member_required
 @transaction.non_atomic_requests
 def upload_album(request):
     """ Allow the artist to upload an album to the store. """
 
-    if request.user.is_superuser:
-        # Test as superuser admin
-        store = models.Store.objects.first()
-    else:
-        store = request.user.get_default_store()
+    # Only needed to fill in currency info
+    store = request.user.get_default_store()
 
     if request.method == "POST":
-        form = AlbumUploadForm(request.POST, request.FILES)
+        form = AlbumUploadForm(request.POST, request.FILES, request=request)
         if form.is_valid():
             try:
+
+                store = form.cleaned_data["store"]
 
                 upload = form.cleaned_data["zip_file"]
 
@@ -64,11 +84,20 @@ def upload_album(request):
                                                form.cleaned_data["song_price"],
                                                )
 
+                try:
+                    album.genre = int(form.cleaned_data["genre"])
+                except ValueError:
+                    album.genre = None
+
+                album.store = form.cleaned_data["store"]
+                album.description = form.cleaned_data["description"][0:40]
+                album.save()
+
                 messages.success(request, "The album is now uploaded. It might still take couple of minutes to process all songs and have them to appear.")
 
                 # Succesfully loaded embed from the user website
                 # TODO: Make sure we are the store owner
-                wizard = models.WelcomeWizard(request.user)
+                wizard = models.WelcomeWizard(store)
                 wizard.set_step_status("upload_album", True)
 
                 # JavaScript redirect to this URL
@@ -80,7 +109,7 @@ def upload_album(request):
                 errors = form._errors.setdefault("zip_upload", ErrorList())
                 errors.append(str(e))
     else:
-        form = AlbumUploadForm()
+        form = AlbumUploadForm(request=request)
 
     form.fields["song_price"].label = "Song price for individual buys ({})".format(store.currency)
     form.fields["album_price"].label = "Album price ({})".format(store.currency)
@@ -140,8 +169,35 @@ def store_facebook_data(request):
     return http.HttpResponse(json.dumps(store.facebook_data), content_type="application/json")
 
 
+@staff_member_required
+def new_store(request):
+    """Add new store form."""
+
+    if request.method == "POST":
+        form = NewStoreForm(request.POST)
+        if form.is_valid():
+
+            artist_name = form.cleaned_data["artist_name"]
+            store_url = form.cleaned_data["store_url"]
+
+            currency = request.user.get_default_store().currency
+
+            store = models.Store.objects.create(name=artist_name, store_url=store_url, currency=currency)
+            store.operators = [request.user]
+            store.save()
+
+            messages.success(request, "New store added. Please see the store checklist in the sidebar.")
+
+            return shortcuts.redirect("admin:index")
+    else:
+        form = NewStoreForm()
+
+    return render_to_response("storeadmin/new_store.html", locals(), context_instance=RequestContext(request))
+
+
 urlpatterns = patterns('',
     url(r'^upload-album/$', upload_album, name="upload_album"),
+    url(r'^new-store/$', new_store, name="new_store"),
     url(r'^add-to-facebook/$', add_to_facebook, name="add_to_facebook"),
     url(r'^store_facebook_data/$', store_facebook_data, name="store_facebook_data"),
 )

@@ -2,17 +2,17 @@
 
 {% if not request.user.is_superuser and store.slug %}
     <div class="module" id="checklist-module">
-        <h2>{% trans 'Setting up your store' %}</h2>
+        <h2>{{store.name}} store set up</h2>
 
         <p>
             <strong>Follow instructions here to get started</strong>.
         </p>
 
         {% if store %}
-            <p class="{{ step_class.check_store_details }}"><a href="{% url 'admin:tatianastore_store_change' store.id %}">Set up your store info</a></p>
+            <p class="{{ step_class.check_store_details }}"><a href="{% url 'admin:tatianastore_store_change' store.id %}">Review store info</a></p>
         {% endif %}
         <p class="{{ step_class.upload_album }}">
-            <a href="{% url 'upload_album' %}">Upload an album</a>
+            <a href="{% url 'upload_album' %}?store={{store.id}}">Upload an album</a>
         </p>
 
         <p class="{{ step_class.preview_store }}">
@@ -23,9 +23,11 @@
             <a href="{% url 'embed_code' store.slug %}">Add store on your website</a>
         </p>
 
-        <p class="{{ step_class.embed_facebook_store }} checklist-facebook">
-            <a href="{% url 'add_to_facebook' %}">Add store on your Facebook page</a>
-        </p>
+        {% if is_default %}
+            <p class="{{ step_class.embed_facebook_store }} checklist-facebook">
+                <a href="{% url 'add_to_facebook' %}">Add store on your Facebook page</a>
+            </p>
+        {% endif %}
 
     </div>
 {% endif %}

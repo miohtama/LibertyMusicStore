@@ -95,6 +95,10 @@ class SignupForm(forms.Form):
         store.operators = [u]
         store.save()
 
+        # The store info wizard step is completed now
+        wizard = models.WelcomeWizard(store)
+        wizard.set_step_status("check_store_details", True)
+
         site_url = settings.SITE_URL
         emailer.mail_store_owner(store, "{} sign up confirmation".format(settings.SITE_NAME), "email/sign_up.html", dict(store=store, user=u, site_url=site_url, site_name=settings.SITE_NAME))
 
@@ -113,10 +117,6 @@ def signup(request):
             if user is not None:
                 messages.success(request, "You are now logged in. A verification email has been sent to your email %s" % user.email)
                 login(request, user)
-
-            # The store info wizard step is completed now
-            wizard = models.WelcomeWizard(request.user)
-            wizard.set_step_status("check_store_details", True)
 
             return shortcuts.redirect("admin:index")
 

@@ -76,6 +76,7 @@ class DownloadTransaction(admin.ModelAdmin):
 
 class Store(admin.ModelAdmin):
 
+    list_display_links = ("id", "name",)
     list_display = ("id", "name", "store_url")
     readonly_fields = ("slug", "facebook_data",)
     change_form_template = "admin/store_form.html"
@@ -83,6 +84,16 @@ class Store(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        res = super(Store, self).change_view(request, object_id, form_url, extra_context)
+
+        store = models.Store.objects.get(id=object_id)
+
+        wizard = models.WelcomeWizard(store)
+        wizard.set_step_status("check_store_details", True)
+
+        return res
 
     def get_queryset(self, request):
         qs = super(Store, self).get_queryset(request)
@@ -110,10 +121,6 @@ class Store(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         super(Store, self).save_model(request, obj, form, change)
-
-        # Mark wizard step complete
-        wizard = models.WelcomeWizard(request.user)
-        wizard.set_step_status("check_store_details", True)
 
 
 class Song(admin.ModelAdmin):
@@ -208,8 +215,6 @@ class Album(admin.ModelAdmin):
     def get_fields(self, request, obj=None):
         fields = super(Album, self).get_fields(request, obj)
         fields = list(fields)
-        if not request.user.is_superuser:
-            fields.remove("store")
 
         return fields
 

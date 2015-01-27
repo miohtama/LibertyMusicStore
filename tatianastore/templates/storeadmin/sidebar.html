@@ -1,8 +1,23 @@
 {% load i18n %}
 {% load checklist %}
 
+
+
 <div id="content-related">
-    {% checklist %}
+
+    {% for store in user.get_stores %}
+        {% checklist store %}
+    {% endfor %}
+
+
+    <div class="module" id="new-store-module">
+        <h2>{% trans 'Add new artists' %}</h2>
+
+        <p>
+            Managing multiple stores and artists? <a href="{% url 'new_store' %}">Add new store</a>
+        </p>
+
+    </div>
 
     <div class="module" id="checklist-module">
         <h2>{% trans 'Need help?' %}</h2>

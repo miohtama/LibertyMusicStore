@@ -125,6 +125,17 @@ class User(AbstractUser):
             # Assume others have specific stores
             return self.operated_stores.first()
 
+    def get_stores(self):
+        """Return queryset of stores operated by this user.
+
+        Admin gets snapshot of latest stores.
+        """
+        if self.is_superuser:
+            return Store.objects.all()
+        else:
+            # Assume others have specific stores
+            return self.operated_stores.all()
+
     def __str__(self):
         return self.username
 
@@ -604,9 +615,7 @@ class UserPaidContentManager(object):
 
 
 class WelcomeWizard(object):
-    """ Store welcome wizard steps in Redis.
-
-    """
+    """Manage store set up wizard procedure."""
 
     #: username -> JSON'ed welcome step status dictionary
     REDIS_HASH_KEY = "user_welcome_wizard_steps"
@@ -617,9 +626,10 @@ class WelcomeWizard(object):
              "embed_website_store",
              "embed_facebook_store"]
 
-    def __init__(self, user):
+    def __init__(self, store):
         self.redis = get_cache("default").client.get_client(write=True)
-        self.user = user
+        assert isinstance(store, Store)
+        self.store = store
 
     @classmethod
     def clear(self):
@@ -633,12 +643,12 @@ class WelcomeWizard(object):
         return content
 
     def _update_content(self, content):
-        self.redis.hset(WelcomeWizard.REDIS_HASH_KEY, self.user.username, json.dumps(content).encode("utf-8"))
+        self.redis.hset(WelcomeWizard.REDIS_HASH_KEY, self.store.name, json.dumps(content).encode("utf-8"))
 
     def get_step_statuses(self):
         """
         """
-        content = self.redis.hget(WelcomeWizard.REDIS_HASH_KEY, self.user.username)
+        content = self.redis.hget(WelcomeWizard.REDIS_HASH_KEY, self.store.name)
 
         if not content:
             content = self._create_default_content()

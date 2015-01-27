@@ -42,6 +42,8 @@ def store(request, slug):
     """ Show artist show inside embed <iframe>.
     """
 
+    store = get_object_or_404(models.Store, slug=slug)
+
     # Force creation of session key
     request.session._get_or_create_session_key()
     request.session["initialized"] = datetime.datetime.now()
@@ -63,10 +65,9 @@ def store(request, slug):
         else:
             # Succesfully loaded embed from the user website
             # TODO: Make sure we are the store owner
-            wizard = models.WelcomeWizard(request.user)
+            wizard = models.WelcomeWizard(store)
             wizard.set_step_status("embed_website_store", True)
 
-    store = get_object_or_404(models.Store, slug=slug)
     albums = store.album_set.filter(visible=True)
     songs_without_album = models.Song.objects.filter(store=store, album__isnull=True, visible=True)
     session_id = get_session_id(request)
@@ -99,7 +100,7 @@ def facebook(request):
     # Mark that the user has succesfully loaded the store from his/her site
     if request.user.is_authenticated():
         # TODO: Make sure we are the store owner
-        wizard = models.WelcomeWizard(request.user)
+        wizard = models.WelcomeWizard(store)
         wizard.set_step_status("embed_facebook_store", True)
 
     albums = store.album_set.all()
@@ -116,7 +117,7 @@ def on_site(request, slug):
     store = get_object_or_404(models.Store, slug=slug)
 
     if request.user.is_authenticated():
-        wizard = models.WelcomeWizard(request.user)
+        wizard = models.WelcomeWizard(store)
         wizard.set_step_status("preview_store", True)
 
     public_url = settings.PUBLIC_URL
@@ -272,8 +273,8 @@ def embed_preview(request, slug):
     embed_src = request.build_absolute_uri(reverse("embed", args=(store.slug,)))
 
     # The user managed to preview their store
-    wizard = models.WelcomeWizard(request.user)
-    wizard.set_step_status("preview_store", True)
+    wizard = models.WelcomeWizard(store)
+    wizard.set_step_status(store, True)
 
     return render_to_response("storefront/embed_preview.html", locals(), context_instance=RequestContext(request))
 
