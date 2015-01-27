@@ -108,6 +108,10 @@ def txupdate_received(event_name, data, **kwargs):
     address = data['address']
     confirmations = int(data.get('confirmations', -1))
 
+    if data.get("transaction_type") != "deposit":
+        # We are only interest updates on incoming transctions
+        return
+
     logger.info("Transaction received: %s BTC:%s address:%s confirmations:%d", transaction_hash, value, address, confirmations)
 
     try:
