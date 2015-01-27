@@ -197,7 +197,7 @@ class Album(admin.ModelAdmin):
 
     list_display_links = ("store", "name",)
 
-    fields = ("visible", "store", "name", "fiat_price", "cover", "download_zip")
+    fields = ("visible", "store", "name", "description", "genre", "fiat_price", "cover", "download_zip")
 
     add_url = "/foobar/"
 

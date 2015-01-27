@@ -5,8 +5,14 @@
 <img src="{% thumbnail album.cover 128x128 %}" alt="">
 {% endif %}
 
-<p class="album-description text-muted">
+<p class="album-description">
+{{album.description|default:''}}
 </p>
+
+<p class="album-genre">
+    <small>{{album.get_genre|default:''}}</small>
+</p>
+
 
 {% if tx %}
     <a rel="nofollow" class="btn btn-lg btn-default btn-buy-album" href="{% url 'download' tx.uuid album.uuid album.get_download_info.1 %}">

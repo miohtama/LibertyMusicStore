@@ -36,6 +36,29 @@ _rate_converter = None
 
 from . import btcaverage
 
+
+GENRES = (
+    (1,  'Rock'),
+    (2,  'Metal'),
+    (3,  'Alternative'),
+    (4,  'Indie'),
+    (5,  'Electro'),
+    (6,  'Pop'),
+    (7,  'R&B'),
+    (8,  'Hip Hop/Rap'),
+    (9,  'Country/Folk'),
+    (17, 'Gospel'),
+    (10, 'Blues/Jazz'),
+    (11, 'World'),
+    (12, 'Reggae'),
+    (14, 'Indian music'),
+    (15, 'Afro fusion'),
+    (16, 'Cont.African'),
+    (13, 'Punk'),
+)
+
+GENRES_DICT = dict(GENRES)
+
 logger = logging.getLogger("__name__")
 
 
@@ -214,7 +237,9 @@ class Album(StoreItem):
     """
 
     #: Store's description of this albums
-    description = models.TextField(blank=True, null=True)
+    description = models.CharField(verbose_name="Tagline", help_text="Short shout about the album shown in the album listing", max_length=40, blank=True, null=True)
+
+    genre = models.IntegerField(verbose_name="Music genre", choices=GENRES, null=True, blank=True)
 
     cover = ThumbnailerImageField(upload_to=filename_gen("covers/"), blank=True, null=True,
                                   verbose_name="Cover art",
@@ -233,6 +258,10 @@ class Album(StoreItem):
 
     def get_visible_songs(self):
         return self.song_set.filter(visible=True)
+
+    def get_genre(self):
+        """Get human-readable genre name or None if not defined."""
+        return GENRES_DICT.get(self.genre)
 
     def __str__(self):
         return u"%s: %s" % (self.store.name, self.name)
