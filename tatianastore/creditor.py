@@ -50,11 +50,11 @@ def credit_store(store):
     credited = 0
 
     if not store.email:
-        logger.error("Store lacks email %s", store.name)
+        logger.info("Store lacks email %s", store.name)
         return 0
 
     if not store.btc_address:
-        logger.error("Store lacks BTC address %s", store.name)
+        logger.info("Store lacks BTC address %s", store.name)
         return 0
 
     # No Py3k compatibility
