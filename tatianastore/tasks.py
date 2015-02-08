@@ -52,6 +52,12 @@ def credit_stores():
 
     credited = 0
     for store in models.Store.objects.all():
-        credited += creditor.credit_store(store)
+
+        try:
+            credited += creditor.credit_store(store)
+        except Exception as e:
+            # Allow individual store crediting fails, still keep plowing through rest of the stores
+            logger.error("Could not credit store %s", store)
+            logger.exception(e)
 
     return credited
