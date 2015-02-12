@@ -46,3 +46,6 @@ facepy==1.0.3
 # Production / Sentry logging
 raven==5.1.1
 django-requestlogging==1.0.2
+
+# Backups
+mega.py==0.9.18

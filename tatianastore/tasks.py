@@ -61,3 +61,9 @@ def credit_stores():
             logger.exception(e)
 
     return credited
+
+
+@db_periodic_task(crontab(hour='5'))
+def backup_site():
+    """Run site backup command"""
+    subprocess.check_call(["bin/incremental-backup.bash", settings.MEGA_USERNAME, settings.MEGA_PASSWORD], timeout=4*60*60)
