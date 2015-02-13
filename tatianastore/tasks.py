@@ -63,7 +63,12 @@ def credit_stores():
     return credited
 
 
-@db_periodic_task(crontab(hour='5'))
+@db_periodic_task(crontab(days='3'))
 def backup_site():
-    """Run site backup command"""
-    subprocess.check_call(["bin/incremental-backup.bash", settings.MEGA_USERNAME, settings.MEGA_PASSWORD], timeout=4*60*60)
+    """Run site backup every three days.
+
+    To run manually::
+
+        echo "import tasks ; tasks.backup_site()" | python manage.py
+    """
+    subprocess.check_call(["bin/incremental-backup.bash", settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY, settings.BACKUP_ENCRYPTION_KEY], timeout=4*60*60)
