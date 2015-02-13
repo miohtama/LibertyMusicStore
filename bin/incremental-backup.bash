@@ -14,6 +14,10 @@
 #    pip install https://launchpad.net/duplicity/0.7-series/0.7.01/+download/duplicity-0.7.01.tar.gz
 #    pip install boto
 #
+# Recovering the backup:
+#
+#    gpg --batch --decrypt --passphrase xyz mysite-dump-20150213.sql.bzip2.gpg | bunzip2 > dump.sql
+#
 # Note: The user running this script must have sudo -u postgres acces to run pg_dump
 #
 # Note: This script is safe to run only on a server where you have 100% control and there are no other UNIX users who could see process command line or environment
@@ -48,8 +52,8 @@ if [ -z "$BACKUP_ENCRYPTION_KEY" ]; then
     exit 1
 fi
 
-# Create daily dump of the database
-sudo -u postgres pg_dumpall | bzip2 | gpg --batch --symmetric --passphrase $BACKUP_ENCRYPTION_KEY > backups/$SITENAME-dump-$(date -d "today" +"%Y%m%d").sql.bzip2.gpg
+# Create daily dump of the database, suitable for drop in restore
+sudo -u postgres pg_dumpall --clean | bzip2 | gpg --batch --symmetric --passphrase $BACKUP_ENCRYPTION_KEY > backups/$SITENAME-dump-$(date -d "today" +"%Y%m%d").sql.bzip2.gpg
 
 # Use cheap RSS S3 storage, exclude some stuff we know is not important.
 # Also we do not need to encrypt media files as in our use case they are not sensitive, SQL dump is encrypted separately.
