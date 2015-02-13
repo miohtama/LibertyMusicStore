@@ -47,5 +47,6 @@ facepy==1.0.3
 raven==5.1.1
 django-requestlogging==1.0.2
 
-# Backups
-mega.py==0.9.18
+# Backup
+https://launchpad.net/duplicity/0.7-series/0.7.01/+download/duplicity-0.7.01.tar.gz
+boto==2.36.0
