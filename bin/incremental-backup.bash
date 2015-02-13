@@ -37,7 +37,7 @@ SITENAME=`basename $PWD`
 # Need to access:
 source duplicity-venv/bin/activate
 
-DUPLICITY_TARGET=s3://s3-us-west-2.amazonaws.com/liberty-backup3/liberty-backup3
+DUPLICITY_TARGET=s3://s3-us-west-2.amazonaws.com/liberty-backup3/$SITENAME
 
 # Tell credentials to Boto
 export AWS_ACCESS_KEY_ID=$1
