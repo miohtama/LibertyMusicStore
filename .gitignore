@@ -42,3 +42,6 @@ manage.py
 *.rdb
 *.yaml
 *.htpasswd
+duplicity-venv
+backups/*
+
