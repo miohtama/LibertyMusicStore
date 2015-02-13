@@ -73,7 +73,7 @@ def backup_site():
         echo "from tatianastore import tasks ; tasks.backup_site()"|python manage.py shell
     """
     try:
-        subprocess.check_output(["bin/incremental-backup.bash", settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY, settings.BACKUP_ENCRYPTION_KEY], timeout=4*60*60, stderr=subprocess.PIPE)
+        subprocess.check_output(["bin/incremental-backup.bash", settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY, settings.BACKUP_ENCRYPTION_KEY, timeout=4*60*60, stderr=subprocess.PIPE)
     except subprocess.CalledProcessError as e:
         # Capture error in Sentry
         logger.error(e.output)
