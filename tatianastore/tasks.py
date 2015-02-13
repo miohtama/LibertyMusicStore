@@ -1,5 +1,6 @@
 import logging
 import time
+import subprocess
 
 from django.utils import timezone
 from django.conf import settings
@@ -63,12 +64,17 @@ def credit_stores():
     return credited
 
 
-@db_periodic_task(crontab(days='3'))
+@db_periodic_task(crontab(day='*/3'))
 def backup_site():
     """Run site backup every three days.
 
     To run manually::
 
-        echo "import tasks ; tasks.backup_site()" | python manage.py
+        echo "from tatianastore import tasks ; tasks.backup_site()"|python manage.py shell
     """
-    subprocess.check_call(["bin/incremental-backup.bash", settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY, settings.BACKUP_ENCRYPTION_KEY], timeout=4*60*60)
+    try:
+        subprocess.check_output(["bin/incremental-backup.bash", settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY, settings.BACKUP_ENCRYPTION_KEY], timeout=4*60*60, stderr=subprocess.PIPE)
+    except subprocess.CalledProcessError as e:
+        # Capture error in Sentry
+        logger.error(e.output)
+        raise

@@ -44,7 +44,7 @@ export AWS_ACCESS_KEY_ID=$1
 export AWS_SECRET_ACCESS_KEY=$2
 export BACKUP_ENCRYPTION_KEY=$3
 
-if [ -z "$BACKUP_ENCRYPTION_KEY"]; then
+if [ -z "$BACKUP_ENCRYPTION_KEY" ]; then
     echo "You must give AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and BACKUP_ENCRYPTION_KEY on the command line"
     exit 1
 fi
