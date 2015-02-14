@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Backup all site SQL database + media files to S3 bucket (US region)
+# Backup installation, PostgreSQL database, Redis databases and media files to S3 bucket
 #
 # Usage:
 #
@@ -55,10 +55,17 @@ fi
 # Create daily dump of the database, suitable for drop in restore
 sudo -u postgres pg_dumpall --clean | bzip2 | gpg --batch --symmetric --passphrase $BACKUP_ENCRYPTION_KEY > backups/$SITENAME-dump-$(date -d "today" +"%Y%m%d").sql.bzip2.gpg
 
+# Dump the system Redis database, encrypt a copy of it
+redis-cli save
+cat /var/lib/redis/dump.rdb | bzip2 | gpg --batch --symmetric --passphrase $BACKUP_ENCRYPTION_KEY > backups/$SITENAME-dump-$(date -d "today" +"%Y%m%d").redis.bzip2.gpg
+
+
 # Use cheap RSS S3 storage, exclude some stuff we know is not important.
 # Also we do not need to encrypt media files as in our use case they are not sensitive, SQL dump is encrypted separately.
-duplicity --s3-use-rrs --exclude=`pwd`/logs --exclude=`pwd`/.git --exclude=`pwd`/venv --exclude=`pwd`/duplicity-venv --no-encryption --full-if-older-than 1M `pwd` $DUPLICITY_TARGET
+# Use 1024 MB volumes, as we are going to backup > 10 GB
+duplicity --volsize 1024 --s3-use-rrs --exclude=`pwd`/logs --exclude=`pwd`/.git --exclude=`pwd`/venv --exclude=`pwd`/duplicity-venv --no-encryption --full-if-older-than 1M `pwd` $DUPLICITY_TARGET
 
 
 # Clean up old backups
 duplicity remove-older-than 3M $DUPLICITY_TARGET
+
