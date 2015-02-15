@@ -12,7 +12,7 @@
 #    source duplicity-venv/bin/activate
 #    apt-get install -y librsync-dev
 #    pip install https://launchpad.net/duplicity/0.7-series/0.7.01/+download/duplicity-0.7.01.tar.gz
-#    pip install boto
+#    pip install boto lockfile
 #
 # Recovering the backup:
 #
