@@ -51,3 +51,7 @@ django-requestlogging==1.0.2
 # XXX: Duplicity is not yet Python 3 compatible, needs separate venv!
 https://launchpad.net/duplicity/0.7-series/0.7.01/+download/duplicity-0.7.01.tar.gz
 boto==2.36.0
+
+# PostgreSQL maintenance
+pgcli==0.15.4
+

@@ -162,7 +162,7 @@ THUMBNAIL_ALIASES = {
 
 THUMBNAIL_BASEDIR = 'thumbs'
 
-THUMBNAIL_DEBUG = True
+THUMBNAIL_DEBUG = False
 
 INSTALLED_APPS = (
     'sslserver',  # Facebook page tab development
