@@ -54,7 +54,7 @@ class User(UserAdmin):
 
 class DownloadTransaction(admin.ModelAdmin):
 
-    list_display = ("uuid", "get_status", "created_at", "description", "fiat_amount", "credited_at", "credit_transaction_hash")
+    list_display = ("store", "uuid", "get_status", "created_at", "description", "fiat_amount", "credited_at", "credit_transaction_hash", "btc_address")
 
     readonly_fields = ("store", "uuid", "created_at", "description", "btc_amount", "fiat_amount", "currency", "btc_received_at", "cancelled_at")
 
@@ -125,7 +125,7 @@ class Store(admin.ModelAdmin):
 
 class Song(admin.ModelAdmin):
 
-    list_display = ('visible', 'album', 'name', "fiat_price")
+    list_display = ('visible', 'album', 'name', "store")
     list_display_links = ("name",)
     fields = ("visible", "store", "album", "name", "fiat_price", "download_mp3", "prelisten_mp3", "prelisten_vorbis")
     readonly_fields = ("order",)

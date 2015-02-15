@@ -389,6 +389,9 @@ class DownloadTransaction(models.Model):
         verbose_name = "Purchase"
         verbose_name_plural = "Purchases"
 
+    def __str__(self):
+        return "store:{} uuid:{} addr:{} amount:{} txid:{}".format(self.store, self.uuid, self.btc_address, self.btc_amount, self.credit_transaction_hash)
+
     def update_new_btc_address(self):
         if self.payment_source == DownloadTransaction.PAYMENT_SOURCE_BLOCKCHAIN:
             self.update_new_btc_address_blockchain()
