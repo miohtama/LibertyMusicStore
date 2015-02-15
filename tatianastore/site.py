@@ -18,11 +18,16 @@ logger = logging.getLogger(__name__)
 
 
 def index(request):
-    """ """
+    """Site front page."""
 
     # Get splash albums
-    splash_albums = Album.objects.filter(cover__isnull=False, visible=True, fiat_price__gt=0).exclude(cover__exact='')
-    splash_albums = [a for a in splash_albums if a.song_set.count() > 0]
+    # 1. With genre
+    splash_albums = Album.objects.filter(cover__isnull=False, visible=True, genre__isnull=False, fiat_price__gt=0).exclude(cover__exact='').order_by("-id")
+
+    # 2. old, no genre or other decoratation :()
+    splash_albums_2 = Album.objects.filter(cover__isnull=False, visible=True, genre__isnull=True, fiat_price__gt=0).exclude(cover__exact='').order_by("-id")
+
+    splash_albums = [a for a in list(splash_albums) + list(splash_albums_2) if a.song_set.count() > 0]
 
     return render_to_response("site/index.html", locals(), context_instance=RequestContext(request))
 

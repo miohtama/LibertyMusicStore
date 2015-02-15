@@ -25,7 +25,7 @@
                     <a class="media tile-link" href="{% url 'on_site' album.store.slug %}">
 
                         {% if album.cover %}
-                            <img class="media-object pull-left" src="{% thumbnail album.cover 128x128 %}" alt="">
+                            <img class="media-object" src="{% thumbnail album.cover 96x96 %}" alt="">
                         {% endif %}
 
                         <div class="media-body">
