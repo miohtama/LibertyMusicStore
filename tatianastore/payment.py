@@ -207,7 +207,7 @@ def scan_open_download_transactions():
     """Check all open download transactions."""
 
     # 30 days backlog
-    open_downloads = models.DownloadTransaction.objects.filter(btc_received_at__isnull=True, created_at__lt=datetime.datetime.utcnow() - datetime.timedelta(days=30))
+    open_downloads = models.DownloadTransaction.objects.filter(btc_received_at__isnull=True, created_at__gt=datetime.datetime.utcnow() - datetime.timedelta(days=30))
 
     for tx in open_downloads:
         logger.info("Checking old transaction %s", tx)
