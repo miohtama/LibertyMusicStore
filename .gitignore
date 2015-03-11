@@ -44,4 +44,5 @@ manage.py
 *.htpasswd
 duplicity-venv
 backups/*
+*.sublime-project
 

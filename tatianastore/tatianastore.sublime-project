@@ -1,7 +1,7 @@
 {
 	"SublimeLinter":
 	{
-		"@python": 2.7
+		"@python": 3.4
 	},
 	"build_systems":
 	[

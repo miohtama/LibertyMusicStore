@@ -78,3 +78,10 @@ def backup_site():
         # Capture error in Sentry
         logger.error(e.output)
         raise
+
+
+@db_periodic_task(crontab(minute='*/3')):
+def keep_transactions_running():
+    """Keep transactions runnign in the case of notify channel breaking up."""
+    from . import payment
+    payment.scan_open_download_transactions()
