@@ -563,6 +563,11 @@ class DownloadTransactionItem(models.Model):
         item = self.content_object
         return item.get_download_info()
 
+    def __str__(self):
+        """Helper to troubleshoot issues."""
+        item = self.content_object
+        return "id:{} name:{}".format(item.id, item.name)
+
 
 class UserPaidContentManager(object):
     """ Remember which songs and albums are available for the user.

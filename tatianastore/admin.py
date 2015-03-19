@@ -54,9 +54,9 @@ class User(UserAdmin):
 
 class DownloadTransaction(admin.ModelAdmin):
 
-    list_display = ("store", "uuid", "get_status", "created_at", "description", "fiat_amount", "credited_at", "credit_transaction_hash", "btc_address")
+    list_display = ("store", "uuid", "get_status", "created_at", "description", "fiat_amount", "credited_at", "credit_transaction_hash", "btc_address", "get_admin_description")
 
-    readonly_fields = ("store", "uuid", "created_at", "description", "btc_amount", "fiat_amount", "currency", "btc_received_at", "cancelled_at")
+    readonly_fields = ("store", "uuid", "created_at", "description", "btc_amount", "fiat_amount", "currency", "btc_received_at", "cancelled_at", "get_admin_description")
 
     fields = readonly_fields
 
@@ -69,6 +69,12 @@ class DownloadTransaction(admin.ModelAdmin):
         if not request.user.is_superuser:
             qs = filter_user_manageable_content(request.user, qs)
         return qs
+
+    def get_admin_description(self, obj):
+        """Help troubleshooting transaction issues."""
+        for download_item in models.DownloadTransactionItem.objects.filter(transaction=obj):
+            return str(download_item)
+    get_admin_description.short_description = "Item"
 
     def has_delete_permission(self, request, obj=None):
         return False

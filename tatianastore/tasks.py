@@ -64,7 +64,7 @@ def credit_stores():
     return credited
 
 
-@db_periodic_task(crontab(hours='1'))
+@db_periodic_task(crontab(hour='1'))
 def backup_site():
     """Run site backup daily.
 
