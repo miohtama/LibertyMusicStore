@@ -73,7 +73,7 @@ def backup_site():
         echo "from tatianastore import tasks ; tasks.backup_site()"|python manage.py shell
     """
     try:
-        subprocess.check_output(["bin/incremental-backup.bash", settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY, settings.BACKUP_ENCRYPTION_KEY], timeout=4*60*60, stderr=subprocess.PIPE)
+        subprocess.check_output(["bin/incremental-backup.bash", settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY, settings.BACKUP_ENCRYPTION_KEY], timeout=4*60*60, stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as e:
         # Capture error in Sentry
         logger.error(e.output)
@@ -83,5 +83,6 @@ def backup_site():
 @db_periodic_task(crontab(minute='*/3'))
 def keep_transactions_running():
     """Keep transactions runnign in the case of notify channel breaking up."""
+    logger.error("TEMPORARY - see are still forcing transactions")
     from . import payment
     payment.scan_open_download_transactions()
