@@ -63,9 +63,14 @@ cat /var/lib/redis/dump.rdb | bzip2 | gpg --batch --symmetric --passphrase $BACK
 # Use cheap RSS S3 storage, exclude some stuff we know is not important.
 # Also we do not need to encrypt media files as in our use case they are not sensitive, SQL dump is encrypted separately.
 # Use 1024 MB volumes, as we are going to backup > 10 GB
+echo "Running backup"
 duplicity --volsize 1024 --s3-use-rrs --exclude=`pwd`/logs --exclude=`pwd`/.git --exclude=`pwd`/venv --exclude=`pwd`/duplicity-venv --no-encryption --full-if-older-than 1M `pwd` $DUPLICITY_TARGET
 
 
 # Clean up old backups
+echo "Cleaning up"
 duplicity remove-older-than 3M $DUPLICITY_TARGET
+
+echo "Done"
+exit 0
 
