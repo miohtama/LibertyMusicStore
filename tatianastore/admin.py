@@ -73,7 +73,9 @@ class DownloadTransaction(admin.ModelAdmin):
     def get_admin_description(self, obj):
         """Help troubleshooting transaction issues."""
         for download_item in models.DownloadTransactionItem.objects.filter(transaction=obj):
-            return str(download_item)
+            text = str(download_item)
+            return text
+
     get_admin_description.short_description = "Item"
 
     def has_delete_permission(self, request, obj=None):
