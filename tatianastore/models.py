@@ -566,7 +566,8 @@ class DownloadTransactionItem(models.Model):
     def __str__(self):
         """Helper to troubleshoot issues."""
         item = self.content_object
-        return "id:{} name:{}".format(item.id, item.name)
+        fitem = item.download_mp3 if hasattr(item, "download_mp3") else item.download_zip
+        return "id:{} name:{} file:{}".format(item.id, item.name, os.path.basename(fitem.name))
 
 
 class UserPaidContentManager(object):
