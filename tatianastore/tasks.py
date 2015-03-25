@@ -42,7 +42,7 @@ def generate_prelisten(song_id):
     prelisten.create_prelisten_on_demand(song)
 
 
-@db_periodic_task(crontab(hour='1'))
+@db_periodic_task(crontab(hour=1, minute=0))
 def credit_stores():
     """ Credit authors for their purchased songs every 24 h"""
 
@@ -64,7 +64,7 @@ def credit_stores():
     return credited
 
 
-@db_periodic_task(crontab(hour='1'))
+@db_periodic_task(crontab(hour=1, minute=0))
 def backup_site():
     """Run site backup daily.
 
