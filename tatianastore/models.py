@@ -71,15 +71,6 @@ def get_rate_converter():
     return _rate_converter
 
 
-#def filename_gen(basedir):
-#    """ Generate safe filenames for storage backend """
-#    def generator(instance, filename):
-#        salt = hashers.get_hasher().salt()
-#        salt = smart_str(salt)
-#        return basedir + salt + u"-" + filename
-#    return generator
-
-
 @deconstructible
 class filename_gen(object):
     """Courtesy of http://stackoverflow.com/questions/25767787/django-cannot-create-migrations-for-imagefield-with-dynamic-upload-to-value"""
