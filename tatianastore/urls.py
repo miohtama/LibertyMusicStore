@@ -9,11 +9,13 @@ from django.conf import settings
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.views import defaults
+from django.contrib.sitemaps.views import sitemap
 
 from . import storefront
 from . import storeadmin
 from . import site
 from . import signup
+from . import sitemaps
 
 
 logger = logging.getLogger(__name__)
@@ -32,6 +34,12 @@ def do_400(request):
 handler404 = 'tatianastore.urls.do_404'
 handler400 = 'tatianastore.urls.do_400'
 
+sitemaps = {
+    "stores": sitemaps.StoreSitemap,
+    "static": sitemaps.StaticViewSitemap
+}
+
+
 urlpatterns = patterns('',
     url(r'^$', 'tatianastore.site.index', name='index'),
 
@@ -45,6 +53,7 @@ urlpatterns = patterns('',
     url(r'^signup/', include(signup)),
     url(r'^registration/', include('registration.backends.default.urls')),
     url(r'^accounts/', include('django.contrib.auth.urls')),
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap')
 
 )
 

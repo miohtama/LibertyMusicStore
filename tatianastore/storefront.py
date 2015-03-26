@@ -68,8 +68,8 @@ def store(request, slug):
             wizard = models.WelcomeWizard(store)
             wizard.set_step_status("embed_website_store", True)
 
-    albums = store.album_set.filter(visible=True)
-    songs_without_album = models.Song.objects.filter(store=store, album__isnull=True, visible=True)
+    albums = store.album_set.filter(visible=True, fiat_price__gt=0)
+    songs_without_album = models.Song.objects.filter(store=store, album__isnull=True, visible=True, fiat_price__gt=0)
     session_id = get_session_id(request)
     content_manager = models.UserPaidContentManager(session_id)
     public_url = settings.PUBLIC_URL
@@ -390,7 +390,9 @@ def config_js(request):
 
 urlpatterns = patterns('',
     url(r'^facebook/$', facebook, name="facebook"),
-    url(r'^(?P<slug>[-_\w]+)/store/$', on_site, name="on_site"),
+    url(r'^(?P<slug>[-_\w]+)/bitcoin/$', on_site, name="on_site"),
+    # XXX: Backwards compatiblity... remove
+    url(r'^(?P<slug>[-_\w]+)/store/$', on_site, name="old_on_site"),
     url(r'^(?P<slug>[-_\w]+)/embed/$', embed, name="embed"),
     url(r'^(?P<slug>[-_\w]+)/embed-code/$', embed_code, name="embed_code"),
     url(r'^(?P<slug>[-_\w]+)/embed-preview/$', embed_preview, name="embed_preview"),

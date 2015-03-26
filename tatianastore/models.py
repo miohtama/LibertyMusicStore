@@ -19,6 +19,7 @@ from django.core.cache import get_cache
 from django.db.models import Sum
 from django.utils import timezone
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
@@ -70,15 +71,6 @@ def get_rate_converter():
     return _rate_converter
 
 
-#def filename_gen(basedir):
-#    """ Generate safe filenames for storage backend """
-#    def generator(instance, filename):
-#        salt = hashers.get_hasher().salt()
-#        salt = smart_str(salt)
-#        return basedir + salt + u"-" + filename
-#    return generator
-
-
 @deconstructible
 class filename_gen(object):
     """Courtesy of http://stackoverflow.com/questions/25767787/django-cannot-create-migrations-for-imagefield-with-dynamic-upload-to-value"""
@@ -103,6 +95,12 @@ def update_initial_groups():
     store_operators, created = Group.objects.get_or_create(name="Store operators")
     store_operators.permissions = allowed_permissions
     store_operators.save()
+
+
+def validate_currency(value):
+    currencies = [cur for cur, name in settings.CURRENCIES]
+    if value not in currencies:
+        raise ValidationError("Only the following currencies are supported: {}".format(", ".join(currencies)))
 
 
 class UserManager(DjangoUserManager):
@@ -154,9 +152,7 @@ class Store(models.Model):
     name = models.CharField(max_length=80, blank=True, null=True)
 
     #: In which fiat currency the sales of these songs are
-    currency = models.CharField(max_length=5, blank=False, null=False, default="USD",
-                                verbose_name="Currency",
-                                help_text="Currency code for your local currency which you user to price your albums and songs")
+    currency = models.CharField(max_length=5, blank=False, null=False, default="USD", verbose_name="Currency", help_text="Currency code for your local currency which you user to price your albums and songs", validators=[validate_currency])
 
     #: Where this store is hosted (needed for the backlinks)
     store_url = models.URLField(verbose_name="Homepage", help_text="Link to home page or Facebook page")
