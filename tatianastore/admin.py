@@ -133,8 +133,8 @@ class Store(admin.ModelAdmin):
 
 class Song(admin.ModelAdmin):
 
-    list_display = ('visible', 'album', 'name', "store")
-    list_display_links = ("name",)
+    list_display = ('visible', 'name', 'album', "store", "id",)
+    list_display_links = ("name", "id",)
     fields = ("visible", "store", "album", "name", "fiat_price", "download_mp3", "prelisten_mp3", "prelisten_vorbis")
     readonly_fields = ("order",)
 
@@ -150,8 +150,6 @@ class Song(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         fields = super(Song, self).get_readonly_fields(request, obj)
         fields = list(fields)
-        if not request.user.is_superuser:
-            fields.append("album")
 
         return fields
 
@@ -162,6 +160,7 @@ class Song(admin.ModelAdmin):
         # so it's safe to modifys
         if not request.user.is_superuser:
             default_store = request.user.operated_stores.first()
+
             if "store" in form.base_fields:
                 form.base_fields['store'].queryset = request.user.operated_stores
                 form.base_fields['store'].initial = default_store
@@ -208,9 +207,9 @@ class SongInline(admin.TabularInline):
 class Album(admin.ModelAdmin):
     inlines = [SongInline]
 
-    list_display = ("visible", "name", "store",)
+    list_display = ("visible", "name", "store", "id",)
 
-    list_display_links = ("store", "name",)
+    list_display_links = ("store", "name", "id",)
 
     fields = ("visible", "store", "name", "description", "genre", "fiat_price", "cover", "download_zip")
 
