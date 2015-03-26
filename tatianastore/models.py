@@ -19,6 +19,7 @@ from django.core.cache import get_cache
 from django.db.models import Sum
 from django.utils import timezone
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
@@ -105,6 +106,12 @@ def update_initial_groups():
     store_operators.save()
 
 
+def validate_currency(value):
+    currencies = [cur for cur, name in settings.CURRENCIES]
+    if value not in currencies:
+        raise ValidationError("Only the following currencies are supported: {}".format(", ".join(currencies)))
+
+
 class UserManager(DjangoUserManager):
     pass
 
@@ -154,9 +161,7 @@ class Store(models.Model):
     name = models.CharField(max_length=80, blank=True, null=True)
 
     #: In which fiat currency the sales of these songs are
-    currency = models.CharField(max_length=5, blank=False, null=False, default="USD",
-                                verbose_name="Currency",
-                                help_text="Currency code for your local currency which you user to price your albums and songs")
+    currency = models.CharField(max_length=5, blank=False, null=False, default="USD", verbose_name="Currency", help_text="Currency code for your local currency which you user to price your albums and songs", validators=[validate_currency])
 
     #: Where this store is hosted (needed for the backlinks)
     store_url = models.URLField(verbose_name="Homepage", help_text="Link to home page or Facebook page")
