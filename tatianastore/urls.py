@@ -55,7 +55,7 @@ urlpatterns = patterns('',
     url(r'^buy-music-online$', 'tatianastore.site.buy_music', name='buy_music'),
     url(r'^sell-music-online$', 'tatianastore.site.sell_music', name='sell_music'),
 
-    url(r'^store/*', store_redirect, name='old_store_redirect'),
+    url(r'^store/', store_redirect, name='old_store_redirect'),
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
