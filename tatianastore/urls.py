@@ -11,11 +11,14 @@ from django.conf.urls.static import static
 from django.views import defaults
 from django.contrib.sitemaps.views import sitemap
 
+from andablog.sitemaps import EntrySitemap
+
 from . import storefront
 from . import storeadmin
 from . import site
 from . import signup
 from . import sitemaps
+from .feeds import LatestBlogEntries
 
 
 logger = logging.getLogger(__name__)
@@ -36,7 +39,8 @@ handler400 = 'tatianastore.urls.do_400'
 
 sitemaps = {
     "stores": sitemaps.StoreSitemap,
-    "static": sitemaps.StaticViewSitemap
+    "static": sitemaps.StaticViewSitemap,
+    'blog': EntrySitemap,
 }
 
 
@@ -53,7 +57,11 @@ urlpatterns = patterns('',
     url(r'^signup/', include(signup)),
     url(r'^registration/', include('registration.backends.default.urls')),
     url(r'^accounts/', include('django.contrib.auth.urls')),
-    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap')
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+
+    url(r'^rss$', LatestBlogEntries(), name='rss_feed'),
+    url(r'^blog/', include('andablog.urls', namespace='andablog')),
+    url(r'^markitup/', include('markitup.urls')),
 
 )
 

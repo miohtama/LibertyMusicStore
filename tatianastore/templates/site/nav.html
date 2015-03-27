@@ -32,11 +32,15 @@
                 </li>
 
                 <li>
-                    <a class="page-scroll" href="{% url 'info' %}">Info</a>
+                    <a href="{% url 'info' %}">Info</a>
                 </li>
 
                 <li>
-                    <a class="page-scroll" href="{% url 'bitcoin' %}">Bitcoin</a>
+                    <a href="{% url 'andablog:entrylist' %}">Blog</a>
+                </li>
+
+                <li>
+                    <a href="{% url 'bitcoin' %}">Bitcoin</a>
                 </li>
 
                 {% if not request.user.is_authenticated %}

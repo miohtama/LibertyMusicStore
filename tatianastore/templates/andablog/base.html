@@ -1,0 +1,92 @@
+{% extends "site/base.html" %}
+{% load staticfiles %}
+
+{% block subtitle %}
+    {% block andablog_page_title %}
+    {% endblock %}
+{% endblock %}
+
+{% block head_styles %}
+    {% block andablog_head_extra %}
+        <link rel="stylesheet" href="{% static 'css/andablog.css' %}">
+    {% endblock %}
+{% endblock %}
+
+{% block menu-blog-class %}active{% endblock %}
+
+{% block content %}
+    <section id="all-blogs">
+
+        <div class="row">
+            <div class="col-md-8 info-lead">
+                {% block andablog_content %}
+                {% endblock %}
+            </div>
+
+
+            <div class="col-md-4">
+
+                <div class="panel">
+                    <img class="img-responsive img-thumbnail"  src="{% static "img/selfie.jpg" %}" alt="">
+                     <div class="panel-footer">
+                        <p>
+                            Enjoy music and Bitcoin
+                        </p>
+
+                        <p>
+                            <small>-Mikko Ohtamaa, Liberty Music Store author</small>
+                        </p>
+                    </div>
+                </div>
+
+                <p class="panel-spacer"></p>
+
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <h3>In media</h3>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <p>
+                            <a href="https://bitcointalk.org/index.php?topic=668423.0">BitcoinTalk</a>
+                        </p>
+
+                        <p>
+                            <a href="http://www.cryptocoinsnews.com/news/liberty-music-store-selling-indie-music-bitcoin-made-easy/">CryptoCoinsNews</a>
+                        </p>
+
+                        <p>
+                            <a href="http://novitabitcoin.blogspot.it/2014/07/liberty-music-store-vendere-musica-in.html">
+                                Liberty Music Store: vendere musica in bitcoin (Italian)
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+                <p class="panel-spacer"></p>
+
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <h3>More links</h3>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <p>
+                            <a href="https://github.com/miohtama/LibertyMusicStore"><i class="fa fa-github-alt"></i> 100% open source</a>
+                        </p>
+
+                        <p>
+                            <a href="https://linkedin.com/in/ohtis"><i class="fa fa-linkedin-square"></i> LinkedIn</a>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+{% endblock %}

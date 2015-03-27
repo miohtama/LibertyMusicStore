@@ -18,6 +18,8 @@
 
     <link rel="stylesheet" href="{% static 'css/libertymusicstore.min.css' %}"/>
 
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="{% url 'rss_feed' %}" />
+
     <link rel="icon" type="image/png" href="{% static 'icon/16x16.png' %}" />
 
     <title>{% block title %}Liberty Music Store - Buy and sell music with Bitcoin{% endblock %}</title>

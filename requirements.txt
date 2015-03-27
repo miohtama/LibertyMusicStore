@@ -38,6 +38,8 @@ python-slugify==0.0.7
 django-autoslug==1.7.2
 retools==0.4.1
 django-jsonfield==0.9.13
+django-andablog==1.3.0
+Markdown==2.6.1
 
 # Facebook development
 django-sslserver==0.12
