@@ -112,6 +112,9 @@ class User(AbstractUser):
 
     objects = UserManager()
 
+    def get_absolute_url(self):
+        return "/"
+
     def get_default_store(self):
         """ Get the store where this user is uploading content etc.
 

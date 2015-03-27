@@ -185,7 +185,10 @@ INSTALLED_APPS = (
     'tatianastore.app.TatianastoreConfig',
     'django_nose',
     'raven.contrib.django.raven_compat',
-    'django_requestlogging'
+    'django_requestlogging',
+    'andablog',
+    'markitup',  # For entry content
+    'taggit',  # For entry tags
 )
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
@@ -427,6 +430,9 @@ CRYPTOASSETS = {
         "port": 9001
     }
 }
+
+MARKITUP_FILTER = ('markdown.markdown', {'safe_mode': False})
+MARKITUP_SET = 'markitup/sets/markdown'
 
 
 from tatianastore.local_settings import *
