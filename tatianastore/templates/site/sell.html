@@ -1,0 +1,114 @@
+{% extends "site/base.html" %}
+
+{% load i18n %}
+{% load static %}
+
+{% block body_classes %}
+class="sell-page"
+{% endblock body_classes %}
+
+{% block title %}Sell music online{% endblock title %}
+{% block description %}
+<meta name="description" content="Sell songs and albums online with {{coin_name}}">
+{% endblock description %}
+
+
+{% block content %}
+
+    <section id="sign-up">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="text-center">
+                    <span>Get started</span>
+                </h2>
+            </div>
+
+            <p class="lead lead-highlight  text-center">
+                Sign up now and open your own music store up in 5 minutes.
+            </p>
+
+            <p class="text-center">
+                <a class="btn btn-primary btn-mega pulse" href="{% url 'signup' %}"><i class="fa fa-arrow-right"></i> Artist sign up free</a>
+            </p>
+        </div>
+    </section>
+
+    <section id="features">
+        <div class="container marketing">
+             <div class="row">
+                <div class="col-lg-12 text-center">
+                    <p class="lead lead-highlight">Sell music with Bitcoin</p>
+                </div>
+            </div>
+            <div class="row text-center">
+
+                <div class="col-md-4 col-sm-6">
+
+                    <!-- Left -->
+                    <div class="entry">
+                        <span class="fa-stack fa-4x">
+                            <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fa fa-music fa-stack-1x fa-inverse"></i>
+                        </span>
+                        <h4>Music is your merchandise</h4>
+                        <p>As an artist, sell your music directly to your fans. Name your price and place.</p>
+                    </div>
+
+                    <div class="entry">
+                        <span class="fa-stack fa-4x">
+                            <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fa fa-lock fa-stack-1x fa-inverse"></i>
+                        </span>
+                        <h4>For your eyes only</h4>
+                        <p>Bitcoin transactions are anonymous. Bitcoin revenue is for your eyes only. No paperwork needed.</p>
+                    </div>
+                </div>
+
+                <!-- Middle -->
+                <div class="col-md-4 col-sm-6">
+
+                    <div class="entry">
+                        <span class="fa-stack fa-4x">
+                            <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fa fa-heart fa-stack-1x fa-inverse"></i>
+                        </span>
+                        <h4>Easy downloads</h4>
+                        <p>Make your song buyable without any hassle - no sign ups or credit card numbers needed.</p>
+                    </div>
+
+                    <div class="entry">
+                        <span class="fa-stack fa-4x">
+                            <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                        </span>
+                        <h4>A store on your page</h4>
+                        <p>Sell music directly on your Facebook page or website. 100% customizable and faithful to your style.</p>
+                    </div>
+                </div>
+
+                <!-- Right -->
+                <div class="col-md-4">
+
+                    <div class="entry">
+                        <span class="fa-stack fa-4x">
+                            <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fa fa-globe fa-stack-1x fa-inverse"></i>
+                        </span>
+                        <h4>Reach everywhere</h4>
+                        <p>Bitcoin is the first global virtual currency. Fans can pay for the music regardless where they come from.</p>
+                    </div>
+
+                    <div class="entry">
+                        <span class="fa-stack fa-4x">
+                            <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
+                        </span>
+                        <h4>Perfect for specials</h4>
+                        <p>Do presales, campaigns, exclusive content. You control the sales channel.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock content %}

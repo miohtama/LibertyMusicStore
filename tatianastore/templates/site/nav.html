@@ -24,18 +24,19 @@
                 </li>
 
                 <li>
-                    <a class="page-scroll" href="{% url 'index' %}#stores">Browse music</a>
+                    <a href="{% url 'buy_music' %}">Buy music</a>
                 </li>
 
+                <li>
+                    <a href="{% url 'sell_music' %}">Sell music</a>
+                </li>
 
-                <li>
-                    <a class="page-scroll" href="{% url 'about' %}">About</a>
-                </li>
-                <li>
-                    <a class="page-scroll" href="{% url 'bitcoin' %}">Bitcoin</a>
-                </li>
                 <li>
                     <a class="page-scroll" href="{% url 'info' %}">Info</a>
+                </li>
+
+                <li>
+                    <a class="page-scroll" href="{% url 'bitcoin' %}">Bitcoin</a>
                 </li>
 
                 {% if not request.user.is_authenticated %}

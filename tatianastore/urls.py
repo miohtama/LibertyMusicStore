@@ -42,8 +42,8 @@ sitemaps = {
 
 urlpatterns = patterns('',
     url(r'^$', 'tatianastore.site.index', name='index'),
-
-    url(r'^blockchain_received/%s$' % settings.BLOCKCHAIN_WEBHOOK_SECRET, 'tatianastore.blockchain.blockchain_received', name='blockchain_received'),
+    url(r'^buy-music-online$', 'tatianastore.site.buy_music', name='buy_music'),
+    url(r'^sell-music-online$', 'tatianastore.site.sell_music', name='sell_music'),
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
