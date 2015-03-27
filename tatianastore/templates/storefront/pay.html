@@ -33,6 +33,13 @@
                 <i class="fa fa-music"></i> {{ transaction.description }}
             </h3>
 
+            <p class="text-center">
+                <small>
+                    Don't have Bitcoins yet? <a target="_blank" href="https://localbitcoins.com/?ch=1af">Get them here.</a>
+                </small>
+            </p>
+
+
             <p>
                 <span class="btc-clickable-amount">{{ transaction.btc_amount }}</span> <i class="fa fa-btc"></i>
                 / {{ user_fiat_amount|floatformat:2 }} {{ user_currency }}

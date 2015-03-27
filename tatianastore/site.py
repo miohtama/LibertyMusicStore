@@ -12,6 +12,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf.urls import patterns
 from django.conf.urls import url
 
+from . import models
 from .models import Album
 
 logger = logging.getLogger(__name__)
@@ -29,7 +30,36 @@ def index(request):
 
     splash_albums = [a for a in list(splash_albums) + list(splash_albums_2) if a.song_set.count() > 0]
 
+    splash_albums = splash_albums[0:12]
+
     return render_to_response("site/index.html", locals(), context_instance=RequestContext(request))
+
+
+def buy_music(request):
+    """Buy music."""
+
+    # Get splash albums
+    # 1. With genre
+    splash_albums = Album.objects.filter(cover__isnull=False, visible=True, genre__isnull=False, fiat_price__gt=0).exclude(cover__exact='').order_by("-id")
+
+    # 2. old, no genre or other decoratation :()
+    splash_albums_2 = Album.objects.filter(cover__isnull=False, visible=True, genre__isnull=True, fiat_price__gt=0).exclude(cover__exact='').order_by("-id")
+
+    genre_sources = models.GENRES
+
+    genres = []
+    for genre_id, genre_name in models.GENRES:
+        genre_count = splash_albums.filter(genre=genre_id).count()
+        genres.append((genre_id, genre_name, genre_count))
+
+    splash_albums = [a for a in list(splash_albums) + list(splash_albums_2) if a.song_set.count() > 0]
+
+    return render_to_response("site/buy.html", locals(), context_instance=RequestContext(request))
+
+
+def sell_music(request):
+    """Sell music."""
+    return render_to_response("site/sell.html", locals(), context_instance=RequestContext(request))
 
 
 def about(request):
