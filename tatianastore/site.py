@@ -54,11 +54,16 @@ def buy_music(request):
 
     splash_albums = [a for a in list(splash_albums) + list(splash_albums_2) if a.song_set.count() > 0]
 
+    coin_name = settings.COIN_NAME
+
     return render_to_response("site/buy.html", locals(), context_instance=RequestContext(request))
 
 
 def sell_music(request):
     """Sell music."""
+
+    coin_name = settings.COIN_NAME
+
     return render_to_response("site/sell.html", locals(), context_instance=RequestContext(request))
 
 

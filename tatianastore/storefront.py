@@ -122,6 +122,7 @@ def on_site(request, slug):
 
     public_url = settings.PUBLIC_URL
     embed_src = request.build_absolute_uri(reverse("embed", args=(store.slug,))) + "?on_site=true"
+    coin_name = settings.COIN_NAME
     return render_to_response("site/store_on_site.html", locals(), context_instance=RequestContext(request))
 
 
