@@ -2,7 +2,6 @@
 -e git+https://miohtama@bitbucket.org/miohtama/stagger.git#egg=stagger
 -e git+https://miohtama@bitbucket.org/miohtama/cryptoassets.git#egg=cryptoassets.core
 -e git+https://miohtama@bitbucket.org/miohtama/cryptoassets.django.git#egg=cryptoassets.django
--e git+git@github.com:miohtama/PythonPusherClient#egg=pusherclient
 Django==1.7.1
 psycopg2==2.5.4
 Pillow==2.4.0
