@@ -4,6 +4,7 @@ import logging
 
 from django.conf.urls import patterns, include, url
 from django.conf import settings
+from django.shortcuts import redirect
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -44,14 +45,21 @@ sitemaps = {
 }
 
 
+def store_redirect(request):
+    path = "/buy-music-online/" + request.path[7:]
+    return redirect(path)
+
+
 urlpatterns = patterns('',
     url(r'^$', 'tatianastore.site.index', name='index'),
     url(r'^buy-music-online$', 'tatianastore.site.buy_music', name='buy_music'),
     url(r'^sell-music-online$', 'tatianastore.site.sell_music', name='sell_music'),
 
+    url(r'^store/*', store_redirect, name='old_store_redirect'),
+
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^store/', include(storefront)),
+    url(r'^buy-music-online/', include(storefront)),
     url(r'^storeadmin/', include(storeadmin)),
     url(r'^site/', include(site)),
     url(r'^signup/', include(signup)),

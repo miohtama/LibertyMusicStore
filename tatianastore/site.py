@@ -11,6 +11,7 @@ from django.template import RequestContext
 from django.utils.translation import ugettext_lazy as _
 from django.conf.urls import patterns
 from django.conf.urls import url
+from django.conf import settings
 
 from . import models
 from .models import Album
