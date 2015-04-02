@@ -1,0 +1,15 @@
+---
+# Handle creation of self-signed SSL certificate for the server if one doesn't exist
+
+- name: Install OpenSSL via apt
+  apt: pkg={{ item }}
+  with_items:
+     - openssl
+
+- stat: path={{self_signed_certificate_base}}.crt
+  register: has_self_signed_cert
+
+- name: Create self-signed SSL cert for HTTPS
+  when: has_self_signed_cert.stat.exists == False
+  command: openssl req -new -nodes -x509 -subj "/C=US/ST=/L=/O=/CN=${ansible_fqdn}" -days 3650 -keyout {{self_signed_certificate_base}}.key -out {{self_signed_certificate_base}}.crt -extensions v3_ca creates={{self_signed_certificate_base}}.crt
+

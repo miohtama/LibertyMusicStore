@@ -46,3 +46,5 @@ duplicity-venv
 avenv
 backups/*
 .vagrant
+ansible/galaxy/*
+
