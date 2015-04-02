@@ -43,6 +43,6 @@ manage.py
 *.yaml
 *.htpasswd
 duplicity-venv
+avenv
 backups/*
-*.sublime-project
-
+.vagrant
