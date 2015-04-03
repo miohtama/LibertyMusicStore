@@ -47,4 +47,6 @@ avenv
 backups/*
 .vagrant
 ansible/galaxy/*
+hosts.ini
+
 

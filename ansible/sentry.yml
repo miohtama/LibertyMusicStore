@@ -55,20 +55,21 @@
     sentry_home: /home/sentry/sentry                              # Deploy sentry to the folder
     sentry_user: sentry                                       # Run as user
 
-    # For Nginx
-    sentry_hostname: "{{inventory_hostname}}"
+    # For Nginx + Django config
+    # You need to add sentry.local to /etc/hosts and point it to the public IP of Vagrant machine
+    sentry_hostname: sentry.local
     sentry_port: 443
     sentry_https_url: yes
     sentry_access_log: /var/log/nginx/sentry.access.log
     sentry_error_log: /var/log/nginx/sentry.error.log
 
+    sentry_ssl_certificate: /etc/server.ssl.crt
+    sentry_ssl_certificate_key: /etc/server.ssl.key
+
     # in vault
     # sentry_secret_key: x
     sentry_extensions: []                                     # List of sentry-extensions
 
-    # Initial data
-    sentry_admin_username: admin                              # Creates admin user with credentials, set blank for skip
-    sentry_admin_email: mikko@libertymusicstore.net
     # in vault
     # sentry_admin_password: x
     sentry_teams: [opensourcehacker]                                    # Creates teams for admin user, set blank for skip

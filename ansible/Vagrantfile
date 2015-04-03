@@ -9,7 +9,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # compiling GCC needs more memory
     config.vm.provider "virtualbox" do |v|
-      v.customize ["modifyvm", :id, "--memory", "768"]
+      v.customize ["modifyvm", :id, "--memory", "1024"]
       v.customize ["modifyvm", :id, "--cpus", 2]
     end
 
