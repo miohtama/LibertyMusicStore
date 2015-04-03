@@ -120,4 +120,11 @@
     nginx_enabled: yes
     # Don't use Stouts.python role, use system default Python
     python_enabled: no
+    sentry_virtualenv_command: virtualenv
+    sentry_python: python2.7
+
+  pre_tasks:
+    - name: Install system default Python
+      apt: name={{item}}
+      with_items: [python-virtualenv, python-dev]
 
