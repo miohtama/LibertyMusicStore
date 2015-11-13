@@ -45,4 +45,5 @@ manage.py
 duplicity-venv
 backups/*
 *.sublime-project
+conf/blockio-webhook.conf
 
