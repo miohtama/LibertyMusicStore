@@ -108,7 +108,7 @@ def upload_album(request):
                 logger.exception(e)
                 errors = form._errors.setdefault("zip_upload", ErrorList())
                 errors.append(str(e))
-                raise http.HttpResponseServerError(str(e))
+                raise http.HttpResponseForbidden(str(e))
     else:
         logger.info("Not a POST request to upload album")
         form = AlbumUploadForm(request=request)
