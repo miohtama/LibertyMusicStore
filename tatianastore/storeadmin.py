@@ -108,7 +108,9 @@ def upload_album(request):
                 logger.exception(e)
                 errors = form._errors.setdefault("zip_upload", ErrorList())
                 errors.append(str(e))
+                raise http.HttpResponseServerError(str(e))
     else:
+        logger.info("Not a POST request to upload album")
         form = AlbumUploadForm(request=request)
 
     form.fields["song_price"].label = "Song price for individual buys ({})".format(store.currency)

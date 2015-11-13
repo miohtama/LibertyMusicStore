@@ -93,6 +93,8 @@ def upload_cover(album, data):
 def upload_album(store, name, zip_file, album_price, song_price):
     """ Process an album uploaded as a zip file. """
 
+    logger.info("STarting to process album for %s", store)
+
     album_price = album_price.quantize(Decimal("1.00"))
     song_price = song_price.quantize(Decimal("1.00"))
 
