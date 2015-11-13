@@ -119,7 +119,7 @@ $(document).ready(function() {
             // Javascript redirect to album edit
 
             // The server upload failed for a reason or another
-            if(xhr.status >= 400) {
+            if(xhr.status >= 400 || xhr.responseText[0] == "<") {
                 // This won't make a perfect error page, but gives us something readable
                 $(document.body).html("<pre>" + xhr.responseText + "</pre>");
                 return;
