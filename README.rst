@@ -6,20 +6,40 @@ Introduction
 
 `Liberty Music Store is a prototype MP3 store taking Bitcoin payments. <https://libertymusicstore.net>`_
 
-Dependencies
---------------
+The project is 100% open source. You can use this as an example project for your Django and Bitcoin services.
 
-In order to get this running you need to install:
+Stack
+------
 
-* SQL database (SQLite for development, PostgreSQL for production recommended)
+* `Python 3.4 <https://python.org>`_ - core programming language
 
-* Redis
+* `Django <https://www.djangoproject.com/>`_ - Python web framework
 
-* Django
+* `Bootstrap <http://getbootstrap.com/>`_ - Layout
 
-* Supervisor (production deployment only)
+* `uWSGI <http://uwsgi-docs.readthedocs.org/en/latest/>`_ - web server
 
-blockchain.info API is used for the receiving transactions and Bitcoin wallet management.
+* `Nginx <http://nginx.org/>`_ - web server
+
+* PostgreSQL / SQLite - database
+
+* Redis - database (sessions, task queue)
+
+* `Supervisor <http://supervisord.org/>`_ - process launch and management
+
+* `cryptoassets.core <http://cryptoassetscore.readthedocs.org/en/latest/>`_ / `cryptoassets.django <https://bitbucket.org/miohtama/cryptoassets.django>`_ - Bitcoin payment handling
+
+* `huey <http://huey.readthedocs.org/>`_  - asynchronous and background tasks
+
+* `bitcoinaddress.js <http://github.com/miohtama/bitcoinaddress.js>`_ - Bitcoin address interaction in web browser
+
+* `bitcoinprices.js <https://github.com/miohtama/bitcoin-prices>`_ - real-time currency conversion
+
+* `Sentry <http://sentry.readthedocs.org/>`_ - logging
+
+* `Duplicity <http://duplicity.nongnu.org/>`_ - backups
+
+* `ffmpeg <https://www.ffmpeg.org/>`_ - audio processing
 
 Development environment setup
 ------------------------------
@@ -39,10 +59,86 @@ Setup virtualenv::
     # https://bitbucket.org/nicfit/eyed3/issue/80/pypi-hosted-release
     pip install --allow-all-external -r requirements.txt
 
-Example ``local_settings.py``::
+Example ``local_settings.py`` for development::
 
-    # xxx
-    # empty file should be enough
+    import os
+    import sys
+
+    ALLOWED_HOSTS = ["localhost:8000", "localhost:8090", "libertymusicstore.net:9999"]
+
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+    RECAPTCHA_PUBLIC_KEY = 'x'
+    RECAPTCHA_PRIVATE_KEY = 'y'
+    RECAPTCHA_USE_SSL = True
+
+    PUBLIC_URL = "http://localhost:8000"
+
+
+    # FB test settings
+    if "runsslserver" in sys.argv:
+        os.environ["HTTPS"] = "on"
+        SITE_URL = "https://libertymusicstore.net:9999"
+    else:
+        SITE_URL = "http://localhost:8000"
+
+    HUEY = {
+        'backend': 'huey.backends.redis_backend',  # required.
+        'name': 'Huey Redis',
+        'connection': {'host': 'localhost', 'port': 6379},
+        'always_eager': True, # Defaults to False when running via manage.py run_huey
+        'consumer_options': {'workers': 3},
+    }
+
+    # Facebook development
+    FACEBOOK_SECRET_KEY = "x"
+
+    #from cryptoassets.core.coin.bitcoin.models import BitcoinWallet
+    #PAYMENT_WALLET_CLASS = BitcoinWallet
+
+    # TESTNET settings
+    CRYPTOASSETS = {
+
+        # You can use a separate database for cryptoassets,
+        # or share the Django database. In any case, cryptoassets
+        # will use a separate db connection.
+        "database": {
+            "url": "postgresql://localhost/cryptoassets_copy",
+            "echo": False,
+        },
+
+        "coins": {
+            # Locally running bitcoind in testnet
+            "btc": {
+                "backend": {
+                    "class": "cryptoassets.core.backend.blockio.BlockIo",
+                    "api_key": "x",
+                    "network": "btctest",
+                    "pin": "x",
+                    # Cryptoassets helper process will use this UNIX named pipe to communicate
+                    # with bitcoind
+                    "walletnotify": {
+                        "class": "cryptoassets.core.backend.sochainwalletnotify.SochainWalletNotifyHandler",
+                        "pusher_app_key": "x"
+                    },
+                }
+            },
+        },
+
+        # Bind cryptoassets.core event handler to Django dispacth wrapper
+        "events": {
+            "django": {
+                "class": "cryptoassets.core.event.python.InProcessEventHandler",
+                "callback": "cryptoassets.django.incoming.handle_tx_update"
+            }
+        },
+
+        "status_server": {
+            "ip": "127.0.0.1",
+            "port": 9001
+        }
+    }
+
 
 Setup empty database::
 
@@ -62,10 +158,6 @@ Start the server::
 
     python manage.py runserver
 
-You should now able to access generated test store
-
-* http://localhost:8000/store/test-store/embed-preview/
-
 Production setup on Ubuntu
 ----------------------------
 
@@ -84,15 +176,7 @@ Create venv::
 
     python3.4 -m venv --copies venv
 
-
-Reset::
-
-    python manage.py reset_db --router=default --noinput && python manage.py syncdb --noinput && python manage.py migrate
-    echo "execfile('./tatianastore/sample.py')" | python manage.py shell
-
-Nginx:
-
-    TODO
+... TODO
 
 FFMPEG
 --------
@@ -109,42 +193,6 @@ Running tests
 Ex::
 
     python manage.py test tatianastore --settings=tatianastore.test_settings
-
-Running manual tests against the blockchain wallet
-----------------------------------------------------
-
-Build a tunnel to a publicly accessible server::
-
-    bin/tunnel-blockchain-callback.sh
-
-Make sure you have your tunneled IP and port in blockchain account notifications::
-
-    http://1.2.3.4:4000/blockchain_received/
-
-Do a test payment.
-
-UWSGI
--------
-
-Ex::
-
-    uwsgi uwsgi_test.ini
-
-Stop::
-
-    pkill -f uwsgi
-
-Restart::
-
-    pkill -f uwsgi ; sleep 1; uwsgi uwsgi.prod.ini
-
-Populate cache::
-
-    from decimal import Decimal
-    from tatianastore.models import get_rate_converter
-    converter = get_rate_converter()
-    converter.update()
-    print converter.convert("btc", "usd", Decimal("1.0"))
 
 Production setup
 -----------------
@@ -189,6 +237,8 @@ More
 Facebook app testing
 ----------------------
 
+TODO: deprecated
+
 Register a faux app on Facebook.
 
 Use `runsslserver` to run a local development server.
@@ -209,42 +259,6 @@ Codename ``tatianastore`` is used through the project.
 ``test-song.mp3`` is *I dunno* by *Grapes*.
 
 * http://ccmixter.org/files/grapes/16626
-
-Dark theme example
-+++++++++++++++++++++
-
-Extra HTML for the store to make it white on black::
-
-    <link href='http://fonts.googleapis.com/css?family=Volkhov' rel='stylesheet' type='text/css'>
-    <style>
-        body {
-           background: black;
-           color: #aaa;
-           margin: 20px;
-        }
-
-        h1, h3 {
-           font-family: "Volkhov",serif;
-        }
-
-        .btn-default {
-            background: #666;
-            color: white;
-        }
-
-        /* QR code must be on the white background or BlockChain mobile wallet does not pick it up */
-        .bitcoin-address-qr-container {
-            padding: 40px 0;
-            background: white;
-        }
-    </style>
-
-Some fonts
-++++++++++++
-
-Examples::
-
-    <link href='https://fonts.googleapis.com/css?family=Libre+Baskerville&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 
 Author
 ------

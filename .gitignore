@@ -43,7 +43,10 @@ manage.py
 *.yaml
 *.htpasswd
 duplicity-venv
+avenv
 backups/*
 *.sublime-project
 conf/blockio-webhook.conf
-
+.vagrant
+ansible/galaxy/*
+hosts.ini
