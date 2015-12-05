@@ -49,7 +49,7 @@ CACHES = {
         "LOCATION": "127.0.0.1:6379:1",
         "OPTIONS": {
             "CLIENT_CLASS": "redis_cache.client.DefaultClient",
-            'CONNECTION_POOL_KWARGS': {'max_connections': 10},
+            'CONNECTION_POOL_KWARGS': {'max_connections': 30},
         }
     }
 }
