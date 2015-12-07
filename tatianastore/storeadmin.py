@@ -69,7 +69,14 @@ def upload_album(request):
     # Only needed to fill in currency info
     store = request.user.get_default_store()
 
+    # if request.get_host() == "libertymusicstore.net":
+    # upload_url = "https://upload.libertymusicstore.net" if "libertymusicstore.net" in request.get_host() else ""
+    #
+    logger.info("Processing")
+
+
     if request.method == "POST":
+        logger.info("Got POST")
         form = AlbumUploadForm(request.POST, request.FILES, request=request)
         if form.is_valid():
             try:
@@ -102,14 +109,16 @@ def upload_album(request):
                 wizard.set_step_status("upload_album", True)
 
                 # JavaScript redirect to this URL
-                return http.HttpResponse(reverse('admin:tatianastore_album_change', args=(album.id,)))
+                url = reverse('admin:tatianastore_album_change', args=(album.id,))
+                url = url.replace("upload.libertystoremusic.net", "libertystoremusic.net")
+                return http.HttpResponse(url)
             except zipupload.BadAlbumContenException as e:
                 # Handle b(ad upload content errors
                 logger.error("Bad album content")
                 logger.exception(e)
                 errors = form._errors.setdefault("zip_upload", ErrorList())
                 errors.append(str(e))
-                return http.HttpResponseForbidden(str(e))
+                return http.HttpResponseServerError(str(e))
     else:
         logger.info("Not a POST request to upload album")
         form = AlbumUploadForm(request=request)
