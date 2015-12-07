@@ -32,13 +32,13 @@ You can edit all files, information, prices and song order after the upload.
 </p>
 
 <p>
-<strong>Warning:</strong> Maximum upload size at the moment is <strong>100 MB</strong>. If you need larger uploads, please contact the support and provide album download link in the email. We can fix it for you.
+<strong>Warning:</strong> Maximum upload size at the moment is <strong>300 MB</strong> per album.
 </p>
 
 
 <h2>Upload an album as a ZIP file</h2>
 
-<form enctype="multipart/form-data" method="POST">
+<form enctype="multipart/form-data" method="POST" action="">
     {% csrf_token %}
     {{form.as_p}}
     <button type="submit">Submit</button>

@@ -116,6 +116,9 @@ def upload_album(request):
     form.fields["song_price"].label = "Song price for individual buys ({})".format(store.currency)
     form.fields["album_price"].label = "Album price ({})".format(store.currency)
 
+    # Workaround for 100mb cloudflare upload limit
+    upload_url = "https://upload.libertymusicstore.net" if "libertymucistore.net" in request.META["HTTP_HOST"] else "."
+
     return render_to_response("storeadmin/upload_album.html", locals(), context_instance=RequestContext(request))
 
 
