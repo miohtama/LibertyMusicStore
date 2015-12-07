@@ -2,6 +2,8 @@ import logging
 
 from tatianastore.settings import *
 
+ALLOWED_HOSTS = ["libertymusicstore.net", "upload.libertymusicstore.net"]
+
 DEBUG = False
 LOGGING["loggers"][""]["level"] = "WARN"
 LOGGING["loggers"][""]["handlers"] = ["file"]
