@@ -76,7 +76,6 @@ $(document).ready(function() {
                 return false;
             }
 
-
             if(files.length == 0) {
                 window.alert("Please choose a ZIP file.");
                 return false;
@@ -117,6 +116,14 @@ $(document).ready(function() {
 
         complete: function(xhr) {
             // Javascript redirect to album edit
+            //
+
+            if(!xhr.responseText) {
+                // Cross domain screw up
+                window.alert("Could not perform upload. Please contact support.")
+                console.error(xhr);
+                return;
+            }
 
             // The server upload failed for a reason or another
             if(xhr.status >= 400 || xhr.responseText[0] == "<") {
