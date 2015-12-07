@@ -128,7 +128,7 @@ def upload_album(request):
 
     # Workaround for 100mb cloudflare upload limit
     logger.info("Upload host set to %s", request.get_host())
-    upload_url = "https://upload.libertymusicstore.net" if "libertymusicstore.net" in request.get_host() else ""
+    upload_url = "https://upload.libertymusicstore.net/storeadmin/upload-album/" if "libertymusicstore.net" in request.get_host() else ""
 
     return render_to_response("storeadmin/upload_album.html", locals(), context_instance=RequestContext(request))
 
