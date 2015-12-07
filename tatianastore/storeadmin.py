@@ -62,6 +62,7 @@ class NewStoreForm(forms.Form):
 
 @staff_member_required
 @transaction.non_atomic_requests
+@csrf_exempt
 def upload_album(request):
     """ Allow the artist to upload an album to the store. """
 
