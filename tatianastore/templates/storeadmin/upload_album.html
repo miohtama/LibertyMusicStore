@@ -64,6 +64,9 @@ $(document).ready(function() {
 
     $('form').ajaxForm({
 
+        crossDomain: true,
+        withCredentials: true,
+
         // http://malsup.com/jquery/form/#options-object
         beforeSubmit: function(arr, $form, options) {
             var files = $("#id_zip_file").get(0).files;
