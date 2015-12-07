@@ -56,6 +56,7 @@ GENRES = (
     (15, 'Afro fusion'),
     (16, 'Cont.African'),
     (13, 'Punk'),
+    (14, 'Soundtrack'),
 )
 
 GENRES_DICT = dict(GENRES)
