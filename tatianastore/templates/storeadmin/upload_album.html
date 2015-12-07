@@ -38,7 +38,7 @@ You can edit all files, information, prices and song order after the upload.
 
 <h2>Upload an album as a ZIP file</h2>
 
-<form enctype="multipart/form-data" method="POST" action="">
+<form enctype="multipart/form-data" method="POST" action="{{ upload_url }}">
     {% csrf_token %}
     {{form.as_p}}
     <button type="submit">Submit</button>
