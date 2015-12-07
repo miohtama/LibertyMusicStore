@@ -65,7 +65,9 @@ $(document).ready(function() {
     $('form').ajaxForm({
 
         crossDomain: true,
-        withCredentials: true,
+        xhrFields: {
+          withCredentials: true
+        },
 
         // http://malsup.com/jquery/form/#options-object
         beforeSubmit: function(arr, $form, options) {
