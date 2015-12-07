@@ -60,9 +60,9 @@ class NewStoreForm(forms.Form):
     store_url = forms.URLField(label="Homepage", help_text="Link to your homepage, Facebook page or blog", required=True)
 
 
+@csrf_exempt
 @staff_member_required
 @transaction.non_atomic_requests
-@csrf_exempt
 def upload_album(request):
     """ Allow the artist to upload an album to the store. """
 
