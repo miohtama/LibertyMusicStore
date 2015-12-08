@@ -154,6 +154,9 @@ def upload_album(store, name, zip_file, album_price, song_price):
                 upload_song(album, s, data, order, song_price)
                 order += 1
 
+                # See if helps with memory pressure
+                import gc ; gc.collect()
+
             if cover:
                 upload_cover(album, zip.read(cover))
 
