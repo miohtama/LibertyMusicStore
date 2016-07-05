@@ -1,1 +1,0 @@
-[smtp.mandrillapp.com]    {{ mandrill_username }}:{{ mandrill_api_key }}

@@ -99,12 +99,12 @@
 - name: Copy local_settings
   become: yes
   become_user: wsgi
-  file: "src=local_settings.py path={{deploy_location}}/tatianastore/local_settings.py"
+  copy: "src=local_settings.py path={{deploy_location}}/tatianastore/local_settings.py"
 
 - name: Copy production_settings
   become: yes
   become_user: wsgi
-  file: "src=production_settings.py path={{deploy_location}}/tatianastore/production_settings.py"
+  copy: "src=production_settings.py path={{deploy_location}}/tatianastore/production_settings.py"
 
 - name: Collect static files
   become: yes
@@ -136,7 +136,7 @@
 - name: Deploy Nginx blockchain hooks configuration
   become: yes
   become_user: root
-  copy: "blockio-webhook.conf dest=/srv/django/tatianastore/conf/blockio-webhook.conf"
+  copy: "src=blockio-webhook.conf dest=/srv/django/tatianastore/conf/blockio-webhook.conf"
   notify:
     - nginx restart
   tags: nginx-config
