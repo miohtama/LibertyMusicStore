@@ -9,7 +9,7 @@
 			"file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
 			"name": "Anaconda Python Builder",
 			"selector": "source.python",
-			"shell_cmd": "/Users/mikko/code/tatianastore/venv3/bin/python -u \"$file\""
+			"shell_cmd": "\"/Users/mikko/code/tatianastore/venv3/bin/python\" -u \"$file\""
 		}
 	],
 	"folders":

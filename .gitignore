@@ -22,6 +22,7 @@ tatianastore/static/bitcoinprices/
 tatianastore/static/bitcoinaddress/
 logs/*
 local_settings.*
+production_settings.*
 *.sqlite3
 media/albums/*
 media/covers/*
@@ -50,3 +51,5 @@ conf/blockio-webhook.conf
 .vagrant
 ansible/galaxy/*
 hosts.ini
+blockio-webhook.conf
+*.retry

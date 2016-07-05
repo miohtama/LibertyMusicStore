@@ -1,0 +1,130 @@
+# SQLAlchemy connection URL - by default PostgreSQL does not require
+# authentication for local users
+db_sqlalchemy_url: "postgresql://localhost/{{ db_name }}"
+
+# Python versions to install on the server.
+python_versions: [3.5]
+
+# Name of the Python interpreter for creating the Websauna application :term:`virtual environment`.
+python_interpreter: python3.5
+
+# PyPi mirror from where the packages are downloaded from. For an enterprise setup you might want to point this to your own server. For example custom PyPi hosting, see http://doc.devpi.net/
+pypi_index_url: https://pypi.python.org/simple
+
+
+# ------------------------------------------------
+# Complex settings below
+# ------------------------------------------------
+
+# ----------------------------------------------------
+# Postfix
+# ----------------------------------------------------
+
+# Which is the domain name where our outboound email comes from
+postfix_domain: "{{ server_email_domain }}"
+
+# Sysadmin email for Postfix notify emails
+postfix_notify_email: "{{ notify_email }}"
+
+# ----------------------------------------------------
+# uWSGI
+# ----------------------------------------------------
+
+# uWSGI version to install
+uwsgi_version: 2.0.13.1
+
+# ----------------------------------------------------
+# nginx
+# ----------------------------------------------------
+
+# A certificate file path on local environment to copy over to the server. Usually like ``certificate.pem``. Note that certificate and certificate key can be in same .pem file.
+local_certificate_file:
+
+# A certificate file key on local environment to copy over to the server. Usually like ``certificate.pem``. Note that certificate and certificate key can be in same .pem file.
+local_key_file:
+
+# Server-side path to a TLS certificate file for Nginx. Usually .pem. Note that certificate and certificate key can be in same .pem file.
+nginx_ssl_certificate_path: /etc/nginx/certificate.pem
+
+# Server-side path to a TLS certificate key file for Nginx. Usually .pem. Note that certificate and certificate key can be in same .pem file.
+nginx_ssl_certificate_path_key: /etc/nginx/key.pem
+
+# ----------------------------------------------------
+# PostgreSQL
+# ----------------------------------------------------
+
+# Installed PostgreSQL version
+postgresql_version: 9.5
+
+postgresql_ext_install_dev_headers: yes
+postgresql_encoding: 'UTF-8'
+postgresql_locale: 'en_US.UTF-8'
+
+postgresql_admin_user: "postgres"
+postgresql_default_auth_method: "trust"
+
+postgresql_cluster_name: "main"
+postgresql_cluster_reset: false
+
+postgresql_ext_postgis_version: 2.2
+postgresql_ext_install_postgis: no
+
+# List of databases to be created
+# By default include PostgreSQL PostGIS support (Geotypes), UUID and HSTORE
+postgresql_databases:
+  - name: "{{ db_name }}"
+    hstore: yes
+    uuid_ossp: yes
+    gis: no
+
+# List of users to be created (optional)
+postgresql_users:
+  - name: "{{ db_user }}"
+    pass: "{{ db_password }}"
+    encrypted: no       # denotes if the password is already encrypted.
+
+# List of user privileges to be applied (optional)
+postgresql_user_privileges:
+  - name: "{{ db_user }}"                   # user name
+    db: "{{ db_name }}"                  # database
+    priv: "ALL"                 # privilege string format: example: INSERT,UPDATE/table:SELECT/anothertable:ALL
+    role_attr_flags: "CREATEDB" # role attribute flags
+
+# Where does Nginx access log file goes
+nginx_access_log: /var/log/nginx/{{ site_id }}.access.log
+
+# Where does Nginx error log file goes
+nginx_error_log: /var/log/nginx/{{ site_id }}.error.log
+
+# ----------------------------------------------------
+# New relic
+# ----------------------------------------------------
+
+# ----------------------------------------------------
+# Log watch
+# ----------------------------------------------------
+
+# Email Address which Logwatch reports to
+logwatch_email: "{{ notify_email }}"
+
+# The level of detail in the Logwatch report
+logwatch_detail: "low"
+
+# The default time range for the Logwatch report
+logwatch_range: "yesterday"
+
+# The output method of the Logwatch report
+logwatch_output: "stdout"
+
+# The format of the Logwatch report
+logwatch_format: "text"
+
+# Cron special time specification nickname - must match with logwatch range!
+logwatch_cron_time: "daily"
+
+# ----------------------------------------------------
+# Supervisor
+# ----------------------------------------------------
+
+# Supervisor config template. Create templates folder and supply your own supervisor startup handlers by giving a custom config filename here.
+supervisor_config: supervisor.conf

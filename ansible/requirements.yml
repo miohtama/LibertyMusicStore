@@ -1,0 +1,17 @@
+- src: git+https://github.com/websauna/Stouts.sentry.git
+  name: Stouts.sentry
+
+- src: git+https://github.com/websauna/ansible-letsencrypt.git
+  name: ansible-letsencrypt
+
+- src: git+https://github.com/websauna/ANXS.postgresql.git
+  name: ANXS.postgresql
+
+#
+# from galaxy.ansible.com
+#
+
+- src: ANXS.logwatch
+- src: Stouts.nginx
+- src: Stouts.redis
+- src: Stouts.python

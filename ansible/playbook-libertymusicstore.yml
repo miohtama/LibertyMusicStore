@@ -1,0 +1,50 @@
+# Playbook which ramps up myapp tutorial site inside a Vagrant virtual machine
+
+- hosts: all
+  gather_facts: true
+
+  # These need to be set up before reading default.yml - more variables are generated based on these
+  vars:
+    - firewall: on
+    - deploy_location: /srv/django/tatianastore
+    - package_name: tatianastore
+    - site_id: tatianastore
+    - site_mode: production
+    - websocket: on
+    - smtp: on
+    - ssl: off
+    - cloudflare: on
+    - new_relic: off
+    - letsenrypt: off
+    - backup: off
+    - notify_email: mikko@libertymusicstore.net
+    - server_email: no-reply@libertymusicstore.net
+    - git_repository: git@github.com:miohtama/LibertyMusicStore.git
+    - git_branch: master
+    - server_name: libertymusicstore.net
+    - server_email_domain: libertymusicstore.net
+    - postfix_domain: libertymusicstore.net
+    - db_name: tatianastore_production
+    - db_user: wsgi
+    - db_password: wsgi
+
+  # Get SMTP settings, etc.
+  pre_tasks:
+    - include_vars: default.yml
+    - include_vars: secrets.yml
+
+  roles:
+  - { role: websauna.preflight, tags: ['site'] }
+  - websauna.users
+  - { role: websauna.ssh, tags: ['site'] }  # Needed to setup SSH auth socket for github/bitbucket
+  - websauna.shell
+  - websauna.harden
+  - websauna.smtp
+  - { role: ANXS.postgresql, become: yes, become_user: root, tags: ['psql'] }
+  - { role: Stouts.nginx, become: yes, become_user: root, tags: ['site'] }  # websauna.site may override Nginx config
+  - { role: Stouts.redis, become: yes, become_user: root }
+  - { role: Stouts.python, become: yes, become_user: root }
+  - { role: libertymusicstore, tags: ['site'] }
+  - websauna.postflight
+
+

@@ -1,0 +1,152 @@
+- name: Install Liberty Music Store dependencies
+  apt: pkg={{ item }} update_cache=no cache_valid_time=86400
+  with_items:
+    - git
+    - supervisor
+    - build-essential
+    - libfreetype6-dev
+    - libncurses5-dev
+    - libxml2-dev
+    - libxslt1-dev
+    - libjpeg-dev
+    - libpng12-dev
+    - fail2ban
+    - gettext
+    - duplicity
+    - python-boto
+    - python-virtualenv
+    - libpq-dev
+    - libffi-dev
+  become: yes
+  become_user: root
+
+- name: Create /srv/django
+  become: yes
+  become_user: root
+  file: path=/srv/django state=directory
+
+- name: Create a deploy location
+  become: yes
+  become_user: root
+  file: path={{ deploy_location }} state=directory group=wsgi owner=wsgi mode="u=rwx,g=,o="
+
+# Check if we have an already running site
+- name: Check previous project checkouts
+  stat: path={{ deploy_location }}/venv/bin/ws-backup
+  register: previous_checkout
+  become: yes
+  become_user: wsgi
+
+- name: Deploy app application from a Git repository
+  become: yes
+  become_user: wsgi
+  git: repo={{ git_repository }} dest={{deploy_location}} accept_hostkey=yes force=yes track_submodules=yes recursive=yes version={{ git_branch }}
+
+- name: Create logs folder
+  become: yes
+  become_user: wsgi
+  file: path={{ deploy_location }}/logs state=directory
+
+- name: Deploy site secrets
+  become: yes
+  become_user: wsgi
+  template: src={{ django_secrets_file_local }} dest={{ django_secrets_file_remote }}
+
+- name: Check existence of virtualenv
+  stat: path={{ deploy_location }}/venv
+  register: has_virtualenv
+  become: yes
+  become_user: root
+
+- name: Upgrade virtualenv to bugfixed versions
+  become: yes
+  become_user: root
+  shell: pip install -U virtualenv
+
+- name: Create virtualenv for app using chosen Python
+  when: has_virtualenv.stat.exists == False
+  shell: virtualenv --python={{ python_interpreter }} {{deploy_location}}/venv
+  become: yes
+  become_user: wsgi
+
+- name: Activate virtualenv on login
+  become: yes
+  become_user: wsgi
+  lineinfile: dest=/home/{{ wsgi_user }}/.profile regexp='^source /srv' line='source {{ deploy_location }}/venv/bin/activate'
+
+- name: Enter to deployment directory on login
+  become: yes
+  become_user: wsgi
+  lineinfile: dest=/home/{{ wsgi_user }}/.profile regexp='^cd /srv' line='cd {{ deploy_location }}'
+
+# We don't use Ansible pip module here becuase
+# https://github.com/ansible/ansible-modules-core/issues/2697
+- name: Install Python packages
+  become: yes
+  become_user: wsgi
+  command: "{{deploy_location}}/venv/bin/pip install --no-input -r {{deploy_location}}/requirements.txt --index-url={{ pypi_index_url }}"
+
+- name: Install application package
+  become: yes
+  become_user: wsgi
+  command: "{{deploy_location}}/venv/bin/pip install -e {{deploy_location}}"
+
+- name: Install uWSGI
+  become: yes
+  become_user: wsgi
+  pip: "name=uwsgi version={{ uwsgi_version }} virtualenv={{deploy_location}}/venv chdir={{ deploy_location }}"
+
+- name: Copy local_settings
+  become: yes
+  become_user: wsgi
+  file: "src=local_settings.py path={{deploy_location}}/tatianastore/local_settings.py"
+
+- name: Copy production_settings
+  become: yes
+  become_user: wsgi
+  file: "src=production_settings.py path={{deploy_location}}/tatianastore/production_settings.py"
+
+- name: Collect static files
+  become: yes
+  become_user: wsgi
+  command: "{{ deploy_location }}/venv/bin/ws-collect-static {{ websauna_config_file }} chdir={{ deploy_location }}"
+
+# Not in playbook yet
+# - name: Deploy SSL certificates
+#  include: certificates.yml
+
+- name: Deploy WSGI hander
+  become: yes
+  become_user: wsgi
+  template: "src=pyramid.wsgi dest={{ deploy_location }}/conf/pyramid.wsgi"
+
+- name: Deploy supervisor config
+  become: yes
+  become_user: root
+  file: "src={{ deploy_location }}/conf/supervisor.conf dest=/etc/supervisor/conf.d/site.conf state=link"
+
+- name: Deploy Nginx configuration
+  become: yes
+  become_user: root
+  file: "src={{ deploy_location }}/conf/ngix.conf dest=/etc/nginx/sites-enabled/tatianastore.conf state=link"
+  notify:
+    - nginx restart
+  tags: nginx-config
+
+- name: Deploy Nginx blockchain hooks configuration
+  become: yes
+  become_user: root
+  copy: "blockio-webhook.conf dest=/srv/django/tatianastore/conf/blockio-webhook.conf"
+  notify:
+    - nginx restart
+  tags: nginx-config
+
+# TODO: Graceful uWSGI loading
+# https://uwsgi-docs.readthedocs.org/en/latest/articles/TheArtOfGracefulReloading.html#standard-default-boring-graceful-reload-aka-sighup
+- name: Start uWSGI
+  become: yes
+  become_user: root
+  supervisorctl: name=uwsgi state=restarted
+
+
+

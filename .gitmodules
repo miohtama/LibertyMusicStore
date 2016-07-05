@@ -7,3 +7,6 @@
 [submodule "tatianastore/static/bitcoinaddress"]
 	path = tatianastore/static/bitcoinaddress
 	url = git@github.com:miohtama/bitcoinaddress.js.git
+[submodule "ansible/websauna.ansible"]
+	path = ansible/websauna.ansible
+	url = git@github.com:websauna/websauna.ansible.git
