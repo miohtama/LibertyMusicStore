@@ -17,6 +17,7 @@
     - python-virtualenv
     - libpq-dev
     - libffi-dev
+    - librsync-dev
   become: yes
   become_user: root
 
@@ -47,11 +48,6 @@
   become_user: wsgi
   file: path={{ deploy_location }}/logs state=directory
 
-- name: Deploy site secrets
-  become: yes
-  become_user: wsgi
-  template: src={{ django_secrets_file_local }} dest={{ django_secrets_file_remote }}
-
 - name: Check existence of virtualenv
   stat: path={{ deploy_location }}/venv
   register: has_virtualenv
@@ -72,12 +68,12 @@
 - name: Activate virtualenv on login
   become: yes
   become_user: wsgi
-  lineinfile: dest=/home/{{ wsgi_user }}/.profile regexp='^source /srv' line='source {{ deploy_location }}/venv/bin/activate'
+  lineinfile: dest=/home/wsgi/.profile regexp='^source /srv' line='source {{ deploy_location }}/venv/bin/activate'
 
 - name: Enter to deployment directory on login
   become: yes
   become_user: wsgi
-  lineinfile: dest=/home/{{ wsgi_user }}/.profile regexp='^cd /srv' line='cd {{ deploy_location }}'
+  lineinfile: dest=/home/wsgi/.profile regexp='^cd /srv' line='cd {{ deploy_location }}'
 
 # We don't use Ansible pip module here becuase
 # https://github.com/ansible/ansible-modules-core/issues/2697
@@ -86,10 +82,11 @@
   become_user: wsgi
   command: "{{deploy_location}}/venv/bin/pip install --no-input -r {{deploy_location}}/requirements.txt --index-url={{ pypi_index_url }}"
 
-- name: Install application package
-  become: yes
-  become_user: wsgi
-  command: "{{deploy_location}}/venv/bin/pip install -e {{deploy_location}}"
+# Not packaged as wheel
+# - name: Install application package
+#  become: yes
+#  become_user: wsgi
+#  command: "{{deploy_location}}/venv/bin/pip install -e {{deploy_location}}"
 
 - name: Install uWSGI
   become: yes
@@ -99,26 +96,22 @@
 - name: Copy local_settings
   become: yes
   become_user: wsgi
-  copy: "src=local_settings.py path={{deploy_location}}/tatianastore/local_settings.py"
+  copy: "src=local_settings.py dest={{deploy_location}}/tatianastore/local_settings.py"
 
 - name: Copy production_settings
   become: yes
   become_user: wsgi
-  copy: "src=production_settings.py path={{deploy_location}}/tatianastore/production_settings.py"
+  template: "src=production_settings.py dest={{deploy_location}}/tatianastore/production_settings.py"
 
-- name: Collect static files
-  become: yes
-  become_user: wsgi
-  command: "{{ deploy_location }}/venv/bin/ws-collect-static {{ websauna_config_file }} chdir={{ deploy_location }}"
+# TODO: update
+# - name: Collect static files
+#  become: yes
+#  become_user: wsgi
+#  command: "{{ deploy_location }}/venv/bin/ws-collect-static {{ websauna_config_file }} chdir={{ deploy_location }}"
 
 # Not in playbook yet
 # - name: Deploy SSL certificates
 #  include: certificates.yml
-
-- name: Deploy WSGI hander
-  become: yes
-  become_user: wsgi
-  template: "src=pyramid.wsgi dest={{ deploy_location }}/conf/pyramid.wsgi"
 
 - name: Deploy supervisor config
   become: yes
@@ -128,7 +121,7 @@
 - name: Deploy Nginx configuration
   become: yes
   become_user: root
-  file: "src={{ deploy_location }}/conf/ngix.conf dest=/etc/nginx/sites-enabled/tatianastore.conf state=link"
+  template: "src=nginx.conf.j2 dest=/etc/nginx/sites-enabled/tatianastore.conf"
   notify:
     - nginx restart
   tags: nginx-config
@@ -141,12 +134,31 @@
     - nginx restart
   tags: nginx-config
 
-# TODO: Graceful uWSGI loading
-# https://uwsgi-docs.readthedocs.org/en/latest/articles/TheArtOfGracefulReloading.html#standard-default-boring-graceful-reload-aka-sighup
+- name: Check if we have ffmpeg
+  stat: path=/usr/local/bin/ffmpeg get_md5=no
+  register: ffmpeg
+
+- name: Install FFMPEG
+  shell: "cd /tmp && wget http://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz && tar -xf ffmpeg-release-64bit-static.tar.xz && mv ffmpeg-3.1.1-64bit-static/ffmpeg /usr/local/bin"
+  when: ffmpeg.stat.exists==False
+  become: yes
+  become_user: root
+
 - name: Start uWSGI
   become: yes
   become_user: root
-  supervisorctl: name=uwsgi state=restarted
+  supervisorctl: name=tatianastore_uwsgi state=restarted
+
+- name: Start Huey
+  become: yes
+  become_user: root
+  supervisorctl: name=tatianastore_huey state=restarted
+
+- name: Start cryptoassets helper
+  become: yes
+  become_user: root
+  supervisorctl: name=tatianastore_cryptoassetshelper state=restarted
+
 
 
 

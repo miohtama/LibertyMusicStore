@@ -8,29 +8,31 @@
 
 server {
 
-    listen {{www_ip}}:80;
-    server_name libertymusicstore.net;
+    listen {{ www_ip }}:80;
+    server_name {{ domain_name }};
 
-    set_real_ip_from 199.27.128.0/21;
-    set_real_ip_from 173.245.48.0/20;
-    set_real_ip_from 103.21.244.0/22;
-    set_real_ip_from 103.22.200.0/22;
-    set_real_ip_from 103.31.4.0/22;
-    set_real_ip_from 141.101.64.0/18;
-    set_real_ip_from 108.162.192.0/18;
-    set_real_ip_from 190.93.240.0/20;
-    set_real_ip_from 188.114.96.0/20;
-    set_real_ip_from 197.234.240.0/22;
-    set_real_ip_from 198.41.128.0/17;
-    set_real_ip_from 162.158.0.0/15;
-    set_real_ip_from 104.16.0.0/12;
-    set_real_ip_from 172.64.0.0/13;
-    #set_real_ip_from 2400:cb00::/32;
-    #set_real_ip_from 2606:4700::/32;
-    #set_real_ip_from 2803:f800::/32;
-    #set_real_ip_from 2405:b500::/32;
-    #set_real_ip_from 2405:8100::/32;
-    real_ip_header CF-Connecting-IP;
+    {% if cloudflare %}
+        set_real_ip_from 199.27.128.0/21;
+        set_real_ip_from 173.245.48.0/20;
+        set_real_ip_from 103.21.244.0/22;
+        set_real_ip_from 103.22.200.0/22;
+        set_real_ip_from 103.31.4.0/22;
+        set_real_ip_from 141.101.64.0/18;
+        set_real_ip_from 108.162.192.0/18;
+        set_real_ip_from 190.93.240.0/20;
+        set_real_ip_from 188.114.96.0/20;
+        set_real_ip_from 197.234.240.0/22;
+        set_real_ip_from 198.41.128.0/17;
+        set_real_ip_from 162.158.0.0/15;
+        set_real_ip_from 104.16.0.0/12;
+        set_real_ip_from 172.64.0.0/13;
+        #set_real_ip_from 2400:cb00::/32;
+        #set_real_ip_from 2606:4700::/32;
+        #set_real_ip_from 2803:f800::/32;
+        #set_real_ip_from 2405:b500::/32;
+        #set_real_ip_from 2405:8100::/32;
+        real_ip_header CF-Connecting-IP;
+    {% endif %}
 
     ssl off;
     ssl_certificate /srv/django/tatianastore/certs/tatianastore_bundle.crt;
@@ -129,8 +131,8 @@ server {
 # Run a separate upload domain due to CloudFlare's 100mb limit
 server {
 
-    listen 78.47.218.165:443;
-    server_name upload.libertymusicstore.net;
+    listen {{ www_ip }}:443;
+    server_name {{ upload_domain_name }};
 
     access_log /var/log/nginx/tatianastore.access.log;
     error_log /var/log/nginx/tatianastore.error.log;

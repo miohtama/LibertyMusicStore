@@ -1,0 +1,3 @@
+Welcome to tatianastore
+
+WWW IP is {{ www_ip }}

@@ -2,12 +2,6 @@
 # authentication for local users
 db_sqlalchemy_url: "postgresql://localhost/{{ db_name }}"
 
-# Python versions to install on the server.
-python_versions: [3.5]
-
-# Name of the Python interpreter for creating the Websauna application :term:`virtual environment`.
-python_interpreter: python3.5
-
 # PyPi mirror from where the packages are downloaded from. For an enterprise setup you might want to point this to your own server. For example custom PyPi hosting, see http://doc.devpi.net/
 pypi_index_url: https://pypi.python.org/simple
 
@@ -68,14 +62,6 @@ postgresql_cluster_reset: false
 
 postgresql_ext_postgis_version: 2.2
 postgresql_ext_install_postgis: no
-
-# List of databases to be created
-# By default include PostgreSQL PostGIS support (Geotypes), UUID and HSTORE
-postgresql_databases:
-  - name: "{{ db_name }}"
-    hstore: yes
-    uuid_ossp: yes
-    gis: no
 
 # List of users to be created (optional)
 postgresql_users:

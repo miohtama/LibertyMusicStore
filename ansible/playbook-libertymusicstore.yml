@@ -10,11 +10,9 @@
     - package_name: tatianastore
     - site_id: tatianastore
     - site_mode: production
-    - websocket: on
     - smtp: on
     - ssl: off
     - cloudflare: on
-    - new_relic: off
     - letsenrypt: off
     - backup: off
     - notify_email: mikko@libertymusicstore.net
@@ -27,11 +25,24 @@
     - db_name: tatianastore_production
     - db_user: wsgi
     - db_password: wsgi
+    - postgresql_databases:
+        - name: "{{ db_name }}"
+          hstore: yes
+          uuid_ossp: yes
+          gis: no
+        - name: cryptoassets_production
+          hstore: yes
+          uuid_ossp: yes
+    - motd_template: tatianastore.txt
+    # Python versions to install on the server.
+    - python_versions: [3.4]
+    # We are now stuck with this because http://stackoverflow.com/q/34827566/315168
+    - python_interpreter: python3.4
 
   # Get SMTP settings, etc.
   pre_tasks:
-    - include_vars: default.yml
-    - include_vars: secrets.yml
+    - include_vars: default.yml  # Populate variables for external roles
+    - include_vars: secrets.yml  # Read our secret variables
 
   roles:
   - { role: websauna.preflight, tags: ['site'] }
